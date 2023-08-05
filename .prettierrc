@@ -1,12 +1,8 @@
 {
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": false,
-    "trailingComma": "es5",
-    "printWidth": 120,
-    "useTabs": false,
-    "endOfLine":"auto",
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true
-    }
-  }
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "useTabs": false,
+  "endOfLine": "auto"
+}
