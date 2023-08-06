@@ -90,6 +90,6 @@ The application will open in your default browser, allowing you to explore and i
 This project is developed by a team talented developers:
 
 - 👨‍🏫  [aleksey-drozdov](https://github.com/aleksey-drozdov) - Mentor
-- 👩‍💼 [elen-jagger](https://github.com/elen-jagger)
-- 👩‍💼 [papryca](https://github.com/papryca)
-- 👨‍💼 [RoierS](https://github.com/RoierS)
+- 👩‍💼 [elen-jagger](https://github.com/elen-jagger) - [elena.leusik@gmail.com](mailto:elena.leusik@gmail.com)
+- 👩‍💼 [papryca](https://github.com/papryca) - [inessasmorgunova@gmail.com](mailto:inessasmorgunova@gmail.com)
+- 👨‍💼 [RoierS](https://github.com/RoierS) - [iermoliuk.roman@gmail.com](mailto:iermoliuk.roman@gmail.com)
