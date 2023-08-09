@@ -11,9 +11,11 @@ const AppHeader = () => {
     const tab = tabs.find((t) => t.link === path);
     return tab ? tab.index : 1;
   };
-  const [value, setIndex] = React.useState(processPathName());
+  const [index, setIndex] = React.useState(processPathName());
 
-  /** routs to new location according to selected header tab */
+  /**
+   * set active header tab
+   */
   const handleChange = (event: React.SyntheticEvent, newIndex: number) =>
     setIndex(newIndex);
 
@@ -25,7 +27,7 @@ const AppHeader = () => {
           width: "95%",
         }}
       >
-        <Tabs value={value} onChange={handleChange} variant="fullWidth">
+        <Tabs value={index} onChange={handleChange} variant="fullWidth">
           {tabs.map((tab) => (
             <Tab
               value={tab.index}
