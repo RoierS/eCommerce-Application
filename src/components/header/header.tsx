@@ -31,6 +31,7 @@ const AppHeader = () => {
           {tabs.map((tab) => (
             <Tab
               value={tab.index}
+              key={tab.index}
               icon={tab.icon}
               label={tab.label}
               to={tab.link}
