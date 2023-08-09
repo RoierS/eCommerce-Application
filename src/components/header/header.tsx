@@ -1,16 +1,31 @@
-import CottageTwoToneIcon from "@mui/icons-material/CottageTwoTone";
-import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
-import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
 import { Box, Tabs, Tab } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+import tabs from "./tabs";
 
 const AppHeader = () => {
-  const [value, setValue] = React.useState("1");
+  const location = useLocation();
+  const processPathName = () => {
+    const path = `/${location.pathname.split("/")[1]}`;
+    const tab = tabs.find((t) => t.link === path);
+    return tab ? tab.value : 1;
+  };
+  const [value, setValue] = React.useState(processPathName());
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const tabsList = tabs.map((tab) => (
+    <Tab
+      value={tab.value}
+      icon={tab.icon}
+      label={tab.label}
+      to={tab.link}
+      component={Link}
+    />
+  ));
 
   return (
     <header className="header">
@@ -21,27 +36,7 @@ const AppHeader = () => {
         }}
       >
         <Tabs value={value} onChange={handleChange} variant="fullWidth">
-          <Tab
-            value="1"
-            icon={<CottageTwoToneIcon />}
-            label="HOME"
-            to="/"
-            component={Link}
-          />
-          <Tab
-            value="2"
-            icon={<HowToRegTwoToneIcon />}
-            label="LOGIN"
-            to="/login"
-            component={Link}
-          />
-          <Tab
-            value="3"
-            icon={<LoginTwoToneIcon />}
-            label="REGISTRATION"
-            to="/registration"
-            component={Link}
-          />
+          {tabsList}
         </Tabs>
       </Box>
     </header>
