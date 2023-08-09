@@ -4,7 +4,7 @@ import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
 import React from "react";
 
 interface IHeaderTab {
-  value: number;
+  index: number;
   icon: React.ReactElement;
   label: string;
   link: string;
@@ -12,19 +12,19 @@ interface IHeaderTab {
 
 const tabs: IHeaderTab[] = [
   {
-    value: 1,
+    index: 1,
     icon: <CottageTwoToneIcon />,
     label: "HOME",
     link: "/",
   },
   {
-    value: 2,
+    index: 2,
     icon: <LoginTwoToneIcon />,
     label: "LOGIN",
     link: "/login",
   },
   {
-    value: 3,
+    index: 3,
     icon: <HowToRegTwoToneIcon />,
     label: "REGISTRATION",
     link: "/registration",

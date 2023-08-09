@@ -9,23 +9,13 @@ const AppHeader = () => {
   const processPathName = () => {
     const path = `/${location.pathname.split("/")[1]}`;
     const tab = tabs.find((t) => t.link === path);
-    return tab ? tab.value : 1;
+    return tab ? tab.index : 1;
   };
-  const [value, setValue] = React.useState(processPathName());
+  const [value, setIndex] = React.useState(processPathName());
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
-  const tabsList = tabs.map((tab) => (
-    <Tab
-      value={tab.value}
-      icon={tab.icon}
-      label={tab.label}
-      to={tab.link}
-      component={Link}
-    />
-  ));
+  /** routs to new location according to selected header tab */
+  const handleChange = (event: React.SyntheticEvent, newIndex: number) =>
+    setIndex(newIndex);
 
   return (
     <header className="header">
@@ -36,7 +26,15 @@ const AppHeader = () => {
         }}
       >
         <Tabs value={value} onChange={handleChange} variant="fullWidth">
-          {tabsList}
+          {tabs.map((tab) => (
+            <Tab
+              value={tab.index}
+              icon={tab.icon}
+              label={tab.label}
+              to={tab.link}
+              component={Link}
+            />
+          ))}
         </Tabs>
       </Box>
     </header>
