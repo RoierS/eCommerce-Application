@@ -15,6 +15,7 @@ import schemaLogin from "../../constants/schema-login";
 import { ILoginFormData } from "../../interfaces/types";
 
 const Login: React.FC = () => {
+  // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
   const {
     handleSubmit,
@@ -25,10 +26,12 @@ const Login: React.FC = () => {
     mode: "onChange",
   });
 
+  // Toggle password visibility
   const handleTogglePassword = () => {
     setShowPassword((prevState) => !prevState);
   };
 
+  // Handle form submission
   const onSubmit: SubmitHandler<ILoginFormData> = (data) => {
     // eslint-disable-next-line no-console
     console.log(data);

@@ -2,6 +2,7 @@ import * as yup from "yup";
 
 import emailValidation from "./email-validation";
 
+// Schema for validation of Login Form
 const schemaLogin = yup.object({
   email: yup
     .string()
