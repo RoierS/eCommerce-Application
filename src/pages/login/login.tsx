@@ -1,11 +1,21 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TextField, Button } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import {
+  TextField,
+  Button,
+  IconButton,
+  InputAdornment,
+  Box,
+} from "@mui/material";
+import { useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 
 import schemaLogin from "../../constants/schema-login";
 import { ILoginFormData } from "../../interfaces/types";
 
 const Login: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     handleSubmit,
     control,
@@ -14,6 +24,10 @@ const Login: React.FC = () => {
     resolver: yupResolver(schemaLogin),
     mode: "onChange",
   });
+
+  const handleTogglePassword = () => {
+    setShowPassword((prevState) => !prevState);
+  };
 
   const onSubmit: SubmitHandler<ILoginFormData> = (data) => {
     // eslint-disable-next-line no-console
@@ -24,8 +38,23 @@ const Login: React.FC = () => {
   const passwordErrorMessage = errors.password?.message;
 
   return (
-    <div className="container">
-      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      height="100vh"
+    >
+      <form
+        className="form"
+        onSubmit={handleSubmit(onSubmit)}
+        style={{
+          minWidth: "330px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+        }}
+      >
         <Controller
           name="email"
           control={control}
@@ -51,10 +80,18 @@ const Login: React.FC = () => {
             <TextField
               label="Password"
               fullWidth
+              variant="outlined"
+              type={showPassword ? "text" : "password"}
               error={!!errors.password}
               helperText={passwordErrorMessage}
-              variant="outlined"
               InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleTogglePassword}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
                 ...field,
               }}
             />
@@ -69,7 +106,7 @@ const Login: React.FC = () => {
           Login
         </Button>
       </form>
-    </div>
+    </Box>
   );
 };
 
