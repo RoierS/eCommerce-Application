@@ -29,7 +29,8 @@ const schemaLogin = yup.object({
       "noWhitespace",
       "Password must not contain leading or trailing whitespace",
       (value) => !value.includes(" ")
-    ),
+    )
+    .min(8, "Must be more than 8 characters"),
 });
 
 export default schemaLogin;
