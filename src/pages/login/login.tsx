@@ -11,12 +11,15 @@ import {
 import { useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 
+import styles from "./login.module.scss";
+
 import schemaLogin from "../../constants/schema-login";
 import { ILoginFormData } from "../../interfaces/types";
 
 const Login: React.FC = () => {
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
+
   const {
     handleSubmit,
     control,
@@ -32,32 +35,15 @@ const Login: React.FC = () => {
   };
 
   // Handle form submission
+  // TODO Integrate the login form with Commerctools
   const onSubmit: SubmitHandler<ILoginFormData> = (data) => {
     // eslint-disable-next-line no-console
     console.log(data);
   };
 
-  const emailErrorMessage = errors.email?.message;
-  const passwordErrorMessage = errors.password?.message;
-
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-    >
-      <form
-        className="form"
-        onSubmit={handleSubmit(onSubmit)}
-        style={{
-          minWidth: "330px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-        }}
-      >
+    <Box className={styles.container}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="email"
           control={control}
@@ -68,7 +54,7 @@ const Login: React.FC = () => {
               fullWidth
               error={!!errors.email}
               variant="outlined"
-              helperText={emailErrorMessage}
+              helperText={errors.email?.message}
               InputProps={{
                 ...field,
               }}
@@ -86,7 +72,7 @@ const Login: React.FC = () => {
               variant="outlined"
               type={showPassword ? "text" : "password"}
               error={!!errors.password}
-              helperText={passwordErrorMessage}
+              helperText={errors.password?.message}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

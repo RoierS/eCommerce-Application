@@ -6,9 +6,8 @@ import emailValidation from "./email-validation";
 const schemaLogin = yup.object({
   email: yup
     .string()
-    .email("Invalid email format")
     .required("This field is required")
-    .matches(emailValidation, "Enter valid email"),
+    .matches(emailValidation, "Invalid email format"),
   password: yup
     .string()
     .required("This field is required")
