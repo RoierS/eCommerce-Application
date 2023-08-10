@@ -3,11 +3,7 @@ import { TextField, Button } from "@mui/material";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 
 import schemaLogin from "../../constants/schema-login";
-
-interface ILoginFormData {
-  email: string;
-  password: string;
-}
+import { ILoginFormData } from "../../interfaces/types";
 
 const Login: React.FC = () => {
   const {
