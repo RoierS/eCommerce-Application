@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
+import PrivateRoute from "./helpers/private-router";
 import Page404 from "./pages/404/404";
 import Login from "./pages/login/login";
 import Home from "./pages/main/main";
@@ -11,9 +12,11 @@ const App = () => {
       <div className="app">
         <main className="main">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/registration" element={<Registration />} />
+            </Route>
             <Route path="/login" element={<Login />} />
-            <Route path="/registration" element={<Registration />} />
             <Route path="*" element={<Page404 />} />
           </Routes>
         </main>
