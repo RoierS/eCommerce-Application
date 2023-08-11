@@ -1,20 +1,25 @@
+import { useState } from "react";
+
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+
+import { ILoginFormData } from "@interfaces/types"; // this import is ok
+
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
-  TextField,
+  Box,
   Button,
   IconButton,
   InputAdornment,
-  Box,
+  TextField,
 } from "@mui/material";
-import { useState } from "react";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
 
+import schemaLogin from "../../constants/schema-login"; // ? when use @ alias path for this i got trying to serve
+
+// import schemaLogin from "@constants/schema-login"; ? error module not find
 import styles from "./login.module.scss";
-
-import schemaLogin from "../../constants/schema-login";
-import { ILoginFormData } from "../../interfaces/types";
 
 const Login: React.FC = () => {
   // State to toggle password visibility
