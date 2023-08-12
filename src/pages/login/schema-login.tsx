@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-import emailValidation from "./email-validation";
+import emailValidation from "../../constants/email-validation";
 
 // Schema for validation of Login Form
 const schemaLogin = yup.object({

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
-import { ILoginFormData } from "@interfaces/types"; // this import is ok
+import { ILoginFormData } from "@interfaces/login-form-data";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -16,9 +16,8 @@ import {
   TextField,
 } from "@mui/material";
 
-import schemaLogin from "../../constants/schema-login"; // ? when use @ alias path for this i got trying to serve
+import schemaLogin from "./schema-login";
 
-// import schemaLogin from "@constants/schema-login"; ? error module not find
 import styles from "./login.module.scss";
 
 const Login: React.FC = () => {
