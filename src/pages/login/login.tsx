@@ -61,6 +61,7 @@ const Login: React.FC = () => {
               helperText={errors.email?.message}
               InputProps={{
                 ...field,
+                autoComplete: "off",
               }}
             />
           )}
@@ -86,6 +87,7 @@ const Login: React.FC = () => {
                   </InputAdornment>
                 ),
                 ...field,
+                autoComplete: "off",
               }}
             />
           )}
