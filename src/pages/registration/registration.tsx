@@ -28,16 +28,30 @@ import schemaRegister from "./schema-register";
 
 import styles from "./registration.module.scss";
 
-const countries: string[] = ["Austria", "Belarus", "USA", "Poland"]; // TODO move to separate file
+// const countries: string[] = ["Austria", "Belarus", "USA", "Poland"]; // TODO move to separate file
+
+interface AutocompleteCountry {
+  label: string;
+  value: string;
+}
+
+const countries: AutocompleteCountry[] = [
+  { label: "Austria", value: "Austria" },
+  { label: "Belarus", value: "Belarus" },
+];
 
 const Registration: React.FC = () => {
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
+  const [billingChecked, setBillingChecked] = React.useState(false);
+  const [shippingChecked, setShippingChecked] = React.useState(false);
 
   const {
     handleSubmit,
     control,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<IRegisterFormData>({
     resolver: yupResolver(schemaRegister),
     mode: "onChange",
@@ -48,15 +62,11 @@ const Registration: React.FC = () => {
     setShowPassword((prevState) => !prevState);
   };
 
-  const [shippingChecked, setShippingChecked] = React.useState(false);
-
   const onShippingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShippingChecked(event.target.checked);
     // eslint-disable-next-line no-console
     console.log("checked-shipping", event.target.checked, shippingChecked);
   };
-
-  const [billingChecked, setBillingChecked] = React.useState(false);
 
   const onBillingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBillingChecked(event.target.checked);
@@ -64,14 +74,40 @@ const Registration: React.FC = () => {
     console.log("checked-billing", event.target.checked, shippingChecked);
   };
 
+  const bilingAdressUpdate = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => {
+    const newBilingAdress = {
+      street: "",
+      city: "",
+      country: "",
+      code: "",
+    };
+
+    if (checked) {
+      newBilingAdress.street = watch("shippingStreet");
+      newBilingAdress.city = watch("shippingCity");
+      newBilingAdress.country = watch("shippingCountry");
+      newBilingAdress.code = watch("shippingPostcode");
+    }
+
+    setValue("billingStreet", newBilingAdress.street);
+    setValue("billingCity", newBilingAdress.city);
+    setValue("billingCountry", newBilingAdress.country);
+    setValue("billingPostcode", newBilingAdress.code);
+  };
+
   // Handle form submission
   // TODO Integrate the login form with Commerctools
-  const onSubmit: SubmitHandler<IRegisterFormData> = (data) =>
+  const onSubmit: SubmitHandler<IRegisterFormData> = (data) => {
     // eslint-disable-next-line no-console
-    console.log("Submit", data);
+    console.log("Submit:", data);
+  };
 
   return (
     <Box sx={{ display: "flex" }} className={styles.container}>
+      {/* onSubmit={handleSubmit(onSubmit)} */}
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <Typography variant="h6" color="primary">
           Login data
@@ -160,18 +196,23 @@ const Registration: React.FC = () => {
           control={control}
           rules={{ required: true }}
           defaultValue=""
-          render={() => (
-            <DatePicker
-              label="Date of birth"
-              format="YYYY-MM-DD"
-              // TODO minDate={}
-              slotProps={{
-                textField: {
-                  required: true,
-                },
-              }}
-            />
-          )}
+          render={({ field }) => {
+            const { value, onChange } = field;
+            return (
+              <DatePicker
+                label="Date of birth"
+                format="YYYY-MM-DD"
+                value={value.toString()}
+                onChange={(newValue) => onChange(newValue)}
+                // TODO minDate={}
+                slotProps={{
+                  textField: {
+                    required: true,
+                  },
+                }}
+              />
+            );
+          }}
         />
         <Typography variant="h6" color="primary">
           Shipping address
@@ -225,27 +266,37 @@ const Registration: React.FC = () => {
           name="shippingCountry"
           control={control}
           defaultValue=""
-          render={() => (
-            <Autocomplete
-              options={countries}
-              renderOption={(props, option) => (
-                <Box component="li" {...props}>
-                  {option}
-                </Box>
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Choose a country"
-                  error={!!errors.shippingCountry}
-                  helperText={errors.shippingCountry?.message}
-                  inputProps={{
-                    ...params.inputProps,
-                  }}
-                />
-              )}
-            />
-          )}
+          render={({ field }) => {
+            const { value, onChange } = field;
+            const country = value
+              ? countries.find((opt) => value === opt.value) ?? null
+              : null;
+            return (
+              <Autocomplete
+                value={country}
+                options={countries}
+                onChange={(event, newValue) => {
+                  onChange(newValue ? newValue.value : null);
+                }}
+                renderOption={(props, option) => (
+                  <Box component="li" {...props}>
+                    {option.label}
+                  </Box>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Choose a country"
+                    error={!!errors.shippingCountry}
+                    helperText={errors.shippingCountry?.message}
+                    inputProps={{
+                      ...params.inputProps,
+                    }}
+                  />
+                )}
+              />
+            );
+          }}
         />
         <Controller
           name="shippingPostcode"
@@ -268,11 +319,8 @@ const Registration: React.FC = () => {
           Billing address
         </Typography>
         <FormControlLabel
-          control={
-            <Checkbox />
-            // checked={shippingChecked} onChange={onShippingChange}
-          }
-          label="The same as shipping address"
+          control={<Checkbox onChange={bilingAdressUpdate} />}
+          label="Copy from shipping address"
         />
         <FormControlLabel
           control={
@@ -323,27 +371,37 @@ const Registration: React.FC = () => {
           name="billingCountry"
           control={control}
           defaultValue=""
-          render={() => (
-            <Autocomplete
-              options={countries}
-              renderOption={(props, option) => (
-                <Box component="li" {...props}>
-                  {option}
-                </Box>
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Choose a country"
-                  error={!!errors.billingCountry}
-                  helperText={errors.billingCountry?.message}
-                  inputProps={{
-                    ...params.inputProps,
-                  }}
-                />
-              )}
-            />
-          )}
+          render={({ field }) => {
+            const { value, onChange } = field;
+            const country = value
+              ? countries.find((opt) => value === opt.value) ?? null
+              : null;
+            return (
+              <Autocomplete
+                value={country}
+                options={countries}
+                onChange={(event, newValue) => {
+                  onChange(newValue ? newValue.value : null);
+                }}
+                renderOption={(props, option) => (
+                  <Box component="li" {...props}>
+                    {option.label}
+                  </Box>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Choose a country"
+                    error={!!errors.billingCountry}
+                    helperText={errors.billingCountry?.message}
+                    inputProps={{
+                      ...params.inputProps,
+                    }}
+                  />
+                )}
+              />
+            );
+          }}
         />
         <Controller
           name="billingPostcode"
