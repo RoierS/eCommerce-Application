@@ -46,8 +46,12 @@ const countries: AutocompleteCountry[] = [
 const Registration: React.FC = () => {
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
-  const [billingChecked, setBillingChecked] = React.useState(false);
+
+  // State to toggle default shipping address
   const [shippingChecked, setShippingChecked] = React.useState(false);
+
+  // State to toggle default billing address
+  const [billingChecked, setBillingChecked] = React.useState(false);
 
   const {
     handleSubmit,
@@ -65,16 +69,14 @@ const Registration: React.FC = () => {
     setShowPassword((prevState) => !prevState);
   };
 
+  // TODO check default for service request
   const onShippingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShippingChecked(event.target.checked);
-    // eslint-disable-next-line no-console
-    console.log("checked-shipping", event.target.checked, shippingChecked);
   };
 
+  // TODO check default for service request
   const onBillingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBillingChecked(event.target.checked);
-    // eslint-disable-next-line no-console
-    console.log("checked-billing", event.target.checked, shippingChecked);
   };
 
   const bilingAdressUpdate = (
@@ -106,7 +108,7 @@ const Registration: React.FC = () => {
   const dataDelta = today.getTime() - minAge13;
 
   // Handle form submission
-  // TODO Integrate the login form with Commerctools
+  // TODO Integrate the registration form with Commerctools
   const onSubmit: SubmitHandler<IRegisterFormData> = (data) => {
     // eslint-disable-next-line no-console
     console.log("Submit:", data);
@@ -114,7 +116,6 @@ const Registration: React.FC = () => {
 
   return (
     <Box sx={{ display: "flex" }} className={styles.container}>
-      {/* onSubmit={handleSubmit(onSubmit)} */}
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <Typography variant="h6" color="primary">
           Login data
@@ -202,7 +203,7 @@ const Registration: React.FC = () => {
           name="birthday"
           control={control}
           rules={{ required: true }}
-          render={({ field }) => {
+          render={({ field, fieldState: { error } }) => {
             const { value, onChange } = field;
             return (
               <DatePicker
@@ -214,6 +215,7 @@ const Registration: React.FC = () => {
                 slotProps={{
                   textField: {
                     required: true,
+                    helperText: error?.message,
                   },
                 }}
               />

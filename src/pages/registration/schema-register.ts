@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 import emailValidation from "../../constants/email-validation";
 
-// Schema for validation of Login Form
+// Schema for validation of Registration Form
 const schemaRegister = yup.object({
   email: yup
     .string()
@@ -46,24 +46,14 @@ const schemaRegister = yup.object({
     ),
   birthday: yup
     .date()
+    .typeError("Date is required")
     .required("This field is required")
-    .test("date-test", (value, validationContext) => {
-      const {
-        createError,
-        parent: { billingCountry },
-      } = validationContext;
+    .test("date-test", "You must be at least 13 years old", (value) => {
       const today = new Date();
       const userDate = new Date(value);
       const dataDelta = today.getTime() - userDate.getTime();
-      const minAge = 410240038000;
-
-      console.log("dataDelta", billingCountry, dataDelta < minAge);
-
-      if (dataDelta < minAge) {
-        return createError({ message: "You must be at least 13 years old" });
-      }
-
-      return true;
+      const minAge13 = 410240038000;
+      return dataDelta >= minAge13;
     }),
   shippingStreet: yup
     .string()
