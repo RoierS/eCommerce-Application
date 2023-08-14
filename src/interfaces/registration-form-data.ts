@@ -3,7 +3,7 @@ export interface IRegisterFormData {
   password: string;
   firstName: string;
   lastName: string;
-  birthday: string;
+  birthday: Date;
   shippingStreet: string;
   shippingCity: string;
   shippingCountry: string;

@@ -4,6 +4,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import { IRegisterFormData } from "@interfaces/registration-form-data";
 
+import dayjs from "dayjs";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Favorite from "@mui/icons-material/Favorite";
@@ -22,7 +24,6 @@ import {
   Checkbox,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { DateValidationError } from "@mui/x-date-pickers/models";
 
 import schemaRegister from "./schema-register";
 
@@ -99,6 +100,10 @@ const Registration: React.FC = () => {
     setValue("billingCountry", newBilingAdress.country);
     setValue("billingPostcode", newBilingAdress.code);
   };
+
+  const today = new Date();
+  const minAge13 = 410240038000;
+  const dataDelta = today.getTime() - minAge13;
 
   // Handle form submission
   // TODO Integrate the login form with Commerctools
@@ -197,16 +202,15 @@ const Registration: React.FC = () => {
           name="birthday"
           control={control}
           rules={{ required: true }}
-          defaultValue=""
           render={({ field }) => {
             const { value, onChange } = field;
             return (
               <DatePicker
                 label="Date of birth"
                 format="YYYY-MM-DD"
-                value={value}
+                maxDate={dayjs(dataDelta)}
+                value={dayjs(value)}
                 onChange={(newValue) => onChange(newValue)}
-                // TODO minDate={}
                 slotProps={{
                   textField: {
                     required: true,

@@ -33,12 +33,38 @@ const schemaRegister = yup.object({
   firstName: yup
     .string()
     .required("This field is required")
-    .matches(/^[A-Za-z]+$/, "First name must contain only letters"),
+    .matches(
+      /^[A-Za-z]+(?:-[A-Za-z]+)*$/,
+      "First name must contain only letters (may be devided by hyphen)"
+    ),
   lastName: yup
     .string()
     .required("This field is required")
-    .matches(/^[A-Za-z]+$/, "Last name must contain only letters"),
-  birthday: yup.string().required("This field is required"),
+    .matches(
+      /^[A-Za-z]+(?:-[A-Za-z]+)*$/,
+      "Last name must contain only letters (may be devided by hyphen)"
+    ),
+  birthday: yup
+    .date()
+    .required("This field is required")
+    .test("date-test", (value, validationContext) => {
+      const {
+        createError,
+        parent: { billingCountry },
+      } = validationContext;
+      const today = new Date();
+      const userDate = new Date(value);
+      const dataDelta = today.getTime() - userDate.getTime();
+      const minAge = 410240038000;
+
+      console.log("dataDelta", billingCountry, dataDelta < minAge);
+
+      if (dataDelta < minAge) {
+        return createError({ message: "You must be at least 13 years old" });
+      }
+
+      return true;
+    }),
   shippingStreet: yup
     .string()
     .required("This field is required")
@@ -47,7 +73,10 @@ const schemaRegister = yup.object({
     .string()
     .required("This field is required")
     .min(1, "Must contain at least one character")
-    .matches(/^[A-Za-z]+$/, "City must contain only letters"),
+    .matches(
+      /^[A-Za-z]+(?:-[A-Za-z]+)*$/,
+      "City must contain only letters (may be devided by hyphen)"
+    ),
   shippingCountry: yup.string().required("This field is required"),
   shippingPostcode: yup
     .string()
@@ -89,7 +118,7 @@ const schemaRegister = yup.object({
     .string()
     .required("This field is required")
     .min(1, "Must contain at least one character")
-    .matches(/^[A-Za-z]+$/, "City must contain only letters"),
+    .matches(/^[A-Za-z]+(?:-[A-Za-z]+)*$/, "City must contain only letters"),
   billingCountry: yup.string().required("This field is required"),
   billingPostcode: yup
     .string()
