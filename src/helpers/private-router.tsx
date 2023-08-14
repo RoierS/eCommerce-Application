@@ -6,7 +6,7 @@ const checkToken = () => {
    * const accessToken = localStorage.getItem('access_token');
    *   return !!accessToken;
    */
-  return false;
+  return true;
 };
 
 const PrivateRoute = () => {
