@@ -6,6 +6,9 @@ import Login from "./pages/login/login";
 import Home from "./pages/main/main";
 import Registration from "./pages/registration/registration";
 
+import "./app.scss";
+import "./index.scss";
+
 const App = () => {
   return (
     <Router>

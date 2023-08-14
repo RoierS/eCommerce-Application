@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 
 const checkAuthorization = () => {
@@ -7,7 +8,7 @@ const checkAuthorization = () => {
    * const accessToken = localStorage.getItem('access_token');
    *   return !!accessToken;
    */
-  return false;
+  return true;
 };
 
 const PrivateRoute = () => {
