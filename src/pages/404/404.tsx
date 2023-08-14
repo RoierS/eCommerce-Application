@@ -1,9 +1,8 @@
+import { ReactComponent as ErrorImage } from "@assets/images/404/404.svg";
 import { Link } from "react-router-dom";
 
 import CottageTwoToneIcon from "@mui/icons-material/CottageTwoTone";
 import Button from "@mui/material/Button";
-
-import { ReactComponent as ErrorImage } from "../../assets/images/404/404.svg";
 
 import styles from "./404.module.scss";
 
