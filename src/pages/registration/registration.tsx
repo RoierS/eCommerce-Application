@@ -38,6 +38,8 @@ interface AutocompleteCountry {
 const countries: AutocompleteCountry[] = [
   { label: "Austria", value: "Austria" },
   { label: "Belarus", value: "Belarus" },
+  { label: "Poland", value: "Poland" },
+  { label: "USA", value: "USA" },
 ];
 
 const Registration: React.FC = () => {
@@ -202,7 +204,7 @@ const Registration: React.FC = () => {
               <DatePicker
                 label="Date of birth"
                 format="YYYY-MM-DD"
-                value={value.toString()}
+                value={value}
                 onChange={(newValue) => onChange(newValue)}
                 // TODO minDate={}
                 slotProps={{
@@ -291,6 +293,7 @@ const Registration: React.FC = () => {
                     helperText={errors.shippingCountry?.message}
                     inputProps={{
                       ...params.inputProps,
+                      autoComplete: "new-password",
                     }}
                   />
                 )}
@@ -396,6 +399,7 @@ const Registration: React.FC = () => {
                     helperText={errors.billingCountry?.message}
                     inputProps={{
                       ...params.inputProps,
+                      autoComplete: "new-password",
                     }}
                   />
                 )}

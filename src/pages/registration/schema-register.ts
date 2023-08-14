@@ -49,7 +49,38 @@ const schemaRegister = yup.object({
     .min(1, "Must contain at least one character")
     .matches(/^[A-Za-z]+$/, "City must contain only letters"),
   shippingCountry: yup.string().required("This field is required"),
-  shippingPostcode: yup.string().required("This field is required"),
+  shippingPostcode: yup
+    .string()
+    .required("This field is required")
+    .test("postcode-test", (value, validationContext) => {
+      const {
+        createError,
+        parent: { shippingCountry },
+      } = validationContext;
+
+      if (shippingCountry === "Austria" && !value.match(/^[0-9]{4,4}$/)) {
+        return createError({ message: "Postcode must contain 4 digits" });
+      }
+
+      if (shippingCountry === "Belarus" && !value.match(/^[0-9]{6,6}$/)) {
+        return createError({ message: "Postcode must contain 6 digits" });
+      }
+
+      if (
+        shippingCountry === "Poland" &&
+        !value.match(/^([0-9]{2,2})-([0-9]{3,3})$/)
+      ) {
+        return createError({
+          message: "Postcode must contain only digits in format xx-xxx",
+        });
+      }
+
+      if (shippingCountry === "USA" && !value.match(/^[0-9]{5,5}$/)) {
+        return createError({ message: "Postcode must contain 5 digits" });
+      }
+
+      return true;
+    }),
   billingStreet: yup
     .string()
     .required("This field is required")
@@ -60,7 +91,38 @@ const schemaRegister = yup.object({
     .min(1, "Must contain at least one character")
     .matches(/^[A-Za-z]+$/, "City must contain only letters"),
   billingCountry: yup.string().required("This field is required"),
-  billingPostcode: yup.string().required("This field is required"),
+  billingPostcode: yup
+    .string()
+    .required("This field is required")
+    .test("postcode-test", (value, validationContext) => {
+      const {
+        createError,
+        parent: { billingCountry },
+      } = validationContext;
+
+      if (billingCountry === "Austria" && !value.match(/^[0-9]{4,4}$/)) {
+        return createError({ message: "Postcode must contain 4 digits" });
+      }
+
+      if (billingCountry === "Belarus" && !value.match(/^[0-9]{6,6}$/)) {
+        return createError({ message: "Postcode must contain 6 digits" });
+      }
+
+      if (
+        billingCountry === "Poland" &&
+        !value.match(/^([0-9]{2,2})-([0-9]{3,3})$/)
+      ) {
+        return createError({
+          message: "Postcode must contain only digits in format xx-xxx",
+        });
+      }
+
+      if (billingCountry === "USA" && !value.match(/^[0-9]{5,5}$/)) {
+        return createError({ message: "Postcode must contain 5 digits" });
+      }
+
+      return true;
+    }),
 });
 
 export default schemaRegister;
