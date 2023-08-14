@@ -1,25 +1,15 @@
-import { useEffect, useState } from "react";
+import { Outlet, Navigate } from "react-router-dom";
 
-import { Outlet, Navigate, useLocation } from "react-router-dom";
-
-const checkAuthorization = () => {
+const checkToken = () => {
   /**
    * TODO logic
    * const accessToken = localStorage.getItem('access_token');
    *   return !!accessToken;
    */
-  return true;
+  return false;
 };
 
 const PrivateRoute = () => {
-  const path = useLocation();
-
-  const [isAuthorization, setIsAuthorization] = useState(true);
-
-  useEffect(() => {
-    setIsAuthorization(checkAuthorization());
-  }, [path]);
-
-  return isAuthorization ? <Outlet /> : <Navigate to="/login" />;
+  return checkToken() ? <Outlet /> : <Navigate to="/login" />;
 };
 export default PrivateRoute;
