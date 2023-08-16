@@ -60,14 +60,12 @@ const Registration: React.FC = () => {
   const handleTogglePassword = () => setShowPassword((prevState) => !prevState);
 
   // TODO check default for service request
-  const onShippingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onShippingChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setShippingChecked(event.target.checked);
-  };
 
   // TODO check default for service request
-  const onBillingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onBillingChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setBillingChecked(event.target.checked);
-  };
 
   const bilingAdressUpdate = (
     event: React.ChangeEvent<HTMLInputElement>,
