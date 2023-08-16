@@ -25,23 +25,15 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
+import countries from "./countries";
+
 import schemaRegister from "./schema-register";
 
 import styles from "./registration.module.scss";
 
-// const countries: string[] = ["Austria", "Belarus", "USA", "Poland"]; // TODO move to separate file
-
-interface AutocompleteCountry {
-  label: string;
-  value: string;
-}
-
-const countries: AutocompleteCountry[] = [
-  { label: "Austria", value: "Austria" },
-  { label: "Belarus", value: "Belarus" },
-  { label: "Poland", value: "Poland" },
-  { label: "USA", value: "USA" },
-];
+const today = new Date();
+const minAge13 = 410240038000;
+const dataDelta = today.getTime() - minAge13;
 
 const Registration: React.FC = () => {
   // State to toggle password visibility
@@ -65,9 +57,7 @@ const Registration: React.FC = () => {
   });
 
   // Toggle password visibility
-  const handleTogglePassword = () => {
-    setShowPassword((prevState) => !prevState);
-  };
+  const handleTogglePassword = () => setShowPassword((prevState) => !prevState);
 
   // TODO check default for service request
   const onShippingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,10 +92,6 @@ const Registration: React.FC = () => {
     setValue("billingCountry", newBilingAdress.country);
     setValue("billingPostcode", newBilingAdress.code);
   };
-
-  const today = new Date();
-  const minAge13 = 410240038000;
-  const dataDelta = today.getTime() - minAge13;
 
   // Handle form submission
   // TODO Integrate the registration form with Commerctools

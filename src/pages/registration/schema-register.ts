@@ -1,6 +1,5 @@
+import emailValidation from "@constants/email-validation";
 import * as yup from "yup";
-
-import emailValidation from "../../constants/email-validation";
 
 // Schema for validation of Registration Form
 const schemaRegister = yup.object({
@@ -77,16 +76,16 @@ const schemaRegister = yup.object({
         parent: { shippingCountry },
       } = validationContext;
 
-      if (shippingCountry === "Austria" && !value.match(/^[0-9]{4,4}$/)) {
+      if (shippingCountry === "AT" && !value.match(/^[0-9]{4,4}$/)) {
         return createError({ message: "Postcode must contain 4 digits" });
       }
 
-      if (shippingCountry === "Belarus" && !value.match(/^[0-9]{6,6}$/)) {
+      if (shippingCountry === "BY" && !value.match(/^[0-9]{6,6}$/)) {
         return createError({ message: "Postcode must contain 6 digits" });
       }
 
       if (
-        shippingCountry === "Poland" &&
+        shippingCountry === "PL" &&
         !value.match(/^([0-9]{2,2})-([0-9]{3,3})$/)
       ) {
         return createError({
@@ -94,7 +93,7 @@ const schemaRegister = yup.object({
         });
       }
 
-      if (shippingCountry === "USA" && !value.match(/^[0-9]{5,5}$/)) {
+      if (shippingCountry === "US" && !value.match(/^[0-9]{5,5}$/)) {
         return createError({ message: "Postcode must contain 5 digits" });
       }
 
