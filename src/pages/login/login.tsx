@@ -1,9 +1,12 @@
+/* eslint-disable no-console */
 import React, { useState } from "react";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import AppHeader from "@components/header/header";
 import { ILoginFormData } from "@interfaces/login-form-data";
+
+import obtainAccessToken from "@services/commerce-tools-service";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -41,9 +44,15 @@ const Login: React.FC = () => {
 
   // Handle form submission
   // TODO Integrate the login form with Commerctools
-  const onSubmit: SubmitHandler<ILoginFormData> = (data) => {
-    // eslint-disable-next-line no-console
-    console.log(data);
+  const onSubmit: SubmitHandler<ILoginFormData> = async (data) => {
+    try {
+      const { email, password } = data;
+      const accessToken = await obtainAccessToken(email, password);
+
+      console.log(accessToken);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
