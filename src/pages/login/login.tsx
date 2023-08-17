@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+// to test login use this data: email: test@example.com; password: S!secret12
 import React, { useState } from "react";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -6,7 +7,10 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import AppHeader from "@components/header/header";
 import { ILoginFormData } from "@interfaces/login-form-data";
 
-import obtainAccessToken from "@services/commerce-tools-service";
+import {
+  obtainAccessToken,
+  loginCustomer,
+} from "@services/commerce-tools-service";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -43,14 +47,21 @@ const Login: React.FC = () => {
   };
 
   // Handle form submission
-  // TODO Integrate the login form with Commerctools
   const onSubmit: SubmitHandler<ILoginFormData> = async (data) => {
     try {
       const { email, password } = data;
-      const accessToken = await obtainAccessToken(email, password);
+      const tokenObject = await obtainAccessToken(email, password);
 
-      console.log(accessToken);
+      const customerInfo = await loginCustomer(
+        tokenObject.access_token,
+        email,
+        password
+      );
+
+      console.log(tokenObject);
+      console.log("Customer logged in successfully", customerInfo);
     } catch (error) {
+      // TODO: Error handling
       console.log(error);
     }
   };
