@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-// to test login use this data: email: test@example.com; password: S!secret123
 import React, { useState } from "react";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";

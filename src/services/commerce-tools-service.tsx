@@ -5,12 +5,11 @@ import { ITokenResponse } from "@interfaces/token-response";
 
 //  Obtain an access token from the CommerceTools
 export const obtainAccessToken = async (email: string, password: string) => {
-  const authHost = "https://auth.europe-west1.gcp.commercetools.com";
+  const authHost = process.env.REACT_APP_AUTH_HOST;
 
   // Note: clientId, clientSecret taken from "API The Reactonauts" not from "E-commerce App API"
-  const clientId = "wsbcBGYjiagoo5MZPbXjlNCR";
-  const clientSecret = "ua-_OJmI0bCJmCYRmuR_L5torJqfmZ8S";
-
+  const clientId = process.env.REACT_APP_CLIENT_ID;
+  const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
   const basicAuth = btoa(`${clientId}:${clientSecret}`);
   const headers = {
     Authorization: `Basic ${basicAuth}`,
@@ -37,8 +36,8 @@ export const loginCustomer = async (
   email: string,
   password: string
 ): Promise<ICustomerLoginResponse> => {
-  const apiHost = "https://api.europe-west1.gcp.commercetools.com";
-  const projectKey = "ecommerce-app-final-task";
+  const apiHost = process.env.REACT_APP_API_HOST;
+  const projectKey = process.env.REACT_APP_PROJECT_KEY;
 
   const headers = {
     "Content-Type": "application/json",
