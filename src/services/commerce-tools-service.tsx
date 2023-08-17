@@ -6,6 +6,8 @@ import { ITokenResponse } from "@interfaces/token-response";
 //  Obtain an access token from the CommerceTools
 export const obtainAccessToken = async (email: string, password: string) => {
   const authHost = "https://auth.europe-west1.gcp.commercetools.com";
+
+  // Note: clientId, clientSecret taken from "API The Reactonauts" not from "E-commerce App API"
   const clientId = "wsbcBGYjiagoo5MZPbXjlNCR";
   const clientSecret = "ua-_OJmI0bCJmCYRmuR_L5torJqfmZ8S";
 
