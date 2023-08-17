@@ -6,6 +6,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import AppHeader from "@components/header/header";
 import { ILoginFormData } from "@interfaces/login-form-data";
 
+import { ITokenResponse } from "@interfaces/token-response";
 import {
   obtainAccessToken,
   loginCustomer,
@@ -49,7 +50,15 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<ILoginFormData> = async (data) => {
     try {
       const { email, password } = data;
-      const tokenObject = await obtainAccessToken(email, password);
+      const tokenObjectStr = localStorage.getItem("tokenObject");
+      let tokenObject: ITokenResponse | null = null;
+
+      if (tokenObjectStr) {
+        tokenObject = JSON.parse(tokenObjectStr) as ITokenResponse;
+      } else {
+        tokenObject = await obtainAccessToken(email, password);
+        localStorage.setItem("tokenObject", JSON.stringify(tokenObject));
+      }
 
       const customerInfo = await loginCustomer(
         tokenObject.access_token,

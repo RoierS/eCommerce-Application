@@ -5,11 +5,11 @@ import { ITokenResponse } from "@interfaces/token-response";
 
 //  Obtain an access token from the CommerceTools
 export const obtainAccessToken = async (email: string, password: string) => {
-  const authHost = process.env.REACT_APP_AUTH_HOST;
-
   // Note: clientId, clientSecret taken from "API The Reactonauts" not from "E-commerce App API"
+  const authHost = process.env.REACT_APP_AUTH_HOST;
   const clientId = process.env.REACT_APP_CLIENT_ID;
   const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
+
   const basicAuth = btoa(`${clientId}:${clientSecret}`);
   const headers = {
     Authorization: `Basic ${basicAuth}`,
@@ -21,13 +21,21 @@ export const obtainAccessToken = async (email: string, password: string) => {
   data.append("username", email);
   data.append("password", password);
 
-  const response: AxiosResponse<ITokenResponse> = await axios.post(
-    `${authHost}/oauth/ecommerce-app-final-task/customers/token`,
-    data.toString(),
-    { headers }
-  );
+  try {
+    const response: AxiosResponse<ITokenResponse> = await axios.post(
+      `${authHost}/oauth/ecommerce-app-final-task/customers/token`,
+      data.toString(),
+      { headers }
+    );
 
-  return response.data;
+    localStorage.setItem("tokenObject", JSON.stringify(response.data));
+
+    return response.data;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    throw error;
+  }
 };
 
 // Login customer using access token
