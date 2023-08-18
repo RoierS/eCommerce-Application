@@ -11,6 +11,7 @@ import {
   obtainAccessToken,
   loginCustomer,
 } from "@services/commerce-tools-service";
+import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -29,6 +30,8 @@ import schemaLogin from "./schema-login";
 import styles from "./login.module.scss";
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
 
@@ -68,6 +71,8 @@ const Login: React.FC = () => {
 
       console.log(tokenObject);
       console.log("Customer logged in successfully", customerInfo);
+
+      navigate("/");
     } catch (error) {
       // TODO: Error handling
       console.log(error);
