@@ -2,8 +2,18 @@ import React, { useState } from "react";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
-import { IRegisterFormData } from "@interfaces/registration-form-data";
+import {
+  IRegisterFormData,
+  IRegistrateData,
+  IBaseAddress,
+} from "@interfaces/registration-form-data";
+import { ITokenResponse } from "@interfaces/token-response";
 
+import {
+  getAccessToken,
+  registrateCustomer,
+} from "@services/registration-service";
+import axios from "axios";
 import dayjs from "dayjs";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -59,11 +69,9 @@ const Registration: React.FC = () => {
   // Toggle password visibility
   const handleTogglePassword = () => setShowPassword((prevState) => !prevState);
 
-  // TODO check default for service request
   const onShippingChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setShippingChecked(event.target.checked);
 
-  // TODO check default for service request
   const onBillingChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setBillingChecked(event.target.checked);
 
@@ -91,11 +99,83 @@ const Registration: React.FC = () => {
     setValue("billingPostcode", newBilingAdress.code);
   };
 
+  const convertFormDataToRegistrateData = (
+    data: IRegisterFormData
+  ): IRegistrateData => {
+    const bilingAdress: IBaseAddress = {
+      country: data.billingCountry,
+      streetName: data.billingStreet,
+      postalCode: data.billingPostcode,
+      city: data.billingCity,
+    };
+    const shippingAdress: IBaseAddress = {
+      country: data.shippingCountry,
+      streetName: data.shippingStreet,
+      postalCode: data.shippingPostcode,
+      city: data.shippingCity,
+    };
+    const user: IRegistrateData = {
+      email: data.email,
+      password: data.password,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      dateOfBirth: dayjs(data.birthday).format("YYYY-MM-DD"),
+      addresses: [bilingAdress, shippingAdress],
+      billingAddresses: [0],
+      shippingAddresses: [1],
+    };
+
+    if (billingChecked) {
+      user.defaultBillingAddress = 0;
+    }
+
+    if (shippingChecked) {
+      user.defaultShippingAddress = 1;
+    }
+
+    return user;
+  };
+
+  // TODO create login function (copy from login page)
+
   // Handle form submission
-  // TODO Integrate the registration form with Commerctools
-  const onSubmit: SubmitHandler<IRegisterFormData> = (data) => {
+  const onSubmit: SubmitHandler<IRegisterFormData> = async (data) => {
     // eslint-disable-next-line no-console
     console.log("Submit:", data);
+
+    const tokenObjectStr = localStorage.getItem("tokenObject");
+    let tokenObject: ITokenResponse | null = null;
+
+    if (tokenObjectStr) {
+      tokenObject = JSON.parse(tokenObjectStr) as ITokenResponse;
+    } else {
+      tokenObject = await getAccessToken();
+      localStorage.setItem("tokenObject", JSON.stringify(tokenObject));
+    }
+
+    const user = convertFormDataToRegistrateData(data);
+    let resultUser;
+    try {
+      resultUser = await registrateCustomer(tokenObject.access_token, user);
+    } catch (error) {
+      // Handle error messages from response
+      if (axios.isAxiosError(error)) {
+        const { response } = error;
+        if (response?.data.errors) {
+          const errorMessage = response.data.message;
+
+          // TODO SHOW MODAL
+          console.log("Error:", errorMessage);
+        } else {
+          console.log("Error:", error.message);
+        }
+      } else {
+        console.log("Error:", error);
+      }
+    }
+
+    console.log("Customer registrated successfully", resultUser);
+    // TODO redirect to home
   };
 
   return (
@@ -423,6 +503,7 @@ const Registration: React.FC = () => {
           Submit
         </Button>
       </form>
+      {/* TODO Link to login page */}
     </Box>
   );
 };
