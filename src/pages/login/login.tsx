@@ -3,6 +3,8 @@ import React, { useState } from "react";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
+import axios from "axios";
+
 import AppHeader from "@components/header/header";
 import { ILoginFormData } from "@interfaces/login-form-data";
 
@@ -39,6 +41,7 @@ const Login: React.FC = () => {
     handleSubmit,
     control,
     formState: { errors },
+    setError,
   } = useForm<ILoginFormData>({
     resolver: yupResolver(schemaLogin),
     mode: "onChange",
@@ -74,8 +77,20 @@ const Login: React.FC = () => {
 
       navigate("/");
     } catch (error) {
-      // TODO: Error handling
-      console.log(error);
+      // Handle error messages from response
+      if (axios.isAxiosError(error)) {
+        const { response } = error;
+        if (response?.data.errors) {
+          const errorMessage = response.data.message;
+
+          setError("email", { type: "manual", message: errorMessage });
+          setError("password", { type: "manual", message: errorMessage });
+        } else {
+          console.log("Error:", error.message);
+        }
+      } else {
+        console.log("Error:", error);
+      }
     }
   };
 

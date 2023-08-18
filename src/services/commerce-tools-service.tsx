@@ -21,21 +21,15 @@ export const obtainAccessToken = async (email: string, password: string) => {
   data.append("username", email);
   data.append("password", password);
 
-  try {
-    const response: AxiosResponse<ITokenResponse> = await axios.post(
-      `${authHost}/oauth/ecommerce-app-final-task/customers/token`,
-      data.toString(),
-      { headers }
-    );
+  const response: AxiosResponse<ITokenResponse> = await axios.post(
+    `${authHost}/oauth/ecommerce-app-final-task/customers/token`,
+    data.toString(),
+    { headers }
+  );
 
-    localStorage.setItem("tokenObject", JSON.stringify(response.data));
+  localStorage.setItem("tokenObject", JSON.stringify(response.data));
 
-    return response.data;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-    throw error;
-  }
+  return response.data;
 };
 
 // Login customer using access token
@@ -57,18 +51,11 @@ export const loginCustomer = async (
     password,
   };
 
-  try {
-    const response = await axios.post<ICustomerLoginResponse>(
-      `${apiHost}/${projectKey}/me/login`,
-      data,
-      { headers }
-    );
+  const response = await axios.post<ICustomerLoginResponse>(
+    `${apiHost}/${projectKey}/me/login`,
+    data,
+    { headers }
+  );
 
-    return response.data;
-  } catch (error) {
-    // TODO: Error handling
-    // eslint-disable-next-line no-console
-    console.error("Error while logging in:", error);
-    throw error;
-  }
+  return response.data;
 };
