@@ -21,6 +21,11 @@ const AppHeader = () => {
   const handleChange = (event: React.SyntheticEvent, newIndex: number) =>
     setIndex(newIndex);
 
+  const token = localStorage.getItem("tokenObject");
+  const filteredTabs = token
+    ? tabs.filter((tab) => tab.key !== "login" && tab.key !== "registration")
+    : tabs.filter((tab) => tab.key !== "logout");
+
   return (
     <header className="header">
       <Box
@@ -30,10 +35,10 @@ const AppHeader = () => {
         }}
       >
         <Tabs value={index} onChange={handleChange} variant="fullWidth">
-          {tabs.map((tab) => (
+          {filteredTabs.map((tab) => (
             <Tab
               value={tab.index}
-              key={tab.index}
+              key={tab.key}
               icon={tab.icon}
               label={tab.label}
               to={tab.link}

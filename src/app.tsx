@@ -5,6 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import Page404 from "./pages/404/404";
 import Login from "./pages/login/login";
+import Logout from "./pages/logout/logout";
 import Home from "./pages/main/main";
 import PrivateRoute from "./pages/private-router/private-router";
 import Registration from "./pages/registration/registration";
@@ -24,6 +25,7 @@ const App = () => {
               </Route>
               <Route path="/registration" element={<Registration />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<Logout />} />
               <Route path="*" element={<Page404 />} />
             </Routes>
           </main>
