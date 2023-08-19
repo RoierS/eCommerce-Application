@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-import PrivateRoute from "./helpers/private-router";
 import Page404 from "./pages/404/404";
 import Login from "./pages/login/login";
 import Home from "./pages/main/main";
+import PrivateRoute from "./pages/private-router/private-router";
 import Registration from "./pages/registration/registration";
 
 import "./app.scss";
