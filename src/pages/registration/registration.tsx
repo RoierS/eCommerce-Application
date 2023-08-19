@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
+import axios from "axios";
+
 import {
   IRegisterFormData,
   IRegistrateData,
@@ -13,7 +15,6 @@ import {
   getAccessToken,
   registrateCustomer,
 } from "@services/registration-service";
-import axios from "axios";
 import dayjs from "dayjs";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -32,6 +33,7 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  Modal,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
@@ -44,6 +46,25 @@ import styles from "./registration.module.scss";
 const today = new Date();
 const minAge13 = 410240038000;
 const dataDelta = today.getTime() - minAge13;
+const style = {
+  position: "absolute" as const,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 390,
+  bgcolor: "background.paper",
+  border: "1.5px solid #2196f3",
+  borderRadius: 5,
+  boxShadow: 24,
+  font: "Roboto",
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
+const enum ModalType {
+  INFO,
+  ERROR,
+}
 
 const Registration: React.FC = () => {
   // State to toggle password visibility
@@ -54,6 +75,11 @@ const Registration: React.FC = () => {
 
   // State to toggle default billing address
   const [billingChecked, setBillingChecked] = React.useState(false);
+
+  // States for modal popup
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [modalMessage, setModalMessage] = React.useState("");
+  const [modalType, setModalType] = React.useState(ModalType.INFO);
 
   const {
     handleSubmit,
@@ -136,7 +162,22 @@ const Registration: React.FC = () => {
     return user;
   };
 
-  // TODO create login function (copy from login page)
+  const showPopup = (type: ModalType, message: string) => {
+    setModalType(type);
+    setModalMessage(message);
+    setModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+    if (modalType === ModalType.INFO) {
+      // todo login
+    }
+  };
+
+  // TODO create login function
+  // const login = (data: { email: string, pass: string }) => {
+  // };
 
   // Handle form submission
   const onSubmit: SubmitHandler<IRegisterFormData> = async (data) => {
@@ -154,28 +195,27 @@ const Registration: React.FC = () => {
     }
 
     const user = convertFormDataToRegistrateData(data);
-    let resultUser;
+
     try {
-      resultUser = await registrateCustomer(tokenObject.access_token, user);
+      await registrateCustomer(tokenObject.access_token, user);
     } catch (error) {
       // Handle error messages from response
       if (axios.isAxiosError(error)) {
         const { response } = error;
-        if (response?.data.errors) {
-          const errorMessage = response.data.message;
 
-          // TODO SHOW MODAL
-          console.log("Error:", errorMessage);
-        } else {
-          console.log("Error:", error.message);
+        console.log("Error:", error.message);
+
+        if (response?.data.errors) {
+          showPopup(ModalType.ERROR, response.data.message);
+          return;
         }
       } else {
         console.log("Error:", error);
       }
     }
 
-    console.log("Customer registrated successfully", resultUser);
-    // TODO redirect to home
+    // todo save email & password
+    showPopup(ModalType.INFO, "You are registrated successfully");
   };
 
   return (
@@ -504,6 +544,16 @@ const Registration: React.FC = () => {
         </Button>
       </form>
       {/* TODO Link to login page */}
+      <Modal
+        open={modalOpen}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 400 }}>
+          <h2 id="parent-modal-title">{modalMessage}</h2>
+        </Box>
+      </Modal>
     </Box>
   );
 };
