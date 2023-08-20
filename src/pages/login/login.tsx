@@ -8,9 +8,9 @@ import axios from "axios";
 import AppHeader from "@components/header/header";
 import { ILoginFormData } from "@interfaces/login-form-data";
 
-import { ITokenResponse } from "@interfaces/token-response";
+// import { ITokenResponse } from "@interfaces/token-response";
 import {
-  obtainAccessToken,
+  obtainAccessTokenPassFlow,
   loginCustomer,
 } from "@services/commerce-tools-service";
 import { useNavigate } from "react-router-dom";
@@ -55,27 +55,21 @@ const Login: React.FC = () => {
   // Handle form submission
   const onSubmit: SubmitHandler<ILoginFormData> = async (data) => {
     try {
-      const { email, password } = data;
-      const tokenObjectStr = localStorage.getItem("tokenObject");
-      let tokenObject: ITokenResponse | null = null;
-
-      if (tokenObjectStr) {
-        tokenObject = JSON.parse(tokenObjectStr) as ITokenResponse;
-      } else {
-        tokenObject = await obtainAccessToken(email, password);
-        localStorage.setItem("tokenObject", JSON.stringify(tokenObject));
-      }
+      const tokenObject = await obtainAccessTokenPassFlow(
+        data.email,
+        data.password
+      );
+      localStorage.setItem("tokenObject", JSON.stringify(tokenObject));
 
       const customerInfo = await loginCustomer(
         tokenObject.access_token,
-        email,
-        password
+        data.email,
+        data.password
       );
 
-      console.log(tokenObject);
       console.log("Customer logged in successfully", customerInfo);
 
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       // Handle error messages from response
       if (axios.isAxiosError(error)) {

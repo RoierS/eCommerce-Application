@@ -4,7 +4,10 @@ import { ICustomerLoginResponse } from "@interfaces/login-response";
 import { ITokenResponse } from "@interfaces/token-response";
 
 //  Obtain an access token from the CommerceTools
-export const obtainAccessToken = async (email: string, password: string) => {
+export const obtainAccessTokenPassFlow = async (
+  email: string,
+  password: string
+) => {
   // Note: clientId, clientSecret taken from "API The Reactonauts" not from "E-commerce App API"
   const authHost = process.env.REACT_APP_AUTH_HOST;
   const clientId = process.env.REACT_APP_CLIENT_ID;
