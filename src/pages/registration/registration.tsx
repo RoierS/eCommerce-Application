@@ -18,8 +18,7 @@ import {
   getTokenAndRegistrate,
 } from "@services/authentication-service";
 import dayjs from "dayjs";
-
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -563,7 +562,12 @@ const Registration: React.FC = () => {
             Submit
           </Button>
         </form>
-        {/* TODO Link to login page */}
+        <Typography variant="h6">
+          Already have an account?{" "}
+          <Link className={styles.link} to="/login">
+            Log in
+          </Link>
+        </Typography>
         <Modal open={modalOpen} onClose={handleClose}>
           <Box
             sx={{
