@@ -122,6 +122,8 @@ const Registration: React.FC = () => {
     checked: boolean
   ) => {
     setOneAddressChecked(event.target.checked);
+    setDisabled(checked);
+
     const newBilingAdress = {
       street: "",
       city: "",
@@ -129,14 +131,11 @@ const Registration: React.FC = () => {
       code: "",
     };
 
-    setDisabled(false);
-
     if (checked) {
       newBilingAdress.street = watch("shippingStreet");
       newBilingAdress.city = watch("shippingCity");
       newBilingAdress.country = watch("shippingCountry");
       newBilingAdress.code = watch("shippingPostcode");
-      setDisabled(true);
     }
 
     setValue("billingStreet", newBilingAdress.street);
@@ -484,98 +483,106 @@ const Registration: React.FC = () => {
             }
             label="Make default billing address"
           />
-          <Controller
-            name="billingStreet"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                disabled={disabled}
-                label="Street"
-                fullWidth
-                error={!!errors.billingStreet}
-                variant="outlined"
-                helperText={errors.billingStreet?.message}
-                InputProps={{
-                  ...field,
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="billingCity"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                disabled={disabled}
-                label="City"
-                fullWidth
-                error={!!errors.billingCity}
-                variant="outlined"
-                helperText={errors.billingCity?.message}
-                InputProps={{
-                  ...field,
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="billingCountry"
-            control={control}
-            defaultValue=""
-            render={({ field }) => {
-              const { value, onChange } = field;
-              const country = value
-                ? countries.find((opt) => value === opt.value) ?? null
-                : null;
-              return (
-                <Autocomplete
+          {!disabled && (
+            <Controller
+              name="billingStreet"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
                   disabled={disabled}
-                  value={country}
-                  options={countries}
-                  onChange={(event, newValue) => {
-                    onChange(newValue ? newValue.value : null);
+                  label="Street"
+                  fullWidth
+                  error={!!errors.billingStreet}
+                  variant="outlined"
+                  helperText={errors.billingStreet?.message}
+                  InputProps={{
+                    ...field,
                   }}
-                  renderOption={(props, option) => (
-                    <Box component="li" {...props}>
-                      {option.label}
-                    </Box>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Choose a country"
-                      error={!!errors.billingCountry}
-                      helperText={errors.billingCountry?.message}
-                      inputProps={{
-                        ...params.inputProps,
-                        autoComplete: "new-password",
-                      }}
-                    />
-                  )}
                 />
-              );
-            }}
-          />
-          <Controller
-            name="billingPostcode"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                disabled={disabled}
-                label="Postal code"
-                fullWidth
-                error={!!errors.billingPostcode}
-                variant="outlined"
-                helperText={errors.billingPostcode?.message}
-                InputProps={{
-                  ...field,
-                }}
-              />
-            )}
-          />
+              )}
+            />
+          )}
+          {!disabled && (
+            <Controller
+              name="billingCity"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  disabled={disabled}
+                  label="City"
+                  fullWidth
+                  error={!!errors.billingCity}
+                  variant="outlined"
+                  helperText={errors.billingCity?.message}
+                  InputProps={{
+                    ...field,
+                  }}
+                />
+              )}
+            />
+          )}
+          {!disabled && (
+            <Controller
+              name="billingCountry"
+              control={control}
+              defaultValue=""
+              render={({ field }) => {
+                const { value, onChange } = field;
+                const country = value
+                  ? countries.find((opt) => value === opt.value) ?? null
+                  : null;
+                return (
+                  <Autocomplete
+                    disabled={disabled}
+                    value={country}
+                    options={countries}
+                    onChange={(event, newValue) => {
+                      onChange(newValue ? newValue.value : null);
+                    }}
+                    renderOption={(props, option) => (
+                      <Box component="li" {...props}>
+                        {option.label}
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Choose a country"
+                        error={!!errors.billingCountry}
+                        helperText={errors.billingCountry?.message}
+                        inputProps={{
+                          ...params.inputProps,
+                          autoComplete: "new-password",
+                        }}
+                      />
+                    )}
+                  />
+                );
+              }}
+            />
+          )}
+          {!disabled && (
+            <Controller
+              name="billingPostcode"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  disabled={disabled}
+                  label="Postal code"
+                  fullWidth
+                  error={!!errors.billingPostcode}
+                  variant="outlined"
+                  helperText={errors.billingPostcode?.message}
+                  InputProps={{
+                    ...field,
+                  }}
+                />
+              )}
+            />
+          )}
           <Button
             className="button"
             type="submit"
