@@ -6,13 +6,11 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 
 import AppHeader from "@components/header/header";
+import ModalType from "@constants/modal-type";
 
+import convertFormDataToRegistrateData from "@helpers/convert-form-data";
 import { ILoginData } from "@interfaces/login-form-data";
-import {
-  IRegisterFormData,
-  IRegistrateData,
-  IBaseAddress,
-} from "@interfaces/registration-form-data";
+import { IRegisterFormData } from "@interfaces/registration-form-data";
 import {
   getTokenAndLogin,
   getTokenAndRegistrate,
@@ -49,31 +47,13 @@ import styles from "./registration.module.scss";
 const today = new Date();
 const minAge13 = 410240038000;
 const dataDelta = today.getTime() - minAge13;
-const style = {
-  position: "absolute" as const,
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 390,
-  bgcolor: "background.paper",
-  border: "1.5px solid #2196f3",
-  borderRadius: 5,
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
-const enum ModalType {
-  INFO,
-  ERROR,
-}
 
 const Registration: React.FC = () => {
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
 
   // State to toggle same shipping and billing addresses
-  const [oneAddressChecked, setOneAddressChecked] = React.useState(false);
+  const [isOneAddressChecked, setOneAddressChecked] = React.useState(false);
 
   // State to toggle default shipping address
   const [shippingChecked, setShippingChecked] = React.useState(false);
@@ -82,12 +62,12 @@ const Registration: React.FC = () => {
   const [billingChecked, setBillingChecked] = React.useState(false);
 
   // States for modal popup
-  const [modalOpen, setModalOpen] = React.useState(false);
+  const [isOpenModal, setModalOpen] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState("");
   const [modalType, setModalType] = React.useState(ModalType.INFO);
 
   // State to toggle disabled billing address
-  const [disabled, setDisabled] = React.useState(false);
+  const [isDisabled, setDisabled] = React.useState(false);
 
   // credentials for next login
   const [credentials, setCredentials] = React.useState({
@@ -144,47 +124,6 @@ const Registration: React.FC = () => {
     setValue("billingPostcode", newBilingAdress.code);
   };
 
-  const convertFormDataToRegistrateData = (
-    data: IRegisterFormData
-  ): IRegistrateData => {
-    const billingAdress: IBaseAddress | null = oneAddressChecked
-      ? null
-      : {
-          country: data.billingCountry,
-          streetName: data.billingStreet,
-          postalCode: data.billingPostcode,
-          city: data.billingCity,
-        };
-    const shippingAdress: IBaseAddress = {
-      country: data.shippingCountry,
-      streetName: data.shippingStreet,
-      postalCode: data.shippingPostcode,
-      city: data.shippingCity,
-    };
-    const user: IRegistrateData = {
-      email: data.email,
-      password: data.password,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      dateOfBirth: dayjs(data.birthday).format("YYYY-MM-DD"),
-      addresses: billingAdress
-        ? [billingAdress, shippingAdress]
-        : [shippingAdress],
-      billingAddresses: [0],
-      shippingAddresses: oneAddressChecked ? [0] : [1],
-    };
-
-    if (billingChecked) {
-      user.defaultBillingAddress = 0;
-    }
-
-    if (shippingChecked) {
-      user.defaultShippingAddress = oneAddressChecked ? 0 : 1;
-    }
-
-    return user;
-  };
-
   const login = async (data: ILoginData) => {
     try {
       const customerInfo = await getTokenAndLogin(data);
@@ -212,7 +151,12 @@ const Registration: React.FC = () => {
 
   // Handle form submission
   const onSubmit: SubmitHandler<IRegisterFormData> = async (data) => {
-    const user = convertFormDataToRegistrateData(data);
+    const user = convertFormDataToRegistrateData(
+      data,
+      isOneAddressChecked,
+      billingChecked,
+      shippingChecked
+    );
     let customerInfo;
 
     try {
@@ -466,7 +410,7 @@ const Registration: React.FC = () => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={oneAddressChecked}
+                checked={isOneAddressChecked}
                 onChange={bilingAdressUpdate}
               />
             }
@@ -483,14 +427,14 @@ const Registration: React.FC = () => {
             }
             label="Make default billing address"
           />
-          {!disabled && (
+          {!isDisabled && (
             <Controller
               name="billingStreet"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <TextField
-                  disabled={disabled}
+                  disabled={isDisabled}
                   label="Street"
                   fullWidth
                   error={!!errors.billingStreet}
@@ -503,14 +447,14 @@ const Registration: React.FC = () => {
               )}
             />
           )}
-          {!disabled && (
+          {!isDisabled && (
             <Controller
               name="billingCity"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <TextField
-                  disabled={disabled}
+                  disabled={isDisabled}
                   label="City"
                   fullWidth
                   error={!!errors.billingCity}
@@ -523,7 +467,7 @@ const Registration: React.FC = () => {
               )}
             />
           )}
-          {!disabled && (
+          {!isDisabled && (
             <Controller
               name="billingCountry"
               control={control}
@@ -535,7 +479,7 @@ const Registration: React.FC = () => {
                   : null;
                 return (
                   <Autocomplete
-                    disabled={disabled}
+                    disabled={isDisabled}
                     value={country}
                     options={countries}
                     onChange={(event, newValue) => {
@@ -563,14 +507,14 @@ const Registration: React.FC = () => {
               }}
             />
           )}
-          {!disabled && (
+          {!isDisabled && (
             <Controller
               name="billingPostcode"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <TextField
-                  disabled={disabled}
+                  disabled={isDisabled}
                   label="Postal code"
                   fullWidth
                   error={!!errors.billingPostcode}
@@ -598,12 +542,11 @@ const Registration: React.FC = () => {
             Log in
           </Link>
         </Typography>
-        <Modal open={modalOpen} onClose={handleClose}>
+        <Modal open={isOpenModal} onClose={handleClose}>
           <Box
+            className={styles.modal}
             sx={{
-              ...style,
-              width: 385,
-              typography: "subtitle2",
+              boxShadow: 24,
             }}
           >
             <Typography variant="h6">{modalMessage}</Typography>

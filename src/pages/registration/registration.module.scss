@@ -1,4 +1,4 @@
-$color-blue: #1769aa;
+@import "../../sass/abstract/constants";
 
 .container {
   flex-direction: column;
@@ -21,6 +21,20 @@ h6 {
 }
 
 .link {
-  color: $color-blue;
+  color: $color-primary;
   text-decoration: none;
+}
+
+.modal {
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 385px;
+  padding: 20px 24px;
+  transform: translate(-50%, -50%);
+  background-color: aliceblue;
+  border: 1.5px solid $color-primary;
+  border-radius: 10px;
+  font-family: "Roboto";
 }
