@@ -72,6 +72,9 @@ const Registration: React.FC = () => {
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
 
+  // State to toggle same shipping and billing addresses
+  const [oneAddressChecked, setOneAddressChecked] = React.useState(false);
+
   // State to toggle default shipping address
   const [shippingChecked, setShippingChecked] = React.useState(false);
 
@@ -82,6 +85,9 @@ const Registration: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState("");
   const [modalType, setModalType] = React.useState(ModalType.INFO);
+
+  // State to toggle disabled billing address
+  const [disabled, setDisabled] = React.useState(false);
 
   // credentials for next login
   const [credentials, setCredentials] = React.useState({
@@ -115,6 +121,7 @@ const Registration: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean
   ) => {
+    setOneAddressChecked(event.target.checked);
     const newBilingAdress = {
       street: "",
       city: "",
@@ -122,11 +129,14 @@ const Registration: React.FC = () => {
       code: "",
     };
 
+    setDisabled(false);
+
     if (checked) {
       newBilingAdress.street = watch("shippingStreet");
       newBilingAdress.city = watch("shippingCity");
       newBilingAdress.country = watch("shippingCountry");
       newBilingAdress.code = watch("shippingPostcode");
+      setDisabled(true);
     }
 
     setValue("billingStreet", newBilingAdress.street);
@@ -138,12 +148,14 @@ const Registration: React.FC = () => {
   const convertFormDataToRegistrateData = (
     data: IRegisterFormData
   ): IRegistrateData => {
-    const bilingAdress: IBaseAddress = {
-      country: data.billingCountry,
-      streetName: data.billingStreet,
-      postalCode: data.billingPostcode,
-      city: data.billingCity,
-    };
+    const billingAdress: IBaseAddress | null = oneAddressChecked
+      ? null
+      : {
+          country: data.billingCountry,
+          streetName: data.billingStreet,
+          postalCode: data.billingPostcode,
+          city: data.billingCity,
+        };
     const shippingAdress: IBaseAddress = {
       country: data.shippingCountry,
       streetName: data.shippingStreet,
@@ -156,9 +168,11 @@ const Registration: React.FC = () => {
       firstName: data.firstName,
       lastName: data.lastName,
       dateOfBirth: dayjs(data.birthday).format("YYYY-MM-DD"),
-      addresses: [bilingAdress, shippingAdress],
+      addresses: billingAdress
+        ? [billingAdress, shippingAdress]
+        : [shippingAdress],
       billingAddresses: [0],
-      shippingAddresses: [1],
+      shippingAddresses: oneAddressChecked ? [0] : [1],
     };
 
     if (billingChecked) {
@@ -166,7 +180,7 @@ const Registration: React.FC = () => {
     }
 
     if (shippingChecked) {
-      user.defaultShippingAddress = 1;
+      user.defaultShippingAddress = oneAddressChecked ? 0 : 1;
     }
 
     return user;
@@ -451,8 +465,13 @@ const Registration: React.FC = () => {
             Billing address
           </Typography>
           <FormControlLabel
-            control={<Checkbox onChange={bilingAdressUpdate} />}
-            label="Copy from shipping address"
+            control={
+              <Checkbox
+                checked={oneAddressChecked}
+                onChange={bilingAdressUpdate}
+              />
+            }
+            label="The same as shipping address"
           />
           <FormControlLabel
             control={
@@ -471,6 +490,7 @@ const Registration: React.FC = () => {
             defaultValue=""
             render={({ field }) => (
               <TextField
+                disabled={disabled}
                 label="Street"
                 fullWidth
                 error={!!errors.billingStreet}
@@ -488,6 +508,7 @@ const Registration: React.FC = () => {
             defaultValue=""
             render={({ field }) => (
               <TextField
+                disabled={disabled}
                 label="City"
                 fullWidth
                 error={!!errors.billingCity}
@@ -510,6 +531,7 @@ const Registration: React.FC = () => {
                 : null;
               return (
                 <Autocomplete
+                  disabled={disabled}
                   value={country}
                   options={countries}
                   onChange={(event, newValue) => {
@@ -542,6 +564,7 @@ const Registration: React.FC = () => {
             defaultValue=""
             render={({ field }) => (
               <TextField
+                disabled={disabled}
                 label="Postal code"
                 fullWidth
                 error={!!errors.billingPostcode}
