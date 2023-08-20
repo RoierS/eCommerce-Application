@@ -1,54 +1,46 @@
 import React from "react";
 
-import { Link, useLocation } from "react-router-dom";
+import HeaderRoute from "@components/header/header-route";
+import routes from "@components/header/tabs";
 
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box } from "@mui/material";
 
-import tabs from "./tabs";
+import styles from "./header.module.scss";
 
 const AppHeader = () => {
-  const location = useLocation();
-  const processPathName = () => {
-    const path = `/${location.pathname.split("/")[1]}`;
-    const tab = tabs.find((t) => t.link === path);
-    return tab ? tab.index : 1;
-  };
-  const [index, setIndex] = React.useState(processPathName());
-
-  /**
-   * set active header tab
-   */
-  const handleChange = (event: React.SyntheticEvent, newIndex: number) =>
-    setIndex(newIndex);
-
-  const token = localStorage.getItem("tokenObject");
-  const filteredTabs = token
-    ? tabs.filter((tab) => tab.key !== "login" && tab.key !== "registration")
-    : tabs.filter((tab) => tab.key !== "logout");
-
+  const hasToken = localStorage.getItem("tokenObject");
   return (
-    <header className="header">
-      <Box
-        sx={{
-          mb: 2,
-          width: "95%",
-        }}
-      >
-        <Tabs value={index} onChange={handleChange} variant="fullWidth">
-          {filteredTabs.map((tab) => (
-            <Tab
-              value={tab.index}
-              key={tab.key}
-              icon={tab.icon}
-              label={tab.label}
-              to={tab.link}
-              component={Link}
+    <header className={styles.header}>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <HeaderRoute
+          to={routes.home.link}
+          icon={routes.home.icon}
+          label={routes.home.label}
+        />
+        <Box display="flex" alignItems="center">
+          {hasToken ? (
+            <HeaderRoute
+              to={routes.logout.link}
+              icon={routes.logout.icon}
+              label={routes.logout.label}
             />
-          ))}
-        </Tabs>
+          ) : (
+            <>
+              <HeaderRoute
+                to={routes.registration.link}
+                icon={routes.registration.icon}
+                label={routes.registration.label}
+              />
+              <HeaderRoute
+                to={routes.login.link}
+                icon={routes.login.icon}
+                label={routes.login.label}
+              />
+            </>
+          )}
+        </Box>
       </Box>
     </header>
   );
 };
-
 export default AppHeader;
