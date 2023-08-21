@@ -13,7 +13,7 @@ import {
   obtainAccessTokenPassFlow,
   loginCustomer,
 } from "@services/commerce-tools-service";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -33,6 +33,7 @@ import styles from "./login.module.scss";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const hasToken = localStorage.getItem("tokenObject");
 
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
@@ -87,6 +88,10 @@ const Login: React.FC = () => {
       }
     }
   };
+
+  if (hasToken) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <>
