@@ -152,7 +152,7 @@ const Login: React.FC = () => {
             Login
           </Button>
         </form>
-        <Typography variant="h6">
+        <Typography className={styles.title} variant="h6">
           I’m new here{" "}
           <Link className={styles.link} to="/registration">
             Register
