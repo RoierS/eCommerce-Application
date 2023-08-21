@@ -13,7 +13,7 @@ import {
   obtainAccessTokenPassFlow,
   loginCustomer,
 } from "@services/commerce-tools-service";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -25,6 +25,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  Typography,
 } from "@mui/material";
 
 import schemaLogin from "./schema-login";
@@ -151,6 +152,12 @@ const Login: React.FC = () => {
             Login
           </Button>
         </form>
+        <Typography variant="h6">
+          I’m new here{" "}
+          <Link className={styles.link} to="/registration">
+            Register
+          </Link>
+        </Typography>
       </Box>
     </>
   );
