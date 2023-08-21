@@ -25,7 +25,7 @@ const HeaderBurger = () => {
         <Box
           sx={{
             width: 250,
-            padding: 16,
+            padding: 4,
             position: "relative",
           }}
         >
