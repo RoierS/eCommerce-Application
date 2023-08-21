@@ -4,6 +4,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import Page404 from "./pages/404/404";
+import Cart from "./pages/cart/cart";
+import Catalog from "./pages/catalog/catalog";
 import Login from "./pages/login/login";
 import Logout from "./pages/logout/logout";
 import Home from "./pages/main/main";
@@ -23,6 +25,8 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/logout" element={<Logout />} />
+              <Route path="/catalog" element={<Catalog />} />
+              <Route path="/cart" element={<Cart />} />
               <Route path="*" element={<Page404 />} />
             </Routes>
           </main>

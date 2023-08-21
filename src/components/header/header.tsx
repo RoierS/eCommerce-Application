@@ -18,6 +18,16 @@ const AppHeader = () => {
           label={routes.home.label}
         />
         <Box display="flex" alignItems="center">
+          <HeaderRoute
+            to={routes.catalog.link}
+            icon={routes.catalog.icon}
+            label={routes.catalog.label}
+          />
+          <HeaderRoute
+            to={routes.cart.link}
+            icon={routes.cart.icon}
+            label={routes.cart.label}
+          />
           {hasToken ? (
             <HeaderRoute
               to={routes.logout.link}

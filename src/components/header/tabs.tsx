@@ -4,6 +4,8 @@ import CottageTwoToneIcon from "@mui/icons-material/CottageTwoTone";
 import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
 import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
 interface IHeaderRoute {
   index: number;
@@ -38,6 +40,18 @@ const routes: RouteDictionary = {
     icon: <LogoutIcon />,
     label: "LOGOUT",
     link: "/logout",
+  },
+  catalog: {
+    index: 5,
+    icon: <ShoppingBagOutlinedIcon />,
+    label: "CATALOG",
+    link: "/catalog",
+  },
+  cart: {
+    index: 6,
+    icon: <ShoppingCartOutlinedIcon />,
+    label: "CART",
+    link: "/cart",
   },
 };
 
