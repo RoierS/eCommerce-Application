@@ -24,6 +24,14 @@ export interface IProductData {
             centAmount: number;
             fractionDigits: number;
           };
+          discounted?: {
+            value: {
+              type: string;
+              currencyCode: string;
+              centAmount: number;
+              fractionDigits: number;
+            };
+          };
         }[];
         images: {
           url: string;

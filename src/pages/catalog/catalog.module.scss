@@ -5,6 +5,7 @@
   justify-content: center;
   gap: 15px;
   justify-items: center;
+  margin: 0 auto;
 }
 
 .card {
@@ -18,4 +19,19 @@
 .image {
   width: 100%;
   object-fit: cover;
+}
+
+.originalPrice {
+  color: black
+}
+
+.originalPriceStriked {
+  color: #888;
+  text-decoration: line-through;
+}
+
+.discountedPrice {
+  color: #e74c3c;
+  font-size: 1.2em;
+  margin-top: 8px;
 }

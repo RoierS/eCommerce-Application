@@ -49,6 +49,30 @@ const Catalog = () => {
               <Typography variant="body1">
                 {product.masterData.current.description["en-US"]}
               </Typography>
+              {product.masterData.current.masterVariant.prices[0].discounted
+                ?.value ? (
+                <>
+                  <Typography className={styles.originalPriceStriked}>
+                    Original Price:{" "}
+                    {product.masterData.current.masterVariant.prices[0].value
+                      .centAmount / 100}{" "}
+                    USD
+                  </Typography>
+                  <Typography className={styles.discountedPrice}>
+                    Discounted Price:{" "}
+                    {product.masterData.current.masterVariant.prices[0]
+                      .discounted.value.centAmount / 100}{" "}
+                    USD
+                  </Typography>
+                </>
+              ) : (
+                <Typography className={styles.originalPrice}>
+                  Original Price:{" "}
+                  {product.masterData.current.masterVariant.prices[0].value
+                    .centAmount / 100}{" "}
+                  USD
+                </Typography>
+              )}
             </CardContent>
           </Card>
         ))}
