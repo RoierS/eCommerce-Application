@@ -11,21 +11,19 @@ import styles from "./catalog.module.scss";
 
 const Catalog = () => {
   const [products, setProducts] = useState([]);
-  const tokenObject = JSON.parse(localStorage.getItem("tokenObject") || "null");
-  const accessToken = tokenObject?.access_token || "";
+
+  const fetchProducts = async () => {
+    try {
+      const response = await getProducts();
+      setProducts(response.results);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await getProducts(accessToken);
-        setProducts(response.results);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
     fetchProducts();
-  }, [accessToken]);
+  }, []);
 
   return (
     <>
