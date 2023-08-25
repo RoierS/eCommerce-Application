@@ -46,9 +46,6 @@ const Catalog = () => {
               <Typography variant="body2">
                 {product.masterData.current.description["en-US"]}
               </Typography>
-              <Typography variant="body1">
-                {product.masterData.current.description["en-US"]}
-              </Typography>
               {product.masterData.current.masterVariant.prices[0].discounted
                 ?.value ? (
                 <>
