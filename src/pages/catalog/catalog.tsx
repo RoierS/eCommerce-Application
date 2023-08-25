@@ -1,11 +1,60 @@
+/* eslint-disable no-console */
+import { useEffect, useState } from "react";
+
 import AppHeader from "@components/header/header";
+import { IProductData } from "@interfaces/product-data";
+import getProducts from "@services/get-products";
+
+import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
+
+import styles from "./catalog.module.scss";
 
 const Catalog = () => {
+  const [products, setProducts] = useState([]);
+  const tokenObject = JSON.parse(localStorage.getItem("tokenObject") || "null");
+  const accessToken = tokenObject?.access_token || "";
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getProducts(accessToken);
+        setProducts(response.results);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [accessToken]);
+
   return (
     <>
       <AppHeader />
-      <div>This is the catalog page</div>
+      <Box className={styles.container}>
+        {products.map((product: IProductData) => (
+          <Card key={product.id} className={styles.card}>
+            <CardMedia
+              component="img"
+              className={styles.image}
+              image={product.masterData.current.masterVariant.images[0].url}
+              alt={product.masterData.current.name["en-US"]}
+            />
+            <CardContent>
+              <Typography variant="h6">
+                {product.masterData.current.name["en-US"]}
+              </Typography>
+              <Typography variant="body2">
+                {product.masterData.current.description["en-US"]}
+              </Typography>
+              <Typography variant="body1">
+                {product.masterData.current.description["en-US"]}
+              </Typography>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
     </>
   );
 };
+
 export default Catalog;

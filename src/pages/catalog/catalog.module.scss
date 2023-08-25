@@ -1,0 +1,21 @@
+.container {
+  max-width: 900px;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  justify-items: center;
+}
+
+.card {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  min-width: 350px;
+}
+
+.image {
+  width: 100%;
+  object-fit: cover;
+}
