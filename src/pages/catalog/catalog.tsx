@@ -5,21 +5,8 @@ import CardComponent from "@components/card/card";
 import AppHeader from "@components/header/header";
 import { IProductData } from "@interfaces/product-data";
 import getProducts from "@services/get-products";
-// import { Link } from "react-router-dom";
 
-// import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-
-import {
-  // Button,
-  // Card,
-  // CardContent,
-  // CardMedia,
-  // Typography,
-  Container,
-  Box,
-  // CardActions,
-  // Chip,
-} from "@mui/material";
+import { Container, Box } from "@mui/material";
 
 import styles from "./catalog.module.scss";
 

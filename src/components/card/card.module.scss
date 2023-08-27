@@ -1,12 +1,13 @@
-
 .card {
+  position: relative;
   display: flex;
   flex-flow: column nowrap;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  justify-content: space-between;
   will-change: transform;
   width: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
 }
 
 .card:hover {
@@ -21,13 +22,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  min-height: 186px;
-}
-
-.image {
-  width: 100%;
-  object-fit: cover;
-  flex: 1 0 auto;
+  flex: 1 auto;
 }
 
 .originalPrice {
@@ -42,5 +37,33 @@
 .discountedPrice {
   color: #e74c3c;
   font-size: 1.2em;
-  margin-top: 8px;
+}
+
+.discountBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.iconBadge {
+  font-size: 1.5em;;
+  color: red;
+  background-color: white;
+  border-radius: 50%;
+  padding: 4px;
+  margin-right: 4px;
+}
+
+.discountPercent {
+  font-size: 1em;
+  font-weight: bold;
+  color: red;
+}
+
+.badgeIcon {
+  display: flex;
+  align-items: center;
+  background-color: #d2cac9;
+  padding: 5px;
+  border-radius: 10px;
 }

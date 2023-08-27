@@ -1,9 +1,11 @@
 import React from "react";
 
-import { IProductData } from "@interfaces/product-data";
+import calculateDiscount from "@helpers/claculate-discount";
 
+import { ICardProps } from "@interfaces/card-props";
 import { Link } from "react-router-dom";
 
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import {
   CardMedia,
   CardContent,
@@ -16,13 +18,21 @@ import {
 
 import styles from "./card.module.scss";
 
-interface ICardProps {
-  product: IProductData;
-}
-
 const CardComponent: React.FC<ICardProps> = ({ product }) => {
+  const discountPercentage = calculateDiscount(product);
+
   return (
     <Card key={product.id} className={styles.card}>
+      <div className={styles.discountBadge}>
+        {discountPercentage > 0 && (
+          <div className={styles.badgeIcon}>
+            <LocalOfferIcon className={styles.iconBadge} />
+            <span
+              className={styles.discountPercent}
+            >{`-${discountPercentage}%`}</span>
+          </div>
+        )}
+      </div>
       <CardMedia
         height="250"
         component="img"
@@ -41,7 +51,7 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
           ?.value ? (
           <>
             <Typography className={styles.originalPriceStriked}>
-              Original Price:{" "}
+              Price:{" "}
               {product.masterData.current.masterVariant.prices[0].value
                 .centAmount / 100}{" "}
               USD
@@ -62,7 +72,7 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
           </>
         ) : (
           <Typography className={styles.originalPrice}>
-            Original Price:{" "}
+            Price:{" "}
             {product.masterData.current.masterVariant.prices[0].value
               .centAmount / 100}{" "}
             USD
