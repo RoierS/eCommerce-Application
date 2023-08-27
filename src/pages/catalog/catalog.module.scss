@@ -1,4 +1,3 @@
-
 .container {
   max-width: 1200px;
   display: grid;
@@ -14,7 +13,7 @@
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   cursor: pointer;
   will-change: transform;
   width: 100%;
@@ -31,7 +30,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   min-height: 186px;
 }
 

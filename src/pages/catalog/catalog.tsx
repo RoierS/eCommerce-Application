@@ -14,6 +14,7 @@ import {
   Container,
   Box,
   CardActions,
+  Chip,
 } from "@mui/material";
 
 import styles from "./catalog.module.scss";
@@ -70,6 +71,13 @@ const Catalog = () => {
                         .discounted.value.centAmount / 100}{" "}
                       USD
                     </Typography>
+                    <Chip
+                      component="span"
+                      size="small"
+                      variant="outlined"
+                      color="success"
+                      label="Lowest price"
+                    />
                   </>
                 ) : (
                   <Typography className={styles.originalPrice}>
