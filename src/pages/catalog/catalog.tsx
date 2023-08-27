@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AppHeader from "@components/header/header";
 import { IProductData } from "@interfaces/product-data";
 import getProducts from "@services/get-products";
+import { Link } from "react-router-dom";
 
 import {
   Button,
@@ -88,9 +89,11 @@ const Catalog = () => {
                   </Typography>
                 )}
                 <CardActions>
-                  <Button variant="contained" size="small" color="primary">
-                    More
-                  </Button>
+                  <Link to={`/product/${product.id}`} className={styles.link}>
+                    <Button variant="contained" size="small" color="primary">
+                      More
+                    </Button>
+                  </Link>
                 </CardActions>
               </CardContent>
             </Card>
