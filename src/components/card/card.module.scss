@@ -1,0 +1,46 @@
+
+.card {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  will-change: transform;
+  width: 100%;
+}
+
+.card:hover {
+  transform: scale(1.01);
+  transition: transform 0.4s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #f0f0f0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 186px;
+}
+
+.image {
+  width: 100%;
+  object-fit: cover;
+  flex: 1 0 auto;
+}
+
+.originalPrice {
+  color: black;
+}
+
+.originalPriceStriked {
+  color: #888;
+  text-decoration: line-through;
+}
+
+.discountedPrice {
+  color: #e74c3c;
+  font-size: 1.2em;
+  margin-top: 8px;
+}
