@@ -5,7 +5,16 @@ import AppHeader from "@components/header/header";
 import { IProductData } from "@interfaces/product-data";
 import getProducts from "@services/get-products";
 
-import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Container,
+  Box,
+  CardActions,
+} from "@mui/material";
 
 import styles from "./catalog.module.scss";
 
@@ -28,50 +37,58 @@ const Catalog = () => {
   return (
     <>
       <AppHeader />
-      <Box className={styles.container}>
-        {products.map((product: IProductData) => (
-          <Card key={product.id} className={styles.card}>
-            <CardMedia
-              component="img"
-              className={styles.image}
-              image={product.masterData.current.masterVariant.images[0].url}
-              alt={product.masterData.current.name["en-US"]}
-            />
-            <CardContent>
-              <Typography variant="h6">
-                {product.masterData.current.name["en-US"]}
-              </Typography>
-              <Typography variant="body2">
-                {product.masterData.current.description["en-US"]}
-              </Typography>
-              {product.masterData.current.masterVariant.prices[0].discounted
-                ?.value ? (
-                <>
-                  <Typography className={styles.originalPriceStriked}>
+      <Container>
+        <Box className={styles.container}>
+          {products.map((product: IProductData) => (
+            <Card key={product.id} className={styles.card}>
+              <CardMedia
+                height="250"
+                component="img"
+                className={styles.image}
+                image={product.masterData.current.masterVariant.images[0].url}
+                alt={product.masterData.current.name["en-US"]}
+              />
+              <CardContent className={styles.content}>
+                <Typography variant="h6">
+                  {product.masterData.current.name["en-US"]}
+                </Typography>
+                <Typography variant="body2">
+                  {product.masterData.current.description["en-US"]}
+                </Typography>
+                {product.masterData.current.masterVariant.prices[0].discounted
+                  ?.value ? (
+                  <>
+                    <Typography className={styles.originalPriceStriked}>
+                      Original Price:{" "}
+                      {product.masterData.current.masterVariant.prices[0].value
+                        .centAmount / 100}{" "}
+                      USD
+                    </Typography>
+                    <Typography className={styles.discountedPrice}>
+                      Discounted Price:{" "}
+                      {product.masterData.current.masterVariant.prices[0]
+                        .discounted.value.centAmount / 100}{" "}
+                      USD
+                    </Typography>
+                  </>
+                ) : (
+                  <Typography className={styles.originalPrice}>
                     Original Price:{" "}
                     {product.masterData.current.masterVariant.prices[0].value
                       .centAmount / 100}{" "}
                     USD
                   </Typography>
-                  <Typography className={styles.discountedPrice}>
-                    Discounted Price:{" "}
-                    {product.masterData.current.masterVariant.prices[0]
-                      .discounted.value.centAmount / 100}{" "}
-                    USD
-                  </Typography>
-                </>
-              ) : (
-                <Typography className={styles.originalPrice}>
-                  Original Price:{" "}
-                  {product.masterData.current.masterVariant.prices[0].value
-                    .centAmount / 100}{" "}
-                  USD
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </Box>
+                )}
+                <CardActions>
+                  <Button variant="contained" size="small" color="primary">
+                    More
+                  </Button>
+                </CardActions>
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
+      </Container>
     </>
   );
 };
