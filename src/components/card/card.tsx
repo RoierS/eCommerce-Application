@@ -2,6 +2,7 @@ import React from "react";
 
 import calculateDiscount from "@helpers/claculate-discount";
 
+import sliceText from "@helpers/slice-text";
 import { ICardProps } from "@interfaces/card-props";
 import { Link } from "react-router-dom";
 
@@ -20,6 +21,11 @@ import styles from "./card.module.scss";
 
 const CardComponent: React.FC<ICardProps> = ({ product }) => {
   const discountPercentage = calculateDiscount(product);
+
+  const briefDescription = sliceText(
+    product.masterData.current.description["en-US"],
+    150
+  );
 
   return (
     <Card key={product.id} className={styles.card}>
@@ -44,9 +50,7 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
         <Typography variant="h6">
           {product.masterData.current.name["en-US"]}
         </Typography>
-        <Typography variant="body2">
-          {product.masterData.current.description["en-US"]}
-        </Typography>
+        <Typography variant="body2">{briefDescription}</Typography>
         {product.masterData.current.masterVariant.prices[0].discounted
           ?.value ? (
           <>
