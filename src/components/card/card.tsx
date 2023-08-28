@@ -82,9 +82,14 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
             USD
           </Typography>
         )}
-        <CardActions>
+        <CardActions className={styles.cardAction}>
           <Link to={`/product/${product.id}`} className={styles.link}>
-            <Button variant="contained" size="small" color="primary">
+            <Button
+              className={styles.button}
+              variant="contained"
+              size="small"
+              color="primary"
+            >
               More
             </Button>
           </Link>
