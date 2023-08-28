@@ -1,12 +1,7 @@
-import { IProductData } from "@interfaces/product-data";
-
-const calculateDiscount = (product: IProductData): number => {
-  const originalPrice =
-    product.masterData.current.masterVariant.prices[0].value.centAmount;
-  const discountPrice =
-    product.masterData.current.masterVariant.prices[0].discounted?.value
-      .centAmount;
-
+const calculateDiscount = (
+  originalPrice: number,
+  discountPrice?: number
+): number => {
   if (discountPrice) {
     const discountAmount = originalPrice - discountPrice;
     return Math.round((discountAmount / originalPrice) * 100);

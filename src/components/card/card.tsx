@@ -20,7 +20,13 @@ import {
 import styles from "./card.module.scss";
 
 const CardComponent: React.FC<ICardProps> = ({ product }) => {
-  const discountPercentage = calculateDiscount(product);
+  const originalPrice =
+    product.masterData.current.masterVariant.prices[0].value.centAmount;
+  const discountPrice =
+    product.masterData.current.masterVariant.prices[0].discounted?.value
+      .centAmount;
+
+  const discountPercentage = calculateDiscount(originalPrice, discountPrice);
 
   const briefDescription = sliceText(
     product.masterData.current.description["en-US"],
@@ -28,7 +34,7 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
   );
 
   return (
-    <Card key={product.id} className={styles.card}>
+    <Card className={styles.card}>
       <div className={styles.discountBadge}>
         {discountPercentage > 0 && (
           <div className={styles.badgeIcon}>

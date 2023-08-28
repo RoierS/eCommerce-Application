@@ -1,3 +1,12 @@
+:root {
+  --card-bg-color: #f0f0f0;
+  --price-color: black;
+  --stricked-price-color: #888;
+  --discounted-price-color: #e74c3c;
+  --badge-icon-bg-color: #d2cac9;
+  --badge-bg-color: white;
+}
+
 .card {
   position: relative;
   display: flex;
@@ -14,7 +23,7 @@
   transform: scale(1.01);
   transition: transform 0.4s ease;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: #f0f0f0;
+  background-color: var(--card-bg-color);
 }
 
 .content {
@@ -26,16 +35,16 @@
 }
 
 .originalPrice {
-  color: black;
+  color: var(--price-color);
 }
 
 .originalPriceStriked {
-  color: #888;
+  color: var(--stricked-price-color);
   text-decoration: line-through;
 }
 
 .discountedPrice {
-  color: #e74c3c;
+  color: var(--discounted-price-color);
   font-size: 1.2em;
 }
 
@@ -47,8 +56,8 @@
 
 .iconBadge {
   font-size: 1.5em;
-  color: red;
-  background-color: white;
+  color: var(--discounted-price-color);
+  background-color: var(--badge-bg-color);
   border-radius: 50%;
   padding: 4px;
   margin-right: 4px;
@@ -57,13 +66,13 @@
 .discountPercent {
   font-size: 1em;
   font-weight: bold;
-  color: red;
+  color: var(--discounted-price-color);
 }
 
 .badgeIcon {
   display: flex;
   align-items: center;
-  background-color: #d2cac9;
+  background-color: var(--badge-icon-bg-color);
   padding: 5px;
   border-radius: 10px;
 }
