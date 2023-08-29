@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const searchProducts = async (searchQuery: string) => {
   const tokenObject = JSON.parse(localStorage.getItem("tokenObject") || "null");
@@ -11,14 +11,15 @@ const searchProducts = async (searchQuery: string) => {
     "Content-Type": "application/json",
     Authorization: `Bearer ${accessToken}`,
   };
-  const availableLanguages = ["en-US", "pl", "ru"];
+  // const availableLanguages = ["en-US", "pl", "ru"];
   const queryParams: Record<string, string> = {};
 
   // search in different languages
-  availableLanguages.forEach((language: string) => {
-    queryParams[`text.${language}`] = searchQuery;
-  });
+  // availableLanguages.forEach((language: string) => {
+  //   queryParams[`text.${language}`] = searchQuery;
+  // });
 
+  queryParams["text.en-Us"] = searchQuery;
   queryParams.fuzzy = "true";
   queryParams.fuzzyLevel = "1";
 
@@ -30,12 +31,20 @@ const searchProducts = async (searchQuery: string) => {
         params: queryParams,
       }
     );
-    console.log(response.data.results);
+
     return response.data.results;
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error("Error searching products:", error);
-    throw error;
+    if (
+      (error as AxiosError).response &&
+      (error as AxiosError).response?.status === 400
+    ) {
+      console.error("Too short request:", error);
+      throw new Error("Too short request");
+    } else {
+      console.error("Error searching products:", error);
+      throw error;
+    }
   }
 };
 

@@ -3,7 +3,6 @@ import React from "react";
 import calculateDiscount from "@helpers/claculate-discount";
 
 import sliceText from "@helpers/slice-text";
-// import { ICardProps } from "@interfaces/card-props";
 import { IProductData } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
 import { Link } from "react-router-dom";
@@ -24,6 +23,7 @@ import styles from "./card.module.scss";
 const CardComponent: React.FC<{
   product: IProductData | IProductSearchResult;
 }> = ({ product }) => {
+  // check needed to use appropriate interface
   const isProductData = "masterData" in product;
 
   const originalPrice = isProductData
@@ -34,8 +34,10 @@ const CardComponent: React.FC<{
         .centAmount
     : product.masterVariant.prices[0].discounted?.value.centAmount;
 
+  // calculate discount
   const discountPercentage = calculateDiscount(originalPrice, discountPrice);
 
+  // trim the discription of product
   const briefDescription = isProductData
     ? sliceText(product.masterData.current.description["en-US"], 150)
     : sliceText(product.description["en-US"], 150);

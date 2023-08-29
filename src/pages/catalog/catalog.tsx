@@ -1,9 +1,11 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-console */
 import { useEffect, useState } from "react";
 
 import CardComponent from "@components/card/card";
 import AppHeader from "@components/header/header";
 import { IProductData } from "@interfaces/product-data";
+import { IProductSearchResult } from "@interfaces/product-search-result";
 import getProducts from "@services/get-products";
 
 import searchProducts from "@services/search-products";
@@ -17,6 +19,7 @@ const Catalog = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchError, setSearchError] = useState(false);
 
+  // fetching product list
   const fetchProducts = async () => {
     try {
       const response = await getProducts();
@@ -26,6 +29,7 @@ const Catalog = () => {
     }
   };
 
+  // handle the search and set the products
   const searchHandler = async () => {
     if (searchQuery.trim() !== "") {
       try {
@@ -39,12 +43,13 @@ const Catalog = () => {
     } else {
       fetchProducts();
     }
+
+    setSearchQuery("");
   };
 
   useEffect(() => {
     fetchProducts();
   }, []);
-  console.log(products.length);
 
   return (
     <>
@@ -61,10 +66,12 @@ const Catalog = () => {
           </Button>
         </Box>
         <Box className={styles.container}>
-          {searchError && products.length === 0 ? ( // TODO error handling and no find results
+          {searchError ? (
+            <p>Too short request</p>
+          ) : !searchError && products.length === 0 ? (
             <p>No product found</p>
           ) : (
-            products.map((product: IProductData) => (
+            products.map((product: IProductData | IProductSearchResult) => (
               <CardComponent key={product.id} product={product} />
             ))
           )}
