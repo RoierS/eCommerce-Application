@@ -10,7 +10,14 @@ import getProducts from "@services/get-products";
 
 import searchProducts from "@services/search-products";
 
-import { Container, Box, TextField, Button } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import {
+  Container,
+  Box,
+  TextField,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 
 import styles from "./catalog.module.scss";
 
@@ -18,14 +25,18 @@ const Catalog = () => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchError, setSearchError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // fetching product list
   const fetchProducts = async () => {
     try {
+      setIsLoading(true);
       const response = await getProducts();
       setProducts(response.results);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching products:", error);
+      setIsLoading(false);
     }
   };
 
@@ -33,12 +44,15 @@ const Catalog = () => {
   const searchHandler = async () => {
     if (searchQuery.trim() !== "") {
       try {
+        setIsLoading(true);
         const searchResults = await searchProducts(searchQuery);
         setProducts(searchResults);
         setSearchError(false);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error searching products:", error);
         setSearchError(true);
+        setIsLoading(false);
       }
     } else {
       fetchProducts();
@@ -60,16 +74,34 @@ const Catalog = () => {
             label="Search products"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            variant="outlined"
+            size="small"
+            fullWidth
+            autoComplete="off"
+            InputProps={{
+              endAdornment: (
+                <Button
+                  className={styles.searchButton}
+                  variant="contained"
+                  color="primary"
+                  onClick={searchHandler}
+                  startIcon={<SearchIcon />}
+                  disabled={isLoading}
+                  size="small"
+                >
+                  Search
+                </Button>
+              ),
+            }}
           />
-          <Button variant="contained" color="primary" onClick={searchHandler}>
-            Search
-          </Button>
         </Box>
         <Box className={styles.container}>
-          {searchError ? (
+          {isLoading ? (
+            <CircularProgress />
+          ) : searchError ? (
             <p>Too short request</p>
           ) : !searchError && products.length === 0 ? (
-            <p>No product found</p>
+            <p>No such product found. Try again</p>
           ) : (
             products.map((product: IProductData | IProductSearchResult) => (
               <CardComponent key={product.id} product={product} />
