@@ -1,7 +1,7 @@
 import React from "react";
 
 import AppHeader from "@components/header/header";
-import products from "@pages/products/catalog-list";
+import products from "@pages/products/mock-catalog-list";
 import { Link } from "react-router-dom";
 
 import { List, ListItem } from "@mui/material";
