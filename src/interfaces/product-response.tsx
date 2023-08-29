@@ -15,15 +15,18 @@ interface IVariant {
   images: IImage[];
   prices: IPrice[];
 }
+enum Locale {
+  EnUS = "en-US",
+}
 
-interface ILocale {
-  "en-US": string;
+interface ITranslation {
+  [Locale.EnUS]: string;
 }
 
 interface IProductData {
-  name: ILocale;
+  name: ITranslation;
 
-  description: ILocale;
+  description: ITranslation;
 
   masterVariant: IVariant;
 }

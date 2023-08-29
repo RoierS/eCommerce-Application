@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import AppHeader from "@components/header/header";
 import { IProductResponse } from "@interfaces/product-response";
 
 import getProductById from "@services/get-product-by-id";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 import { ImageList, ImageListItem } from "@mui/material";
 
@@ -18,10 +18,19 @@ import styles from "./products.module.scss";
 const ProductInformation = () => {
   const { id } = useParams();
 
+  // State to store the fetched product data
   const [product, setProduct] = useState<IProductResponse | null>(null);
-  const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
+
+  // State to toggle description visibility
+  const [isDescription, setDescription] = useState(false);
+
+  // State to track when the data is currently being loaded
   const [isLoading, setLoading] = useState(true);
+
+  // State to track when get error
   const [requestError, setError] = useState<boolean>(false);
+
+  // Fetch product data when the component mounts
   useEffect(() => {
     const requestData = async () => {
       try {
@@ -36,8 +45,10 @@ const ProductInformation = () => {
 
     requestData().then();
   }, [id]);
-  const handleToggleDescription = () => {
-    setDescriptionExpanded(!isDescriptionExpanded);
+
+  // Toggle the description when the button is clicked
+  const toggleDescription = () => {
+    setDescription(!isDescription);
   };
   return (
     <div>
@@ -56,7 +67,7 @@ const ProductInformation = () => {
         </Box>
       ) : // eslint-disable-next-line no-nested-ternary
       requestError ? (
-        <div>Error fetching product data</div>
+        <Navigate to="*" />
       ) : product ? (
         <div className={styles.article}>
           <Box className={styles.product}>
@@ -102,15 +113,15 @@ const ProductInformation = () => {
                 }}
               >
                 <Typography variant="body1">
-                  {isDescriptionExpanded
+                  {isDescription
                     ? product.masterData.current.description["en-US"]
                     : `${product.masterData.current.description["en-US"].slice(
                         0,
                         600
                       )}...`}
                 </Typography>
-                <Button onClick={handleToggleDescription}>
-                  {isDescriptionExpanded ? "Read Less" : "Show More"}
+                <Button onClick={toggleDescription}>
+                  {isDescription ? "Read Less" : "Show More"}
                 </Button>
               </div>
               <div className={styles.price}>

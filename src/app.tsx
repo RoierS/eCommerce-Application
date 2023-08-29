@@ -28,7 +28,7 @@ const App = () => {
               <Route path="/logout" element={<Logout />} />
               <Route path="/catalog" element={<Catalog />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/product/:id" element={<Product />} />
+              <Route path="/catalog/:id" element={<Product />} />
               <Route path="*" element={<Page404 />} />
             </Routes>
           </main>
