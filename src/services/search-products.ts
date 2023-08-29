@@ -11,13 +11,16 @@ const searchProducts = async (searchQuery: string) => {
     "Content-Type": "application/json",
     Authorization: `Bearer ${accessToken}`,
   };
+  const availableLanguages = ["en-US", "pl", "ru"];
+  const queryParams: Record<string, string> = {};
 
-  const queryParams = {
-    "text.pl": searchQuery,
-    // markMatchingVariants: true,
-    // limit: 10,
-    // fuzzy: true,
-  };
+  // search in different languages
+  availableLanguages.forEach((language: string) => {
+    queryParams[`text.${language}`] = searchQuery;
+  });
+
+  queryParams.fuzzy = "true";
+  queryParams.fuzzyLevel = "1";
 
   try {
     const response = await axios.get(
@@ -28,7 +31,6 @@ const searchProducts = async (searchQuery: string) => {
       }
     );
     console.log(response.data.results);
-    console.log(response.data.results[0].id);
     return response.data.results;
   } catch (error) {
     // eslint-disable-next-line no-console

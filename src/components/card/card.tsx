@@ -3,7 +3,9 @@ import React from "react";
 import calculateDiscount from "@helpers/claculate-discount";
 
 import sliceText from "@helpers/slice-text";
-import { ICardProps } from "@interfaces/card-props";
+// import { ICardProps } from "@interfaces/card-props";
+import { IProductData } from "@interfaces/product-data";
+import { IProductSearchResult } from "@interfaces/product-search-result";
 import { Link } from "react-router-dom";
 
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -19,19 +21,32 @@ import {
 
 import styles from "./card.module.scss";
 
-const CardComponent: React.FC<ICardProps> = ({ product }) => {
-  const originalPrice =
-    product.masterData.current.masterVariant.prices[0].value.centAmount;
-  const discountPrice =
-    product.masterData.current.masterVariant.prices[0].discounted?.value
-      .centAmount;
+const CardComponent: React.FC<{
+  product: IProductData | IProductSearchResult;
+}> = ({ product }) => {
+  const isProductData = "masterData" in product;
+
+  const originalPrice = isProductData
+    ? product.masterData.current.masterVariant.prices[0].value.centAmount
+    : product.masterVariant.prices[0].value.centAmount;
+  const discountPrice = isProductData
+    ? product.masterData.current.masterVariant.prices[0].discounted?.value
+        .centAmount
+    : product.masterVariant.prices[0].discounted?.value.centAmount;
 
   const discountPercentage = calculateDiscount(originalPrice, discountPrice);
 
-  const briefDescription = sliceText(
-    product.masterData.current.description["en-US"],
-    150
-  );
+  const briefDescription = isProductData
+    ? sliceText(product.masterData.current.description["en-US"], 150)
+    : sliceText(product.description["en-US"], 150);
+
+  const imageUrl = isProductData
+    ? product.masterData.current.masterVariant.images[0].url
+    : product.masterVariant.images[0].url;
+
+  const productName = isProductData
+    ? product.masterData.current.name["en-US"]
+    : product.name["en-US"];
 
   return (
     <Card className={styles.card}>
@@ -49,28 +64,19 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
         height="250"
         component="img"
         className={styles.image}
-        image={product.masterData.current.masterVariant.images[0].url}
-        alt={product.masterData.current.name["en-US"]}
+        image={imageUrl}
+        alt={productName}
       />
       <CardContent className={styles.content}>
-        <Typography variant="h6">
-          {product.masterData.current.name["en-US"]}
-        </Typography>
+        <Typography variant="h6">{productName}</Typography>
         <Typography variant="body2">{briefDescription}</Typography>
-        {product.masterData.current.masterVariant.prices[0].discounted
-          ?.value ? (
+        {discountPrice ? (
           <>
             <Typography className={styles.originalPriceStriked}>
-              Price:{" "}
-              {product.masterData.current.masterVariant.prices[0].value
-                .centAmount / 100}{" "}
-              USD
+              Price: {originalPrice / 100} USD
             </Typography>
             <Typography className={styles.discountedPrice}>
-              Discounted Price:{" "}
-              {product.masterData.current.masterVariant.prices[0].discounted
-                .value.centAmount / 100}{" "}
-              USD
+              Discounted Price: {discountPrice / 100} USD
             </Typography>
             <Chip
               component="span"
@@ -82,10 +88,7 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
           </>
         ) : (
           <Typography className={styles.originalPrice}>
-            Price:{" "}
-            {product.masterData.current.masterVariant.prices[0].value
-              .centAmount / 100}{" "}
-            USD
+            Price: {originalPrice / 100} USD
           </Typography>
         )}
         <CardActions className={styles.cardAction}>

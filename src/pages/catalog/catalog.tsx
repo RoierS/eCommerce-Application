@@ -15,6 +15,7 @@ import styles from "./catalog.module.scss";
 const Catalog = () => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchError, setSearchError] = useState(false);
 
   const fetchProducts = async () => {
     try {
@@ -30,8 +31,10 @@ const Catalog = () => {
       try {
         const searchResults = await searchProducts(searchQuery);
         setProducts(searchResults);
+        setSearchError(false);
       } catch (error) {
         console.error("Error searching products:", error);
+        setSearchError(true);
       }
     } else {
       fetchProducts();
@@ -41,6 +44,7 @@ const Catalog = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+  console.log(products.length);
 
   return (
     <>
@@ -57,15 +61,13 @@ const Catalog = () => {
           </Button>
         </Box>
         <Box className={styles.container}>
-          {products
-            // .filter((product: IProductData) =>
-            //   product.masterData.current.name["en-US"]
-            //     .toLowerCase()
-            //     .includes(searchQuery.toLowerCase())
-            // )
-            .map((product: IProductData) => (
+          {searchError && products.length === 0 ? ( // TODO error handling and no find results
+            <p>No product found</p>
+          ) : (
+            products.map((product: IProductData) => (
               <CardComponent key={product.id} product={product} />
-            ))}
+            ))
+          )}
         </Box>
       </Container>
     </>
