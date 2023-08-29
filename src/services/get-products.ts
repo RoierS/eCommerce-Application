@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
 import axios from "axios";
 
-const getProducts = async (accessToken: string) => {
+const getProducts = async () => {
+  const tokenObject = JSON.parse(localStorage.getItem("tokenObject") || "null");
+  const accessToken = tokenObject?.access_token || "";
   const apiHost = process.env.REACT_APP_API_HOST;
   const projectKey = process.env.REACT_APP_PROJECT_KEY;
 
