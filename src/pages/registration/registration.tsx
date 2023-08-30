@@ -116,12 +116,29 @@ const Registration: React.FC = () => {
       newBilingAdress.city = watch("shippingCity");
       newBilingAdress.country = watch("shippingCountry");
       newBilingAdress.code = watch("shippingPostcode");
-    }
 
-    setValue("billingStreet", newBilingAdress.street);
-    setValue("billingCity", newBilingAdress.city);
-    setValue("billingCountry", newBilingAdress.country);
-    setValue("billingPostcode", newBilingAdress.code);
+      if (
+        newBilingAdress.street.length !== 0 &&
+        newBilingAdress.city.length !== 0 &&
+        newBilingAdress.country.length !== 0 &&
+        newBilingAdress.code.length !== 0
+      ) {
+        setValue("billingStreet", newBilingAdress.street);
+        setValue("billingCity", newBilingAdress.city);
+        setValue("billingCountry", newBilingAdress.country);
+        setValue("billingPostcode", newBilingAdress.code);
+      } else {
+        setValue("billingStreet", "street");
+        setValue("billingCity", "city");
+        setValue("billingCountry", "country");
+        setValue("billingPostcode", "code");
+      }
+    } else {
+      setValue("billingStreet", "");
+      setValue("billingCity", "");
+      setValue("billingCountry", "");
+      setValue("billingPostcode", "");
+    }
   };
 
   const login = async (data: ILoginData) => {
@@ -158,6 +175,7 @@ const Registration: React.FC = () => {
       shippingChecked
     );
     let customerInfo;
+    console.log("submit data:", data);
 
     try {
       customerInfo = await getTokenAndRegistrate(user);
@@ -309,6 +327,7 @@ const Registration: React.FC = () => {
             Shipping address
           </Typography>
           <FormControlLabel
+            name="shippingChecked"
             control={
               <Checkbox
                 checked={shippingChecked}
