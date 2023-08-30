@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 
 import CardComponent from "@components/card/card";
 import AppHeader from "@components/header/header";
+import SearchField from "@components/search/search-field";
+import SortingField from "@components/sorting/sort-field";
 import { IProductData } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
 import getProducts from "@services/get-products";
@@ -12,15 +14,12 @@ import getSortedProducts from "@services/get-sorted-products";
 
 import searchProducts from "@services/search-products";
 
-import SearchIcon from "@mui/icons-material/Search";
 import {
   Container,
   Box,
-  TextField,
-  Button,
   CircularProgress,
-  Select,
-  MenuItem,
+  // Select,
+  // MenuItem,
 } from "@mui/material";
 
 import styles from "./catalog.module.scss";
@@ -99,52 +98,16 @@ const Catalog = () => {
     <>
       <AppHeader />
       <Container>
-        <Box className={styles.searchContainer}>
-          <TextField
-            className={styles.searchField}
-            label="Search products"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            variant="outlined"
-            size="small"
-            fullWidth
-            autoComplete="off"
-            InputProps={{
-              endAdornment: (
-                <Button
-                  className={styles.searchButton}
-                  variant="contained"
-                  color="primary"
-                  onClick={searchHandler}
-                  startIcon={<SearchIcon />}
-                  disabled={isLoading}
-                  size="small"
-                  sx={{ minWidth: 100 }}
-                >
-                  Search
-                </Button>
-              ),
-            }}
-          />
-        </Box>
-        <Box className={styles.sortingContainer}>
-          <Select
-            value={sortingOption}
-            onChange={(e) => setSortingOption(e.target.value)}
-            displayEmpty
-            className={styles.sortingSelect}
-            variant="outlined"
-            size="small"
-          >
-            <MenuItem value="" disabled>
-              Sort by
-            </MenuItem>
-            <MenuItem value="name.en-Us asc">Name (A-Z)</MenuItem>
-            <MenuItem value="name.en-Us desc">Name (Z-A)</MenuItem>
-            <MenuItem value="price asc">Price (Low to High)</MenuItem>
-            <MenuItem value="price desc">Price (High to Low)</MenuItem>
-          </Select>
-        </Box>
+        <SearchField
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          searchHandler={searchHandler}
+          isLoading={isLoading}
+        />
+        <SortingField
+          sortingOption={sortingOption}
+          setSortingOption={setSortingOption}
+        />
         <Box className={styles.container}>
           {isLoading ? (
             <CircularProgress />
