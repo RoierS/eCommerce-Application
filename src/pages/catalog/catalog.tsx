@@ -101,6 +101,7 @@ const Catalog = () => {
       <Container>
         <Box className={styles.searchContainer}>
           <TextField
+            className={styles.searchField}
             label="Search products"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -118,6 +119,7 @@ const Catalog = () => {
                   startIcon={<SearchIcon />}
                   disabled={isLoading}
                   size="small"
+                  sx={{ minWidth: 100 }}
                 >
                   Search
                 </Button>
@@ -132,6 +134,7 @@ const Catalog = () => {
             displayEmpty
             className={styles.sortingSelect}
             variant="outlined"
+            size="small"
           >
             <MenuItem value="" disabled>
               Sort by
