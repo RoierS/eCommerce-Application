@@ -11,10 +11,10 @@ const searchProducts = async (searchQuery: string) => {
     "Content-Type": "application/json",
     Authorization: `Bearer ${accessToken}`,
   };
-  // const availableLanguages = ["en-US", "pl", "ru"];
   const queryParams: Record<string, string> = {};
 
-  // search in different languages
+  // TODO: search in different languages
+  // const availableLanguages = ["en-US", "pl", "ru"];
   // availableLanguages.forEach((language: string) => {
   //   queryParams[`text.${language}`] = searchQuery;
   // });
@@ -34,7 +34,6 @@ const searchProducts = async (searchQuery: string) => {
 
     return response.data.results;
   } catch (error) {
-    // eslint-disable-next-line no-console
     if (
       (error as AxiosError).response &&
       (error as AxiosError).response?.status === 400

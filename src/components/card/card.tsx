@@ -94,7 +94,7 @@ const CardComponent: React.FC<{
           </Typography>
         )}
         <CardActions className={styles.cardAction}>
-          <Link to={`/product/${product.id}`} className={styles.link}>
+          <Link to={`/catalog/${product.id}`} className={styles.link}>
             <Button
               className={styles.button}
               variant="contained"
