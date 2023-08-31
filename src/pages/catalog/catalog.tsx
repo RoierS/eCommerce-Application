@@ -4,23 +4,18 @@
 import { useEffect, useState } from "react";
 
 import CardComponent from "@components/card/card";
+import FilterComponent from "@components/filter/filter";
 import AppHeader from "@components/header/header";
 import SearchField from "@components/search/search-field";
 import SortingField from "@components/sorting/sort-field";
 import { IProductData } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
+import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
 import getProducts from "@services/get-products";
-import getSortedProducts from "@services/get-sorted-products";
 
 import searchProducts from "@services/search-products";
 
-import {
-  Container,
-  Box,
-  CircularProgress,
-  // Select,
-  // MenuItem,
-} from "@mui/material";
+import { Container, Box, CircularProgress } from "@mui/material";
 
 import styles from "./catalog.module.scss";
 
@@ -30,6 +25,25 @@ const Catalog = () => {
   const [searchError, setSearchError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [sortingOption, setSortingOption] = useState("");
+  const [filterCriteria, setFilterCriteria] = useState<Record<string, string>>(
+    {}
+  );
+
+  // fetching products with filters and/or sorting applied
+  const fetchFilteredAndSortedProducts = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getFilteredAndSortedProducts(
+        filterCriteria,
+        sortingOption
+      );
+      setProducts(response);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setIsLoading(false);
+    }
+  };
 
   // fetching the list of products
   const fetchProducts = async () => {
@@ -47,6 +61,7 @@ const Catalog = () => {
   // handle search and update products based on search query
   const searchHandler = async () => {
     setSortingOption("");
+
     if (searchQuery.trim() !== "") {
       try {
         setIsLoading(true);
@@ -67,32 +82,24 @@ const Catalog = () => {
     setSearchQuery("");
   };
 
-  // handle sorting and update products based on sorting option
-  const sortHandler = async () => {
-    try {
-      setIsLoading(true);
-      const sortedResults = await getSortedProducts(sortingOption);
-      setProducts(sortedResults);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error sorting products:", error);
-      setIsLoading(false);
-    }
-  };
-
-  // handle fetching, sorting, and searching based on dependencies
+  // handle fetching, filtering, sorting, and searching based on dependencies
   useEffect(() => {
-    if (!sortingOption && !searchQuery) {
+    if (!sortingOption && !searchQuery && !sortingOption) {
+      console.log("fetchProducts");
       fetchProducts();
     }
-    if (searchQuery.trim() !== "" && sortingOption) {
+
+    if (searchQuery.trim() !== "" && !sortingOption) {
       setSortingOption("");
       searchHandler();
+      console.log("searchHandler");
     }
-    if (sortingOption) {
-      sortHandler();
+
+    if (sortingOption || filterCriteria) {
+      fetchFilteredAndSortedProducts();
+      console.log("fetchFilteredAndSortedProducts");
     }
-  }, [sortingOption]);
+  }, [sortingOption, filterCriteria]);
 
   return (
     <>
@@ -108,6 +115,7 @@ const Catalog = () => {
           sortingOption={sortingOption}
           setSortingOption={setSortingOption}
         />
+        <FilterComponent onFilterChange={setFilterCriteria} />
         <Box className={styles.container}>
           {isLoading ? (
             <CircularProgress />
