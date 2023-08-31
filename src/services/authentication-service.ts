@@ -55,6 +55,8 @@ export const getAccessTokenPassFlow = async (
   data.append("username", email);
   data.append("password", password);
 
+  console.log("data URL", data);
+
   const response: AxiosResponse<ITokenResponse> = await axios.post(
     `${authHost}/oauth/ecommerce-app-final-task/customers/token`,
     data.toString(),

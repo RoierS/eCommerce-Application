@@ -1,0 +1,31 @@
+@import "../../sass/abstract/constants";
+
+* {
+  box-sizing: border-box;
+}
+
+.container,
+.card {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 45px 0;
+}
+
+.card {
+  align-items: baseline;
+  margin: 0;
+}
+
+.form {
+  width: 50%;
+  min-width: 358px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+button {
+  width: 100%;
+}
