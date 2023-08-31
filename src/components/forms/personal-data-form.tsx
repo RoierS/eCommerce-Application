@@ -1,18 +1,10 @@
-/* eslint-disable import/no-duplicates */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 
-// import React from "react";
-
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
-// import { SubtitleText, BodyText } from "@components/input/typography";
-
-// import { IRegisterFormData } from "@interfaces/registration-form-data";
 import schemaPersonalData from "@constants/schema-personal-data";
 import { IUserDataResponse } from "@interfaces/user-data-response";
-// import { IRegisterFormData } from "@interfaces/registration-form-data";
-// import getUser from "@services/get-user";
 
 import dayjs from "dayjs";
 
@@ -25,10 +17,6 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
-// import countries from "./countries";
-
-// import testUser from "./testUserData";
 
 import styles from "./forms.module.scss";
 
@@ -47,19 +35,17 @@ const PersonalDataForm = (user: IUserDataResponse) => {
     mode: "onChange",
   });
 
-  const updatedFields = ["email", "firstName", "lastName", "dateOfBirth"];
-
-  const setValues = () => {
-    updatedFields.forEach((f: string) => {
-      const fkey = f as keyof IUserDataResponse;
-      // eslint-disable-next-line react/destructuring-assignment
-      setValue(f as keyof IUserDataResponse, user[fkey]);
-    });
-  };
-
   useEffect(() => {
+    const updatedFields = ["email", "firstName", "lastName", "dateOfBirth"];
+    const setValues = () => {
+      updatedFields.forEach((f: string) => {
+        const fkey = f as keyof IUserDataResponse;
+        // eslint-disable-next-line react/destructuring-assignment
+        setValue(f as keyof IUserDataResponse, user[fkey]);
+      });
+    };
     setValues();
-  }, []);
+  }, [setValue, user]);
 
   const [isPersonalDataDisabled, setPersonalDataDisabled] = useState(true);
 
@@ -99,7 +85,6 @@ const PersonalDataForm = (user: IUserDataResponse) => {
             defaultValue=""
             render={({ field }) => (
               <TextField
-                // value={email}
                 disabled={isPersonalDataDisabled}
                 label="Email"
                 fullWidth
