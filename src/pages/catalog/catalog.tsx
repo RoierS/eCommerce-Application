@@ -84,7 +84,11 @@ const Catalog = () => {
 
   // handle fetching, filtering, sorting, and searching based on dependencies
   useEffect(() => {
-    if (!sortingOption && !searchQuery && !sortingOption) {
+    if (
+      !sortingOption &&
+      !searchQuery &&
+      Object.keys(filterCriteria).length === 0
+    ) {
       console.log("fetchProducts");
       fetchProducts();
     }
@@ -95,7 +99,10 @@ const Catalog = () => {
       console.log("searchHandler");
     }
 
-    if (sortingOption || filterCriteria) {
+    if (
+      (sortingOption || Object.keys(filterCriteria).length > 0) &&
+      !searchQuery
+    ) {
       fetchFilteredAndSortedProducts();
       console.log("fetchFilteredAndSortedProducts");
     }

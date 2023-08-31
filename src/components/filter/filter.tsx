@@ -27,6 +27,9 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
     if (countryFilter !== "All") {
       newFilterCriteria["variants.attributes.country"] = `"${countryFilter}"`;
     }
+    if (!countryFilter) {
+      delete newFilterCriteria["variants.attributes.country"];
+    }
 
     const [minPrice, maxPrice] = priceRange;
     newFilterCriteria[
