@@ -13,7 +13,7 @@ import { IProductSearchResult } from "@interfaces/product-search-result";
 import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
 import getProducts from "@services/get-products";
 
-import searchProducts from "@services/search-products";
+// import searchProducts from "@services/search-products";
 
 import { Container, Box, CircularProgress, Typography } from "@mui/material";
 
@@ -32,7 +32,13 @@ const Catalog = () => {
   // fetching products with filters and/or sorting applied
   const fetchFilteredAndSortedProducts = async () => {
     try {
+      setSearchError(false);
       setIsLoading(true);
+      if (searchQuery.trim() !== "") {
+        setSortingOption("");
+        setFilterCriteria({});
+        // setSearchQuery("");
+      }
       const response = await getFilteredAndSortedProducts(
         filterCriteria,
         sortingOption,
@@ -41,6 +47,7 @@ const Catalog = () => {
       setProducts(response);
       setIsLoading(false);
     } catch (error) {
+      setSearchError(true);
       console.error("Error fetching products:", error);
       setIsLoading(false);
     }
@@ -54,30 +61,8 @@ const Catalog = () => {
       setProducts(response.results);
       setIsLoading(false);
     } catch (error) {
-      console.error("Error fetching products:", error);
       setIsLoading(false);
-    }
-  };
-
-  // handle search and update products based on search query
-  const searchHandler = async () => {
-    if (searchQuery.trim() !== "") {
-      try {
-        setIsLoading(true);
-        const searchResults = await searchProducts(searchQuery);
-        setProducts(searchResults);
-        setSearchError(false);
-        setIsLoading(false);
-        setSortingOption("");
-        // TODO: clear filters after getting search results
-      } catch (error) {
-        console.error("Error searching products:", error);
-        setSearchError(true);
-        setIsLoading(false);
-      }
-    } else {
-      setProducts([]);
-      setSearchError(false);
+      console.error("Error fetching products:", error);
     }
   };
 
@@ -113,7 +98,7 @@ const Catalog = () => {
         <SearchField
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          searchHandler={searchHandler}
+          searchHandler={fetchFilteredAndSortedProducts}
           isLoading={isLoading}
         />
         <Typography variant="h6" gutterBottom>

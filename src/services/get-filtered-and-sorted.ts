@@ -1,13 +1,7 @@
 /* eslint-disable no-console */
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
-interface IQueryParams {
-  sort?: string;
-  search?: string;
-  "text.en-Us"?: string;
-  fuzzy?: string;
-  fuzzyLevel?: string;
-}
+import { IQueryParams } from "@interfaces/query-params";
 
 const getFilteredAndSortedProducts = async (
   filterCriteria: Record<string, string>,
@@ -56,8 +50,16 @@ const getFilteredAndSortedProducts = async (
 
     return response.data.results;
   } catch (error) {
-    console.error("Error fetching filtered and sorted products:", error);
-    throw error;
+    if (
+      (error as AxiosError).response &&
+      (error as AxiosError).response?.status === 400
+    ) {
+      console.error("Too short request:", error);
+      throw new Error("Too short request");
+    } else {
+      console.error("Error searching products:", error);
+      throw error;
+    }
   }
 };
 
