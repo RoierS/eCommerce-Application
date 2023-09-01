@@ -38,7 +38,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-import countries from "./countries";
+import countries from "../../constants/countries";
 
 import schemaRegister from "./schema-register";
 

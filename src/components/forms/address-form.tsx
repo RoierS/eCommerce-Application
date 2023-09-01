@@ -9,63 +9,54 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 // import { SubtitleText, BodyText } from "@components/input/typography";
 
 // import { IRegisterFormData } from "@interfaces/registration-form-data";
-import schemaPersonalData from "@constants/schema-personal-data";
-import { IUserDataResponse } from "@interfaces/user-data-response";
+import countries from "@constants/countries";
+import schemaAddress from "@constants/schema-address";
+import { IBaseAddress } from "@interfaces/registration-form-data";
+// import { IUserDataResponse } from "@interfaces/user-response";
 // import { IRegisterFormData } from "@interfaces/registration-form-data";
 // import getUser from "@services/get-user";
 
-import dayjs from "dayjs";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
-import { Button, TextField, Typography } from "@mui/material";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
-// import countries from "./countries";
+import { Autocomplete, Box, Button, TextField } from "@mui/material";
 
 // import testUser from "./testUserData";
 
 import styles from "./forms.module.scss";
 
-const today = new Date();
-const minAge13 = 410240038000;
-const dataDelta = today.getTime() - minAge13;
-
-const AddressDataForm = (user: IUserDataResponse) => {
+const AddressDataForm = (addressData: {
+  address: IBaseAddress;
+  version: number;
+}) => {
+  const { address, version } = addressData;
   const {
     handleSubmit,
     control,
     formState: { errors },
     setValue,
-  } = useForm<IUserDataResponse>({
-    resolver: yupResolver(schemaPersonalData),
+  } = useForm<IBaseAddress>({
+    resolver: yupResolver(schemaAddress),
     mode: "onChange",
   });
 
-  const updatedFields = ["email", "firstName", "lastName", "dateOfBirth"];
-
-  const setValues = () => {
-    updatedFields.forEach((f: string) => {
-      const fkey = f as keyof IUserDataResponse;
-      // eslint-disable-next-line react/destructuring-assignment
-      setValue(f as keyof IUserDataResponse, user[fkey]);
-    });
-  };
-
   useEffect(() => {
+    const updatedFields = ["id", "country", "streetName", "postalCode", "city"];
+
+    const setValues = () => {
+      updatedFields.forEach((f: string) => {
+        const fkey = f as keyof IBaseAddress;
+        // eslint-disable-next-line react/destructuring-assignment
+        setValue(f as keyof IBaseAddress, address[fkey]);
+      });
+    };
     setValues();
-  }, []);
+  }, [setValue, address]);
 
   const [isPersonalDataDisabled, setPersonalDataDisabled] = useState(true);
 
   // Handle form submission
-  const onSubmit: SubmitHandler<IUserDataResponse> = (data) => {
-    console.log("submit data:", data);
+  const onSubmit: SubmitHandler<IBaseAddress> = (data) => {
+    console.log("submit data:", data, "version", version);
     setPersonalDataDisabled(true);
   };
 
@@ -76,36 +67,30 @@ const AddressDataForm = (user: IUserDataResponse) => {
     setPersonalDataDisabled(false);
   };
 
-  const resetPassword = () => {
-    console.log("reset Password");
+  const deleteAddress = () => {
+    console.log("delete Address");
+  };
+
+  const setDefault = () => {
+    console.log("set Default");
   };
 
   return (
-    <Accordion>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-      >
-        <Typography align="center" variant="h6" color="primary">
-          Personal data
-        </Typography>
-      </AccordionSummary>
-      <AccordionDetails>
+    <>
+      <Box>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <Controller
-            name="email"
+            name="streetName"
             control={control}
             defaultValue=""
             render={({ field }) => (
               <TextField
-                // value={email}
                 disabled={isPersonalDataDisabled}
-                label="Email"
+                label="Street"
                 fullWidth
-                error={!!errors.email}
+                error={!!errors.streetName}
                 variant="outlined"
-                helperText={errors.email?.message}
+                helperText={errors.streetName?.message}
                 InputProps={{
                   ...field,
                 }}
@@ -123,17 +108,17 @@ const AddressDataForm = (user: IUserDataResponse) => {
             )}
           />
           <Controller
-            name="firstName"
+            name="city"
             control={control}
             defaultValue=""
             render={({ field }) => (
               <TextField
                 disabled={isPersonalDataDisabled}
-                label="First name"
+                label="City"
                 fullWidth
-                error={!!errors.firstName}
+                error={!!errors.city}
                 variant="outlined"
-                helperText={errors.firstName?.message}
+                helperText={errors.city?.message}
                 InputProps={{
                   ...field,
                 }}
@@ -151,70 +136,83 @@ const AddressDataForm = (user: IUserDataResponse) => {
             )}
           />
           <Controller
-            name="lastName"
+            name="country"
             control={control}
             defaultValue=""
-            render={({ field }) => (
-              <TextField
-                disabled={isPersonalDataDisabled}
-                label="Last name"
-                fullWidth
-                error={!!errors.lastName}
-                variant="outlined"
-                helperText={errors.lastName?.message}
-                InputProps={{
-                  ...field,
-                }}
-                sx={{
-                  "& .MuiInputBase-input.Mui-disabled": {
-                    WebkitTextFillColor: "#15528e",
-                  },
-                  "& .MuiInputBase-root.Mui-disabled": {
-                    "& > fieldset": {
-                      borderColor: "#15528e",
-                    },
-                  },
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="dateOfBirth"
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState: { error } }) => {
+            render={({ field }) => {
               const { value, onChange } = field;
+              const country = value
+                ? countries.find((opt) => value === opt.value) ?? null
+                : null;
               return (
-                <DatePicker
+                <Autocomplete
                   disabled={isPersonalDataDisabled}
-                  label="Date of birth"
-                  format="YYYY-MM-DD"
-                  maxDate={dayjs(dataDelta)}
-                  value={dayjs(value)}
-                  onChange={(newValue) => onChange(newValue)}
-                  slotProps={{
-                    textField: {
-                      required: true,
-                      helperText: error?.message,
-                    },
+                  value={country}
+                  options={countries}
+                  onChange={(event, newValue) => {
+                    onChange(newValue ? newValue.value : null);
                   }}
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      WebkitTextFillColor: "#15528e",
-                    },
-                    "& .MuiInputBase-root.Mui-disabled": {
-                      "& > fieldset": {
-                        borderColor: "#15528e",
-                      },
-                    },
-                  }}
+                  renderOption={(props, option) => (
+                    <Box component="li" {...props}>
+                      {option.label}
+                    </Box>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Choose a country"
+                      error={!!errors.country}
+                      helperText={errors.country?.message}
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: "new-password",
+                      }}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "#15528e",
+                        },
+                        "& .MuiInputBase-root.Mui-disabled": {
+                          "& > fieldset": {
+                            borderColor: "#15528e",
+                          },
+                        },
+                      }}
+                    />
+                  )}
                 />
               );
             }}
           />
+          <Controller
+            name="postalCode"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                disabled={isPersonalDataDisabled}
+                label="Postal code"
+                fullWidth
+                error={!!errors.postalCode}
+                variant="outlined"
+                helperText={errors.postalCode?.message}
+                InputProps={{
+                  ...field,
+                }}
+                sx={{
+                  "& .MuiInputBase-input.Mui-disabled": {
+                    WebkitTextFillColor: "#15528e",
+                  },
+                  "& .MuiInputBase-root.Mui-disabled": {
+                    "& > fieldset": {
+                      borderColor: "#15528e",
+                    },
+                  },
+                }}
+              />
+            )}
+          />
           {isPersonalDataDisabled ? (
             <Button
-              className="button"
               type="button"
               variant="contained"
               color="primary"
@@ -223,27 +221,31 @@ const AddressDataForm = (user: IUserDataResponse) => {
               Edit
             </Button>
           ) : (
-            <Button
-              className="button"
-              type="submit"
-              variant="contained"
-              color="primary"
-            >
-              Submit
+            <Button type="submit" variant="contained" color="success">
+              Save
             </Button>
           )}
         </form>
+      </Box>
+      <Box sx={{ display: "flex", gap: 2 }} className={styles.buttonContainer}>
         <Button
-          className="button"
           type="button"
           variant="contained"
           color="primary"
-          onClick={resetPassword}
+          onClick={deleteAddress}
         >
-          reset password
+          Delete
         </Button>
-      </AccordionDetails>
-    </Accordion>
+        <Button
+          type="button"
+          variant="contained"
+          color="primary"
+          onClick={setDefault}
+        >
+          Set default
+        </Button>
+      </Box>
+    </>
   );
 };
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import schemaPersonalData from "@constants/schema-personal-data";
-import { IUserDataResponse } from "@interfaces/user-data-response";
+import { IUserPersonalDataResponse } from "@interfaces/user-response";
 
 import dayjs from "dayjs";
 
@@ -24,13 +24,13 @@ const today = new Date();
 const minAge13 = 410240038000;
 const dataDelta = today.getTime() - minAge13;
 
-const PersonalDataForm = (user: IUserDataResponse) => {
+const PersonalDataForm = (user: IUserPersonalDataResponse) => {
   const {
     handleSubmit,
     control,
     formState: { errors },
     setValue,
-  } = useForm<IUserDataResponse>({
+  } = useForm<IUserPersonalDataResponse>({
     resolver: yupResolver(schemaPersonalData),
     mode: "onChange",
   });
@@ -39,9 +39,9 @@ const PersonalDataForm = (user: IUserDataResponse) => {
     const updatedFields = ["email", "firstName", "lastName", "dateOfBirth"];
     const setValues = () => {
       updatedFields.forEach((f: string) => {
-        const fkey = f as keyof IUserDataResponse;
+        const fkey = f as keyof IUserPersonalDataResponse;
         // eslint-disable-next-line react/destructuring-assignment
-        setValue(f as keyof IUserDataResponse, user[fkey]);
+        setValue(f as keyof IUserPersonalDataResponse, user[fkey]);
       });
     };
     setValues();
@@ -50,7 +50,7 @@ const PersonalDataForm = (user: IUserDataResponse) => {
   const [isPersonalDataDisabled, setPersonalDataDisabled] = useState(true);
 
   // Handle form submission
-  const onSubmit: SubmitHandler<IUserDataResponse> = (data) => {
+  const onSubmit: SubmitHandler<IUserPersonalDataResponse> = (data) => {
     console.log("submit data:", data);
     setPersonalDataDisabled(true);
   };
@@ -199,7 +199,7 @@ const PersonalDataForm = (user: IUserDataResponse) => {
           />
           {isPersonalDataDisabled ? (
             <Button
-              className="button"
+              className="big-button"
               type="button"
               variant="contained"
               color="primary"
@@ -209,20 +209,20 @@ const PersonalDataForm = (user: IUserDataResponse) => {
             </Button>
           ) : (
             <Button
-              className="button"
+              className="big-button"
               type="submit"
               variant="contained"
-              color="primary"
+              color="success"
             >
-              Submit
+              Save
             </Button>
           )}
         </form>
         <Button
-          className="button"
+          className="big-button"
           type="button"
           variant="contained"
-          color="primary"
+          color="info"
           onClick={resetPassword}
         >
           reset password

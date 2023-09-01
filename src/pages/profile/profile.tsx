@@ -1,10 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 
-import PersonalData from "@components/forms/personal-data-form";
+import AddressesList from "@components/forms/addresses-list";
+import PersonalDataForm from "@components/forms/personal-data-form";
 import AppHeader from "@components/header/header";
-
-import { IUserDataResponse } from "@interfaces/user-data-response";
+import makeAddressArray from "@helpers/make-address-array";
+import { IBaseAddress } from "@interfaces/registration-form-data";
+import {
+  IUserFullDataResponse,
+  IUserPersonalDataResponse,
+} from "@interfaces/user-response";
 
 import getUser from "@services/get-user";
 
@@ -21,12 +26,38 @@ const Profile = () => {
     return <Navigate to="/login" />;
   }
 
-  const [user, setUser] = useState({} as IUserDataResponse);
+  const [user, setUser] = useState({} as IUserFullDataResponse);
+  const [personalData, setPersonalData] = useState(
+    {} as IUserPersonalDataResponse
+  );
+
+  const [shippingAddresses, setShippingAddresses] = useState(
+    [] as IBaseAddress[]
+  );
+
+  const [billingAddresses, setBillingAddresses] = useState(
+    [] as IBaseAddress[]
+  );
 
   const fetchUser = async () => {
     try {
-      const response = await getUser();
+      const response: IUserFullDataResponse = await getUser();
       setUser(response);
+
+      setPersonalData({
+        version: response.version,
+        email: response.email,
+        firstName: response.firstName,
+        lastName: response.lastName,
+        dateOfBirth: response.dateOfBirth,
+      });
+
+      setShippingAddresses(
+        makeAddressArray(response.addresses, response.shippingAddressIds)
+      );
+      setBillingAddresses(
+        makeAddressArray(response.addresses, response.billingAddressIds)
+      );
     } catch (error) {
       console.log("Error fetching user (in component render):", error);
     }
@@ -42,7 +73,19 @@ const Profile = () => {
     <>
       <AppHeader />
       <Box sx={{ display: "flex" }} className={styles.container}>
-        <PersonalData {...user} />
+        <PersonalDataForm {...personalData} />
+        <AddressesList
+          addresses={shippingAddresses ?? []}
+          version={user.version}
+          defaultAddressId={user.defaultShippingAddressId}
+          typography="Shipping addresses"
+        />
+        <AddressesList
+          addresses={billingAddresses ?? []}
+          version={user.version}
+          defaultAddressId={user.defaultBillingAddressId}
+          typography="Billing addresses"
+        />
       </Box>
     </>
   );
