@@ -1,13 +1,18 @@
 /* eslint-disable no-console */
 import axios from "axios";
 
-interface QueryParams {
+interface IQueryParams {
   sort?: string;
+  search?: string;
+  "text.en-Us"?: string;
+  fuzzy?: string;
+  fuzzyLevel?: string;
 }
 
 const getFilteredAndSortedProducts = async (
   filterCriteria: Record<string, string>,
-  sortingOption: string
+  sortingOption: string,
+  searchQuery: string
 ) => {
   try {
     const tokenObject = JSON.parse(
@@ -29,10 +34,16 @@ const getFilteredAndSortedProducts = async (
       )
       .join("&");
 
-    const queryParams: QueryParams = {};
+    const queryParams: IQueryParams = {};
 
     if (sortingOption) {
       queryParams.sort = sortingOption;
+    }
+    if (searchQuery) {
+      // queryParams.search = searchQuery;
+      queryParams["text.en-Us"] = searchQuery;
+      queryParams.fuzzy = "true";
+      queryParams.fuzzyLevel = "1";
     }
 
     const response = await axios.get(

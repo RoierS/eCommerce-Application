@@ -15,7 +15,7 @@ import getProducts from "@services/get-products";
 
 import searchProducts from "@services/search-products";
 
-import { Container, Box, CircularProgress } from "@mui/material";
+import { Container, Box, CircularProgress, Typography } from "@mui/material";
 
 import styles from "./catalog.module.scss";
 
@@ -35,7 +35,8 @@ const Catalog = () => {
       setIsLoading(true);
       const response = await getFilteredAndSortedProducts(
         filterCriteria,
-        sortingOption
+        sortingOption,
+        searchQuery
       );
       setProducts(response);
       setIsLoading(false);
@@ -60,8 +61,6 @@ const Catalog = () => {
 
   // handle search and update products based on search query
   const searchHandler = async () => {
-    setSortingOption("");
-
     if (searchQuery.trim() !== "") {
       try {
         setIsLoading(true);
@@ -69,6 +68,8 @@ const Catalog = () => {
         setProducts(searchResults);
         setSearchError(false);
         setIsLoading(false);
+        setSortingOption("");
+        // TODO: clear filters after getting search results
       } catch (error) {
         console.error("Error searching products:", error);
         setSearchError(true);
@@ -78,8 +79,6 @@ const Catalog = () => {
       setProducts([]);
       setSearchError(false);
     }
-
-    setSearchQuery("");
   };
 
   // handle fetching, filtering, sorting, and searching based on dependencies
@@ -93,10 +92,9 @@ const Catalog = () => {
       fetchProducts();
     }
 
-    if (searchQuery.trim() !== "" && !sortingOption) {
-      setSortingOption("");
-      searchHandler();
-      console.log("searchHandler");
+    if (searchQuery.trim() !== "") {
+      fetchFilteredAndSortedProducts();
+      console.log("fetchFilteredAndSortedProducts");
     }
 
     if (
@@ -118,10 +116,16 @@ const Catalog = () => {
           searchHandler={searchHandler}
           isLoading={isLoading}
         />
+        <Typography variant="h6" gutterBottom>
+          Sorting
+        </Typography>
         <SortingField
           sortingOption={sortingOption}
           setSortingOption={setSortingOption}
         />
+        <Typography variant="h6" gutterBottom>
+          Filters
+        </Typography>
         <FilterComponent onFilterChange={setFilterCriteria} />
         <Box className={styles.container}>
           {isLoading ? (

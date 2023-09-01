@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState } from "react";
 
 import { IFilterComponentProps } from "@interfaces/filter-props";
@@ -40,7 +41,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
   };
 
   // clears the filters
-  const handleClearFilters = () => {
+  const clearFilters = () => {
     setCountryFilter("");
     setPriceRange([0, 300000]);
     onFilterChange({});
@@ -66,15 +67,15 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
           <MenuItem value="Egypt">Egypt</MenuItem>
         </Select>
         <Slider
-          sx={{ width: 1 / 2, alignSelf: "center" }}
+          sx={{ width: 1 / 2, alignSelf: "center", mb: 2 }}
           className={styles.slider}
           value={priceRange}
           onChange={(event, newValue) => setPriceRange(newValue as number[])}
           valueLabelDisplay="on"
-          marks={[
-            { value: 0, label: "0$" },
-            { value: 300000, label: "3000$" },
-          ]}
+          // marks={[
+          //   { value: 0, label: "0$" },
+          //   { value: 300000, label: "3000$" },
+          // ]}
           aria-labelledby="range-slider"
           min={0}
           max={300000}
@@ -85,7 +86,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
         <Button onClick={handleApplyFilters} variant="outlined" color="success">
           Apply Filters
         </Button>
-        <Button onClick={handleClearFilters} variant="outlined" color="error">
+        <Button onClick={clearFilters} variant="outlined" color="error">
           Clear Filters
         </Button>
       </Box>
