@@ -13,8 +13,6 @@ import { IProductSearchResult } from "@interfaces/product-search-result";
 import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
 import getProducts from "@services/get-products";
 
-// import searchProducts from "@services/search-products";
-
 import { Container, Box, CircularProgress, Typography } from "@mui/material";
 
 import styles from "./catalog.module.scss";
