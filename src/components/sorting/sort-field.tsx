@@ -1,8 +1,10 @@
 import React from "react";
 
-import { ISortingFieldProps } from "@interfaces/sort-field-props";
+import { ISortingFieldProps } from "@components/sorting/sort-field-props";
 
 import { Box, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+
+import sortingOptions from "./sorting-options";
 
 import styles from "./sortingField.module.scss";
 
@@ -23,10 +25,11 @@ const SortingField: React.FC<ISortingFieldProps> = ({
           variant="outlined"
           size="small"
         >
-          <MenuItem value="name.en-Us asc">Name (A-Z)</MenuItem>
-          <MenuItem value="name.en-Us desc">Name (Z-A)</MenuItem>
-          <MenuItem value="price asc">Price (Low to High)</MenuItem>
-          <MenuItem value="price desc">Price (High to Low)</MenuItem>
+          {sortingOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Box>

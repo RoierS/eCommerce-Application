@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ISearchFieldProps } from "@interfaces/search-field-props";
+import { ISearchFieldProps } from "@components/search/search-field-props";
 
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, TextField, Button } from "@mui/material";

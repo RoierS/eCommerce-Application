@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-console */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import CardComponent from "@components/card/card";
 import FilterComponent from "@components/filter/filter";
@@ -28,15 +28,10 @@ const Catalog = () => {
   );
 
   // fetching products with filters and/or sorting applied
-  const fetchFilteredAndSortedProducts = async () => {
+  const fetchFilteredAndSortedProducts = useCallback(async () => {
     try {
       setSearchError(false);
       setIsLoading(true);
-      if (searchQuery.trim() !== "") {
-        setSortingOption("");
-        setFilterCriteria({});
-        // setSearchQuery("");
-      }
       const response = await getFilteredAndSortedProducts(
         filterCriteria,
         sortingOption,
@@ -49,10 +44,10 @@ const Catalog = () => {
       console.error("Error fetching products:", error);
       setIsLoading(false);
     }
-  };
+  }, [searchQuery, sortingOption, filterCriteria]);
 
   // fetching the list of products
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await getProducts();
@@ -62,28 +57,16 @@ const Catalog = () => {
       setIsLoading(false);
       console.error("Error fetching products:", error);
     }
-  };
+  }, []);
 
   // handle fetching, filtering, sorting, and searching based on dependencies
   useEffect(() => {
-    if (
-      !sortingOption &&
-      !searchQuery &&
-      Object.keys(filterCriteria).length === 0
-    ) {
+    if (!sortingOption && Object.keys(filterCriteria).length === 0) {
       console.log("fetchProducts");
       fetchProducts();
     }
 
-    if (searchQuery.trim() !== "") {
-      fetchFilteredAndSortedProducts();
-      console.log("fetchFilteredAndSortedProducts");
-    }
-
-    if (
-      (sortingOption || Object.keys(filterCriteria).length > 0) &&
-      !searchQuery
-    ) {
+    if (sortingOption || Object.keys(filterCriteria).length > 0) {
       fetchFilteredAndSortedProducts();
       console.log("fetchFilteredAndSortedProducts");
     }

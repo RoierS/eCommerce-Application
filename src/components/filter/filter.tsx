@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React, { useState } from "react";
 
-import { IFilterComponentProps } from "@interfaces/filter-props";
+import { IFilterComponentProps } from "@components/filter/filter-props";
 
 import {
   FormControl,
@@ -12,6 +12,8 @@ import {
   Slider,
   Box,
 } from "@mui/material";
+
+import countries from "./country-data";
 
 import styles from "./filter.module.scss";
 
@@ -44,7 +46,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
   const clearFilters = () => {
     setCountryFilter("");
     setPriceRange([0, 300000]);
-    onFilterChange({});
+    // onFilterChange({});
   };
 
   return (
@@ -61,10 +63,11 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
           variant="outlined"
           size="small"
         >
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Spain">Spain</MenuItem>
-          <MenuItem value="Poland">Poland</MenuItem>
-          <MenuItem value="Egypt">Egypt</MenuItem>
+          {countries.map((country) => (
+            <MenuItem key={country.value} value={country.value}>
+              {country.label}
+            </MenuItem>
+          ))}
         </Select>
         <Slider
           sx={{ width: 1 / 2, alignSelf: "center", mb: 2 }}
