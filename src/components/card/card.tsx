@@ -75,10 +75,10 @@ const CardComponent: React.FC<{
         {discountPrice ? (
           <>
             <Typography className={styles.originalPriceStriked}>
-              Price: {originalPrice / 100} USD
+              Price: {(originalPrice / 100).toFixed()} USD
             </Typography>
             <Typography className={styles.discountedPrice}>
-              Discounted Price: {discountPrice / 100} USD
+              Discounted Price: {(discountPrice / 100).toFixed()} USD
             </Typography>
             <Chip
               component="span"
@@ -90,7 +90,7 @@ const CardComponent: React.FC<{
           </>
         ) : (
           <Typography className={styles.originalPrice}>
-            Price: {originalPrice / 100} USD
+            Price: {(originalPrice / 100).toFixed()} USD
           </Typography>
         )}
         <CardActions className={styles.cardAction}>
