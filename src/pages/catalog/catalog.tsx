@@ -75,7 +75,7 @@ const Catalog = () => {
   return (
     <>
       <AppHeader />
-      <Container>
+      <Container className={styles.catalogContainer}>
         <SearchField
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
