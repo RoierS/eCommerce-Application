@@ -6,21 +6,27 @@ import axios from "axios";
 import AddressesList from "@components/forms/addresses-list";
 import PersonalDataForm from "@components/forms/personal-data-form";
 import AppHeader from "@components/header/header";
+import InfoPopup from "@components/modal/info-popup";
+import PasswordPopup from "@components/modal/password-popup";
 import makeAddressArray from "@helpers/make-address-array";
+import { ILoginData } from "@interfaces/login-form-data";
+import { IPasswords } from "@interfaces/modal";
 import { IBaseAddress } from "@interfaces/registration-form-data";
 import {
   IUserFullDataResponse,
   IUserPersonalDataResponse,
 } from "@interfaces/user-response";
-import { IUserUpdate } from "@interfaces/user-update";
+import { IPasswordUpdate, IUserUpdate } from "@interfaces/user-update";
 
+import { getTokenAndLogin } from "@services/authentication-service";
+import changePasswordRequest from "@services/change-password";
 import getUser from "@services/get-user";
 
 import userRequest from "@services/user-request";
 import dayjs from "dayjs";
 import { Navigate } from "react-router-dom";
 
-import { Box, Modal, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 import styles from "./profile.module.scss";
 
@@ -44,11 +50,11 @@ const Profile = () => {
     [] as IBaseAddress[]
   );
 
-  // States for info modal popup
+  // States and functions for info modal popup
   const [isOpenInfoModal, setModalInfoOpen] = useState(false);
   const [infoModalMessage, setInfoModalMessage] = useState("");
 
-  const showPopup = (message: string) => {
+  const showInfoPopup = (message: string) => {
     setInfoModalMessage(message);
     setModalInfoOpen(true);
   };
@@ -57,17 +63,70 @@ const Profile = () => {
     setModalInfoOpen(false);
   };
 
-  // States for reset password modal popup
-  // const [isOpenPasswordModal, setModalPasswordOpen] = useState(false);
+  // States and functions for reset password modal popup
+  const [isOpenPasswordModal, setModalPasswordOpen] = useState(false);
 
-  // const showPasswordPopup = () => {
-  //   setModalPasswordOpen(true);
-  // };
+  const showPasswordPopup = () => {
+    setModalPasswordOpen(true);
+  };
 
-  // const handlePasswordModalClose = async () => {
-  //   setModalPasswordOpen(false);
-  // };
+  const handlePasswordModalClose = () => {
+    setModalPasswordOpen(false);
+  };
 
+  const login = async (data: ILoginData) => {
+    let customerInfo;
+    try {
+      customerInfo = await getTokenAndLogin(data);
+
+      console.log("Customer logged in successfully", customerInfo);
+      return customerInfo;
+    } catch (error) {
+      console.log("Error:", error);
+    }
+    return customerInfo;
+  };
+
+  // update password on server
+  const onPasswordSubmit = async (data: IPasswords) => {
+    const { currentPassword, newPassword } = data;
+    const { version } = user;
+
+    console.log(
+      "onPasswordSubmit: currentPassword, newPassword, version",
+      currentPassword,
+      newPassword,
+      version
+    );
+
+    handlePasswordModalClose();
+    const dataObj: IPasswordUpdate = {
+      version,
+      currentPassword,
+      newPassword,
+    };
+
+    let response;
+    try {
+      response = await changePasswordRequest(dataObj);
+      console.log("change Password Request response", response);
+      showInfoPopup("Data is updated successfully");
+
+      // relogin
+      const customerInfo = await login({
+        email: user.email,
+        password: newPassword,
+      });
+      if (customerInfo) {
+        setUser(customerInfo);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        showInfoPopup(error.message);
+      }
+    }
+  };
+  // update personal data on server
   const onPersonalDataSubmit = async (data: IUserPersonalDataResponse) => {
     const { email, firstName, lastName, dateOfBirth } = data;
     const { version } = user;
@@ -100,14 +159,14 @@ const Profile = () => {
       response = await userRequest(dataObj);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        showPopup(error.message);
+        showInfoPopup(error.message);
         return;
       }
     }
 
-    showPopup("Data is updated successfully");
+    showInfoPopup("Data is updated successfully");
     setPersonalData(response);
-    // todo rerender
+    setUser(response);
   };
 
   const fetchUser = async () => {
@@ -115,13 +174,6 @@ const Profile = () => {
       const response: IUserFullDataResponse = await getUser();
       setUser(response);
 
-      // setPersonalData({
-      //   version: response.version,
-      //   email: response.email,
-      //   firstName: response.firstName,
-      //   lastName: response.lastName,
-      //   dateOfBirth: response.dateOfBirth,
-      // });
       setPersonalData(response);
 
       setShippingAddresses(
@@ -148,6 +200,7 @@ const Profile = () => {
         <PersonalDataForm
           user={personalData}
           onParentSubmit={onPersonalDataSubmit}
+          showPasswordPopup={showPasswordPopup}
         />
         <AddressesList
           addresses={shippingAddresses ?? []}
@@ -161,26 +214,16 @@ const Profile = () => {
           defaultAddressId={user.defaultBillingAddressId}
           typography="Billing addresses"
         />
-        <Modal open={isOpenInfoModal} onClose={handleInfoModalClose}>
-          <Box
-            className={styles.modal}
-            sx={{
-              boxShadow: 24,
-            }}
-          >
-            <Typography variant="h6">{infoModalMessage}</Typography>
-          </Box>
-        </Modal>
-        {/* <Modal open={isOpenPasswordModal} onClose={handlePasswordModalClose}>
-          <Box
-            className={styles.modal}
-            sx={{
-              boxShadow: 24,
-            }}
-          >
-            <Typography variant="h6">"Password change</Typography>
-          </Box>
-        </Modal> */}
+        <InfoPopup
+          open={isOpenInfoModal}
+          onClose={handleInfoModalClose}
+          message={infoModalMessage}
+        />
+        <PasswordPopup
+          open={isOpenPasswordModal}
+          onClose={handlePasswordModalClose}
+          onFormSubmit={onPasswordSubmit}
+        />
       </Box>
     </>
   );

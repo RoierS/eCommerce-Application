@@ -29,6 +29,10 @@ export interface IUserFullDataResponse {
   defaultShippingAddressId: string;
 }
 
+export interface ILoginResponse {
+  customer: IUserFullDataResponse;
+}
+
 export interface IUserAddressResponse {
   version?: number;
   addresses: IBaseAddress[];

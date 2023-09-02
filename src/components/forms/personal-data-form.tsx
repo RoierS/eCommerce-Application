@@ -27,6 +27,7 @@ const dataDelta = today.getTime() - minAge13;
 interface IPersonalDataFormProps {
   user: IUserPersonalDataResponse;
   onParentSubmit: (data: IUserPersonalDataResponse) => void;
+  showPasswordPopup: () => void;
 }
 
 const PersonalDataForm = (props: IPersonalDataFormProps) => {
@@ -39,7 +40,7 @@ const PersonalDataForm = (props: IPersonalDataFormProps) => {
     resolver: yupResolver(schemaPersonalData),
     mode: "onChange",
   });
-  const { user, onParentSubmit } = props;
+  const { user, onParentSubmit, showPasswordPopup } = props;
 
   useEffect(() => {
     const updatedFields = ["email", "firstName", "lastName", "dateOfBirth"];
@@ -67,10 +68,6 @@ const PersonalDataForm = (props: IPersonalDataFormProps) => {
     // eslint-disable-next-line no-restricted-globals
     event?.preventDefault();
     setPersonalDataDisabled(false);
-  };
-
-  const resetPassword = () => {
-    console.log("reset Password");
   };
 
   return (
@@ -230,7 +227,7 @@ const PersonalDataForm = (props: IPersonalDataFormProps) => {
           type="button"
           variant="contained"
           color="info"
-          onClick={resetPassword}
+          onClick={showPasswordPopup}
         >
           reset password
         </Button>

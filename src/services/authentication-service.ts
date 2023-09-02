@@ -1,12 +1,16 @@
 import axios, { AxiosResponse } from "axios";
 
 import { ILoginData } from "@interfaces/login-form-data";
-import { ICustomerLoginResponse } from "@interfaces/login-response";
+// import { ICustomerLoginResponse } from "@interfaces/login-response";
 import {
   IRegistrateData,
   ICustomerRegistrationResponse,
 } from "@interfaces/registration-form-data";
 import { ITokenResponse } from "@interfaces/token-response";
+import {
+  ILoginResponse,
+  IUserFullDataResponse,
+} from "@interfaces/user-response";
 
 //  get an access token from the CommerceTools
 export const getAccessToken = async () => {
@@ -73,7 +77,7 @@ const loginCustomer = async (
   accessToken: string,
   email: string,
   password: string
-): Promise<ICustomerLoginResponse> => {
+): Promise<IUserFullDataResponse> => {
   const apiHost = process.env.REACT_APP_API_HOST;
   const projectKey = process.env.REACT_APP_PROJECT_KEY;
 
@@ -87,13 +91,13 @@ const loginCustomer = async (
     password,
   };
 
-  const response = await axios.post<ICustomerLoginResponse>(
+  const response = await axios.post<ILoginResponse>(
     `${apiHost}/${projectKey}/me/login`,
     data,
     { headers }
   );
 
-  return response.data;
+  return response?.data?.customer;
 };
 
 export const getTokenAndLogin = async (data: ILoginData) => {

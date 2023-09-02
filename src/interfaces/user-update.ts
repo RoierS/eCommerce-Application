@@ -7,3 +7,9 @@ export interface IUserUpdate {
   version: number;
   actions: IAction[];
 }
+
+export interface IPasswordUpdate {
+  version: number;
+  currentPassword: string;
+  newPassword: string;
+}
