@@ -24,7 +24,12 @@ const today = new Date();
 const minAge13 = 410240038000;
 const dataDelta = today.getTime() - minAge13;
 
-const PersonalDataForm = (user: IUserPersonalDataResponse) => {
+interface IPersonalDataFormProps {
+  user: IUserPersonalDataResponse;
+  onParentSubmit: (data: IUserPersonalDataResponse) => void;
+}
+
+const PersonalDataForm = (props: IPersonalDataFormProps) => {
   const {
     handleSubmit,
     control,
@@ -34,6 +39,7 @@ const PersonalDataForm = (user: IUserPersonalDataResponse) => {
     resolver: yupResolver(schemaPersonalData),
     mode: "onChange",
   });
+  const { user, onParentSubmit } = props;
 
   useEffect(() => {
     const updatedFields = ["email", "firstName", "lastName", "dateOfBirth"];
@@ -53,6 +59,7 @@ const PersonalDataForm = (user: IUserPersonalDataResponse) => {
   const onSubmit: SubmitHandler<IUserPersonalDataResponse> = (data) => {
     console.log("submit data:", data);
     setPersonalDataDisabled(true);
+    onParentSubmit(data);
   };
 
   // switch edit mode

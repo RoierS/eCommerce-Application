@@ -6,11 +6,14 @@ export interface IUserPersonalDataResponse {
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
-  // addresses?: IBaseAddress[];
-  // billingAddressIds?: string[];
-  // shippingAddressIds?: string[];
-  // defaultBillingAddressId?: string;
-  // defaultShippingAddressId?: string;
+}
+
+export interface IUserPersonalDataUpdate {
+  version: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
 }
 
 export interface IUserFullDataResponse {

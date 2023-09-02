@@ -1,7 +1,8 @@
-/* eslint-disable no-console */
 import axios from "axios";
 
-const getUser = async () => {
+import { IUserUpdate } from "@interfaces/user-update";
+
+const userRequest = async (data: IUserUpdate) => {
   const tokenObject = JSON.parse(localStorage.getItem("tokenObject") || "null");
   const accessToken = tokenObject?.access_token || "";
   const apiHost = process.env.REACT_APP_API_HOST;
@@ -13,16 +14,16 @@ const getUser = async () => {
   };
 
   try {
-    console.log("token in get user service", accessToken);
-    const response = await axios.get(`${apiHost}/${projectKey}/me`, {
+    console.log("token in request user service", accessToken);
+    const response = await axios.post(`${apiHost}/${projectKey}/me`, data, {
       headers,
     });
-
+    console.log("response.data", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error fetching user data (in get user service):", error);
+    console.log("Error fetching user data (in get user service):", error);
     throw error;
   }
 };
 
-export default getUser;
+export default userRequest;

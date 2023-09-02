@@ -15,23 +15,21 @@ const AddressesList = (props: {
   defaultAddressId: string;
   typography: string;
 }) => {
-  // eslint-disable-next-line react/destructuring-assignment
   const { addresses, version, defaultAddressId, typography } = props;
   const listItems = addresses.map((address: IBaseAddress, index: number) => {
     return address && address?.id === defaultAddressId ? (
-      <li className={styles.default}>
+      <li className={styles.default} key={`${address.id}${address.postalCode}`}>
         <Typography
           className={styles.h4default}
           align="center"
           variant="subtitle2"
-          color="primary"
         >
           Address {index + 1} (default):
         </Typography>
         <AddressDataForm {...{ address, version }} />
       </li>
     ) : (
-      <li className={styles.basic}>
+      <li className={styles.basic} key={`${address.id}${address.postalCode}`}>
         <Typography align="center" variant="subtitle2" color="primary">
           Address {index + 1}:
         </Typography>
