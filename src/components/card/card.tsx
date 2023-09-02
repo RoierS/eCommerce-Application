@@ -16,6 +16,8 @@ import {
   CardActions,
   Button,
   Card,
+  Rating,
+  Box,
 } from "@mui/material";
 
 import styles from "./card.module.scss";
@@ -50,6 +52,15 @@ const CardComponent: React.FC<{
     ? product.masterData.current.name["en-US"]
     : product.name["en-US"];
 
+  const starRating = isProductData
+    ? product.masterData.current.masterVariant.attributes.find(
+        (attribute) => attribute.name === "Star-Rating"
+      )?.value
+    : product.masterVariant.attributes.find(
+        (attribute) => attribute.name === "Star-Rating"
+      )?.value;
+  // eslint-disable-next-line no-console
+  console.log(typeof starRating);
   return (
     <Card className={styles.card}>
       <div className={styles.discountBadge}>
@@ -71,6 +82,10 @@ const CardComponent: React.FC<{
       />
       <CardContent className={styles.content}>
         <Typography variant="h6">{productName}</Typography>
+        <Box className={styles.rating}>
+          <Box className={styles.ratingText}>Hotel class:</Box>
+          <Rating name="star-rating" value={Number(starRating)} readOnly />
+        </Box>
         <Typography variant="body2">{briefDescription}</Typography>
         {discountPrice ? (
           <>
