@@ -59,8 +59,7 @@ const CardComponent: React.FC<{
     : product.masterVariant.attributes.find(
         (attribute) => attribute.name === "Star-Rating"
       )?.value;
-  // eslint-disable-next-line no-console
-  console.log(typeof starRating);
+
   return (
     <Card className={styles.card}>
       <div className={styles.discountBadge}>

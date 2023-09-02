@@ -66,5 +66,5 @@ export interface IProductSearchResult {
 
 export interface IAttribute {
   name: string;
-  value: string;
+  value: string | number;
 }

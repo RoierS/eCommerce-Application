@@ -11,9 +11,12 @@ import {
   Button,
   Slider,
   Box,
+  Rating,
 } from "@mui/material";
 
 import countries from "./country-data";
+
+import stars from "./stars-data";
 
 import styles from "./filter.module.scss";
 
@@ -22,6 +25,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
 }) => {
   const [countryFilter, setCountryFilter] = useState("");
   const [priceRange, setPriceRange] = useState<number[]>([0, 300000]);
+  const [starRating, setStarRating] = useState<number | undefined>(undefined);
 
   // apply filters by country and price range
   const handleApplyFilters = () => {
@@ -30,8 +34,17 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
     if (countryFilter !== "All") {
       newFilterCriteria["variants.attributes.country"] = `"${countryFilter}"`;
     }
+
     if (!countryFilter) {
       delete newFilterCriteria["variants.attributes.country"];
+    }
+
+    if (!starRating) {
+      delete newFilterCriteria["variants.attributes.Star-Rating"];
+    }
+
+    if (starRating) {
+      newFilterCriteria["variants.attributes.Star-Rating"] = `${starRating}`;
     }
 
     const [minPrice, maxPrice] = priceRange;
@@ -46,6 +59,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
   const clearFilters = () => {
     setCountryFilter("");
     setPriceRange([0, 300000]);
+    setStarRating(undefined);
     // onFilterChange({});
   };
 
@@ -84,6 +98,23 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
           max={300000}
           valueLabelFormat={(value) => `${(value / 100).toFixed()}$`}
         />
+      </FormControl>
+      <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+        <InputLabel id="star-rating-label">Star Rating</InputLabel>
+        <Select
+          label="Star Rating"
+          value={starRating || ""}
+          onChange={(event) => setStarRating(Number(event.target.value))}
+          className={styles.starRatingSelect}
+          variant="outlined"
+          size="small"
+        >
+          {stars.map((star) => (
+            <MenuItem key={star.value} value={star.value}>
+              <Rating name="star-rating" value={Number(star.value)} readOnly />
+            </MenuItem>
+          ))}
+        </Select>
       </FormControl>
       <Box className={styles.buttonsContainer}>
         <Button onClick={handleApplyFilters} variant="outlined" color="success">

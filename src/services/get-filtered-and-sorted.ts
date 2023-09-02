@@ -7,6 +7,7 @@ const getFilteredAndSortedProducts = async (
   filterCriteria: Record<string, string>,
   sortingOption: string,
   searchQuery: string
+  // starRating: number
 ) => {
   try {
     const tokenObject = JSON.parse(
@@ -39,6 +40,10 @@ const getFilteredAndSortedProducts = async (
       queryParams.fuzzy = "true";
       queryParams.fuzzyLevel = "1";
     }
+
+    // if (typeof starRating !== "undefined") {
+    //   queryParams.filter = `variants.attributes.Star-Rating:${starRating}`;
+    // }
 
     const response = await axios.get(
       `${apiHost}/${projectKey}/product-projections/search?${filterQueryString}`,
