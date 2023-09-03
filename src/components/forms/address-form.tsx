@@ -28,12 +28,18 @@ interface IAddressDataFormProps {
   address: IBaseAddress;
   version: number;
   setDefaultAddress: () => void;
+  deleteAddress: () => void;
   defaultBtnDisabled: boolean;
 }
 
 const AddressDataForm = (addressData: IAddressDataFormProps) => {
-  const { address, version, setDefaultAddress, defaultBtnDisabled } =
-    addressData;
+  const {
+    address,
+    version,
+    setDefaultAddress,
+    deleteAddress,
+    defaultBtnDisabled,
+  } = addressData;
   const {
     handleSubmit,
     control,
@@ -72,8 +78,8 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
     setPersonalDataDisabled(false);
   };
 
-  const deleteAddress = () => {
-    console.log("delete Address");
+  const onDelete = () => {
+    deleteAddress();
   };
 
   const setDefault = () => {
@@ -237,7 +243,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
           type="button"
           variant="contained"
           color="primary"
-          onClick={deleteAddress}
+          onClick={onDelete}
         >
           Delete
         </Button>

@@ -50,6 +50,25 @@ const Profile = () => {
     [] as IBaseAddress[]
   );
 
+  // Get user data for page render
+  const fetchUser = async () => {
+    try {
+      const response: IUserFullDataResponse = await getUser();
+      setUser(response);
+
+      setPersonalData(response);
+
+      setShippingAddresses(
+        makeAddressArray(response.addresses, response.shippingAddressIds)
+      );
+      setBillingAddresses(
+        makeAddressArray(response.addresses, response.billingAddressIds)
+      );
+    } catch (error) {
+      console.log("Error fetching user (in component render):", error);
+    }
+  };
+
   // States and functions for info modal popup
   const [isOpenInfoModal, setModalInfoOpen] = useState(false);
   const [infoModalMessage, setInfoModalMessage] = useState("");
@@ -63,7 +82,7 @@ const Profile = () => {
     setModalInfoOpen(false);
   };
 
-  // States and functions for reset password modal popup
+  // States and functions for reset-password-popup
   const [isOpenPasswordModal, setModalPasswordOpen] = useState(false);
 
   const showPasswordPopup = () => {
@@ -170,11 +189,7 @@ const Profile = () => {
     setUser(response);
   };
 
-  const setDefaultAddress = async (
-    id: string,
-    action: string,
-    srcAdressName: string
-  ) => {
+  const setDefaultAddress = async (id: string, action: string) => {
     const { version } = user;
     const dataObj: IUserUpdate = {
       version,
@@ -186,9 +201,8 @@ const Profile = () => {
       ],
     };
 
-    let response;
     try {
-      response = await userRequest(dataObj);
+      await userRequest(dataObj);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         showInfoPopup(error.message);
@@ -197,49 +211,87 @@ const Profile = () => {
     }
 
     showInfoPopup("Data is updated successfully");
-
-    setShippingAddresses(
-      makeAddressArray(response.addresses, response[srcAdressName])
-    );
-
-    setUser(response);
+    await fetchUser();
   };
 
   // Set default Shipping address
   const setDefaultShipping = async (id: string) => {
-    await setDefaultAddress(
-      id,
-      "setDefaultShippingAddress",
-      "shippingAddressIds"
-    );
+    await setDefaultAddress(id, "setDefaultShippingAddress");
   };
 
   // Set default Billing address
   const setDefaultBilling = async (id: string) => {
-    await setDefaultAddress(
-      id,
-      "setDefaultBillingAddress",
-      "billingAddressIds"
-    );
+    await setDefaultAddress(id, "setDefaultBillingAddress");
   };
 
-  // Get user data for page render
-  const fetchUser = async () => {
+  // Delete address from server
+  const deleteAddress = async (id: string) => {
+    const { version } = user;
+    const dataObj: IUserUpdate = {
+      version,
+      actions: [
+        {
+          action: "removeAddress",
+          addressId: id,
+        },
+      ],
+    };
+
     try {
-      const response: IUserFullDataResponse = await getUser();
-      setUser(response);
-
-      setPersonalData(response);
-
-      setShippingAddresses(
-        makeAddressArray(response.addresses, response.shippingAddressIds)
-      );
-      setBillingAddresses(
-        makeAddressArray(response.addresses, response.billingAddressIds)
-      );
+      await userRequest(dataObj);
     } catch (error) {
-      console.log("Error fetching user (in component render):", error);
+      if (axios.isAxiosError(error)) {
+        showInfoPopup(error.message);
+      }
     }
+  };
+
+  // Delete address id from addresses-id-array on server
+  const deleteAddressId = async (id: string, action: string) => {
+    const { version } = user;
+    const dataObj: IUserUpdate = {
+      version,
+      actions: [
+        {
+          action,
+          addressId: id,
+        },
+      ],
+    };
+
+    try {
+      await userRequest(dataObj);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        showInfoPopup(error.message);
+      }
+    }
+  };
+
+  // Check - delete from addressIds-array or completly from server
+  const onAddressDelete = async (
+    id: string,
+    action: string,
+    otherAddresses: string[]
+  ) => {
+    if (otherAddresses.includes(id)) {
+      await deleteAddressId(id, action);
+    } else {
+      await deleteAddress(id);
+    }
+
+    showInfoPopup("Address deleted successfully");
+    await fetchUser();
+  };
+
+  // Delete shipping address
+  const deleteShippingAddress = (id: string) => {
+    onAddressDelete(id, "removeShippingAddressId", user.billingAddressIds);
+  };
+
+  // Delete billing address
+  const deleteBillingAddress = (id: string) => {
+    onAddressDelete(id, "removeBillingAddressId", user.shippingAddressIds);
   };
 
   useEffect(() => {
@@ -263,6 +315,7 @@ const Profile = () => {
           defaultAddressId={user.defaultShippingAddressId}
           typography="Shipping addresses"
           onSetDefault={setDefaultShipping}
+          onDelete={deleteShippingAddress}
         />
         <AddressesList
           addresses={billingAddresses ?? []}
@@ -270,6 +323,7 @@ const Profile = () => {
           defaultAddressId={user.defaultBillingAddressId}
           typography="Billing addresses"
           onSetDefault={setDefaultBilling}
+          onDelete={deleteBillingAddress}
         />
         <InfoPopup
           open={isOpenInfoModal}

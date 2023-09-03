@@ -15,16 +15,29 @@ interface IAddressesListProps {
   defaultAddressId: string;
   typography: string;
   onSetDefault: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 const AddressesList = (props: IAddressesListProps) => {
-  const { addresses, version, defaultAddressId, typography, onSetDefault } =
-    props;
+  const {
+    addresses,
+    version,
+    defaultAddressId,
+    typography,
+    onSetDefault,
+    onDelete,
+  } = props;
 
   const listItems = addresses.map((address: IBaseAddress, index: number) => {
     const setDefaultAddress = () => {
       if (address.id) {
         onSetDefault(address.id);
+      }
+    };
+
+    const deleteAddress = () => {
+      if (address.id) {
+        onDelete(address.id);
       }
     };
 
@@ -43,6 +56,7 @@ const AddressesList = (props: IAddressesListProps) => {
             version,
             setDefaultAddress,
             defaultBtnDisabled: true,
+            deleteAddress,
           }}
         />
       </li>
@@ -57,6 +71,7 @@ const AddressesList = (props: IAddressesListProps) => {
             version,
             setDefaultAddress,
             defaultBtnDisabled: false,
+            deleteAddress,
           }}
         />
       </li>
@@ -70,6 +85,7 @@ const AddressesList = (props: IAddressesListProps) => {
   return (
     <Accordion>
       <AccordionSummary
+        className={styles.summary}
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
