@@ -24,7 +24,7 @@ const getFilteredAndSortedProducts = async (
     const filterQueryString = Object.entries(filterCriteria)
       .map(
         ([key, value]) =>
-          `filter=${encodeURIComponent(key)}:${encodeURIComponent(value)}`
+          `${encodeURIComponent(key)}:${encodeURIComponent(value)}`
       )
       .join("&");
 
