@@ -24,11 +24,16 @@ import { Autocomplete, Box, Button, TextField } from "@mui/material";
 
 import styles from "./forms.module.scss";
 
-const AddressDataForm = (addressData: {
+interface IAddressDataFormProps {
   address: IBaseAddress;
   version: number;
-}) => {
-  const { address, version } = addressData;
+  setDefaultAddress: () => void;
+  defaultBtnDisabled: boolean;
+}
+
+const AddressDataForm = (addressData: IAddressDataFormProps) => {
+  const { address, version, setDefaultAddress, defaultBtnDisabled } =
+    addressData;
   const {
     handleSubmit,
     control,
@@ -72,7 +77,7 @@ const AddressDataForm = (addressData: {
   };
 
   const setDefault = () => {
-    console.log("set Default");
+    setDefaultAddress();
   };
 
   return (
@@ -237,6 +242,7 @@ const AddressDataForm = (addressData: {
           Delete
         </Button>
         <Button
+          disabled={defaultBtnDisabled}
           type="button"
           variant="contained"
           color="primary"

@@ -126,6 +126,7 @@ const Profile = () => {
       }
     }
   };
+
   // update personal data on server
   const onPersonalDataSubmit = async (data: IUserPersonalDataResponse) => {
     const { email, firstName, lastName, dateOfBirth } = data;
@@ -169,6 +170,60 @@ const Profile = () => {
     setUser(response);
   };
 
+  const setDefaultAddress = async (
+    id: string,
+    action: string,
+    srcAdressName: string
+  ) => {
+    const { version } = user;
+    const dataObj: IUserUpdate = {
+      version,
+      actions: [
+        {
+          action,
+          addressId: id,
+        },
+      ],
+    };
+
+    let response;
+    try {
+      response = await userRequest(dataObj);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        showInfoPopup(error.message);
+        return;
+      }
+    }
+
+    showInfoPopup("Data is updated successfully");
+
+    setShippingAddresses(
+      makeAddressArray(response.addresses, response[srcAdressName])
+    );
+
+    setUser(response);
+  };
+
+  // Set default Shipping address
+  const setDefaultShipping = async (id: string) => {
+    await setDefaultAddress(
+      id,
+      "setDefaultShippingAddress",
+      "shippingAddressIds"
+    );
+  };
+
+  // Set default Billing address
+  const setDefaultBilling = async (id: string) => {
+    await setDefaultAddress(
+      id,
+      "setDefaultBillingAddress",
+      "billingAddressIds"
+    );
+  };
+
+  // Get user data for page render
   const fetchUser = async () => {
     try {
       const response: IUserFullDataResponse = await getUser();
@@ -207,12 +262,14 @@ const Profile = () => {
           version={user.version}
           defaultAddressId={user.defaultShippingAddressId}
           typography="Shipping addresses"
+          onSetDefault={setDefaultShipping}
         />
         <AddressesList
           addresses={billingAddresses ?? []}
           version={user.version}
           defaultAddressId={user.defaultBillingAddressId}
           typography="Billing addresses"
+          onSetDefault={setDefaultBilling}
         />
         <InfoPopup
           open={isOpenInfoModal}

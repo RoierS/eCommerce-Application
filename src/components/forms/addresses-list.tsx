@@ -9,14 +9,25 @@ import AddressDataForm from "./address-form";
 
 import styles from "./forms.module.scss";
 
-const AddressesList = (props: {
+interface IAddressesListProps {
   addresses: IBaseAddress[];
   version: number;
   defaultAddressId: string;
   typography: string;
-}) => {
-  const { addresses, version, defaultAddressId, typography } = props;
+  onSetDefault: (id: string) => void;
+}
+
+const AddressesList = (props: IAddressesListProps) => {
+  const { addresses, version, defaultAddressId, typography, onSetDefault } =
+    props;
+
   const listItems = addresses.map((address: IBaseAddress, index: number) => {
+    const setDefaultAddress = () => {
+      if (address.id) {
+        onSetDefault(address.id);
+      }
+    };
+
     return address && address?.id === defaultAddressId ? (
       <li className={styles.default} key={`${address.id}${address.postalCode}`}>
         <Typography
@@ -26,14 +37,28 @@ const AddressesList = (props: {
         >
           Address {index + 1} (default):
         </Typography>
-        <AddressDataForm {...{ address, version }} />
+        <AddressDataForm
+          {...{
+            address,
+            version,
+            setDefaultAddress,
+            defaultBtnDisabled: true,
+          }}
+        />
       </li>
     ) : (
       <li className={styles.basic} key={`${address.id}${address.postalCode}`}>
         <Typography align="center" variant="subtitle2" color="primary">
           Address {index + 1}:
         </Typography>
-        <AddressDataForm {...{ address, version }} />
+        <AddressDataForm
+          {...{
+            address,
+            version,
+            setDefaultAddress,
+            defaultBtnDisabled: false,
+          }}
+        />
       </li>
     );
   });
