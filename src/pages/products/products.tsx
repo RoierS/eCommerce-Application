@@ -10,6 +10,7 @@ import { Navigate, useParams } from "react-router-dom";
 
 import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTone";
 import ArrowForwardIosTwoToneIcon from "@mui/icons-material/ArrowForwardIosTwoTone";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Modal, ImageList, ImageListItem } from "@mui/material";
 
 import Box from "@mui/material/Box";
@@ -181,24 +182,34 @@ const ProductInformation = () => {
             className={styles.modal}
           >
             <div>
-              <ArrowBackIosNewTwoToneIcon
-                className={styles.arrowLeft}
-                onClick={prevSlide}
-              />
-              {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-              <img
-                className={styles.image}
-                src={
-                  product.masterData.current.masterVariant.images[
-                    currentSlideIndex
-                  ].url
-                }
-                alt="product image"
-              />
-              <ArrowForwardIosTwoToneIcon
-                className={styles.arrowRight}
-                onClick={nextSlide}
-              />
+              <div className={styles.cross}>
+                <CancelOutlinedIcon
+                  fontSize="large"
+                  className={styles.close}
+                  onClick={closeModal}
+                />
+              </div>
+
+              <div className={styles.arrows}>
+                <ArrowBackIosNewTwoToneIcon
+                  className={styles.arrowLeft}
+                  onClick={prevSlide}
+                />
+                {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+                <img
+                  className={styles.image}
+                  src={
+                    product.masterData.current.masterVariant.images[
+                      currentSlideIndex
+                    ].url
+                  }
+                  alt="product image"
+                />
+                <ArrowForwardIosTwoToneIcon
+                  className={styles.arrowRight}
+                  onClick={nextSlide}
+                />
+              </div>
             </div>
           </Modal>
         </div>
