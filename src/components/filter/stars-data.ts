@@ -1,5 +1,5 @@
 const stars = [
-  { value: "", label: "All" },
+  { value: "", label: "Any" },
   { value: 1, label: "1 Star" },
   { value: 2, label: "2 Stars" },
   { value: 3, label: "3 Stars" },

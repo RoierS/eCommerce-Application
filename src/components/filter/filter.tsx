@@ -25,7 +25,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
 }) => {
   const [countryFilter, setCountryFilter] = useState("");
   const [priceRange, setPriceRange] = useState<number[]>([0, 300000]);
-  const [starRating, setStarRating] = useState<number | undefined>(undefined);
+  const [starRating, setStarRating] = useState("");
 
   // apply filters by country and price range
   const handleApplyFilters = () => {
@@ -39,12 +39,12 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
       delete newFilterCriteria["variants.attributes.country"];
     }
 
-    if (!starRating) {
-      delete newFilterCriteria["variants.attributes.Star-Rating"];
+    if (starRating !== "Any") {
+      newFilterCriteria["variants.attributes.Star-Rating"] = `${starRating}`;
     }
 
-    if (starRating) {
-      newFilterCriteria["variants.attributes.Star-Rating"] = `${starRating}`;
+    if (!starRating) {
+      delete newFilterCriteria["variants.attributes.Star-Rating"];
     }
 
     const [minPrice, maxPrice] = priceRange;
@@ -59,9 +59,10 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
   const clearFilters = () => {
     setCountryFilter("");
     setPriceRange([0, 300000]);
-    setStarRating(undefined);
+    setStarRating("");
     // onFilterChange({});
   };
+  // console.log(starRating);
 
   return (
     <Box className={styles.filterContainer}>
@@ -102,16 +103,28 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
       <FormControl fullWidth size="small" sx={{ mb: 2 }}>
         <InputLabel id="star-rating-label">Star Rating</InputLabel>
         <Select
+          labelId="star-rating-label"
           label="Star Rating"
-          value={starRating || ""}
-          onChange={(event) => setStarRating(Number(event.target.value))}
+          value={starRating}
+          onChange={(event) => {
+            setStarRating(event.target.value || "Any");
+          }}
           className={styles.starRatingSelect}
           variant="outlined"
           size="small"
         >
           {stars.map((star) => (
-            <MenuItem key={star.value} value={star.value}>
-              <Rating name="star-rating" value={Number(star.value)} readOnly />
+            <MenuItem key={star.value} value={star.value || "Any"}>
+              {!star.value ? (
+                star.label
+              ) : (
+                <Rating
+                  name="star-rating"
+                  value={Number(star.value)}
+                  readOnly
+                  size="small"
+                />
+              )}
             </MenuItem>
           ))}
         </Select>

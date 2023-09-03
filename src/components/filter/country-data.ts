@@ -1,8 +1,8 @@
 const countries = [
-  { value: 1, label: "All" },
-  { value: 2, label: "Spain" },
-  { value: 1, label: "Poland" },
-  { value: 1, label: "Egypt" },
+  { value: "All", label: "All" },
+  { value: "Spain", label: "Spain" },
+  { value: "Poland", label: "Poland" },
+  { value: "Egypt", label: "Egypt" },
 ];
 
 export default countries;
