@@ -9,7 +9,10 @@ import Catalog from "./pages/catalog/catalog";
 import Login from "./pages/login/login";
 import Logout from "./pages/logout/logout";
 import Home from "./pages/main/main";
+
+import Product from "./pages/products/products";
 import Profile from "./pages/profile/profile";
+
 import Registration from "./pages/registration/registration";
 
 import "./app.scss";
@@ -29,6 +32,7 @@ const App = () => {
               <Route path="/catalog" element={<Catalog />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/catalog/:id" element={<Product />} />
               <Route path="*" element={<Page404 />} />
             </Routes>
           </main>
