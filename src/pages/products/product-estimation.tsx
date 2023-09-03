@@ -36,7 +36,6 @@ const ProductEstimation = ({ product }: { product: IProductResponse }) => {
                 style={{ textDecoration: "line-through" }}
                 className={styles.noSale}
               >
-                $
                 {(
                   parseFloat(
                     String(
@@ -44,10 +43,10 @@ const ProductEstimation = ({ product }: { product: IProductResponse }) => {
                         .centAmount
                     )
                   ) / 100
-                ).toFixed(2)}
+                ).toFixed(2)}{" "}
+                USD
               </span>
               <span style={{ color: "red" }} className={styles.sale}>
-                $
                 {(
                   parseFloat(
                     String(
@@ -55,12 +54,12 @@ const ProductEstimation = ({ product }: { product: IProductResponse }) => {
                         .discounted.value.centAmount
                     )
                   ) / 100
-                ).toFixed(2)}
+                ).toFixed(2)}{" "}
+                USD
               </span>
             </div>
           ) : (
             <>
-              $
               {(
                 parseFloat(
                   String(
@@ -68,7 +67,8 @@ const ProductEstimation = ({ product }: { product: IProductResponse }) => {
                       .centAmount
                   )
                 ) / 100
-              ).toFixed(2)}
+              ).toFixed(2)}{" "}
+              USD
             </>
           )}
         </Typography>

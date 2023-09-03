@@ -16,7 +16,10 @@ import { Modal, ImageList, ImageListItem } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import styles from "./modal.module.scss";
 
@@ -116,6 +119,9 @@ const ProductInformation = () => {
     };
   }, [isModalOpen]);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
     <div>
       <AppHeader />
@@ -129,8 +135,37 @@ const ProductInformation = () => {
         <Navigate to="*" />
       ) : product ? (
         <div className={styles.article}>
-          <Box className={styles.product}>
-            <ImageList className={styles.imageList} rowHeight={200} gap={1}>
+          <Box
+            className={styles.product}
+            style={isMobile ? { flexDirection: "column" } : {}}
+          >
+            <div>
+              <div>
+                <Typography variant="h4" gutterBottom>
+                  {product.masterData.current.name["en-US"]}
+                </Typography>
+              </div>
+              <div className={styles.title}>
+                <Typography variant="body1">
+                  {isDescription
+                    ? product.masterData.current.description["en-US"]
+                    : `${product.masterData.current.description["en-US"].slice(
+                        0,
+                        600
+                      )}...`}
+                </Typography>
+                <Button onClick={toggleDescription}>
+                  {isDescription ? "Read Less" : "Show More"}
+                </Button>
+              </div>
+              <ProductEstimation product={product} />
+            </div>
+            <ImageList
+              className={styles.imageList}
+              style={isMobile ? { width: "100%" } : {}}
+              rowHeight={200}
+              gap={1}
+            >
               {product.masterData.current.masterVariant.images.map(
                 (image, index) => {
                   const rowHeight = index === 0 ? 400 : 200;
@@ -154,27 +189,6 @@ const ProductInformation = () => {
                 }
               )}
             </ImageList>
-            <div>
-              <div>
-                <Typography variant="h4" gutterBottom>
-                  {product.masterData.current.name["en-US"]}
-                </Typography>
-              </div>
-              <div className={styles.title}>
-                <Typography variant="body1">
-                  {isDescription
-                    ? product.masterData.current.description["en-US"]
-                    : `${product.masterData.current.description["en-US"].slice(
-                        0,
-                        600
-                      )}...`}
-                </Typography>
-                <Button onClick={toggleDescription}>
-                  {isDescription ? "Read Less" : "Show More"}
-                </Button>
-              </div>
-              <ProductEstimation product={product} />
-            </div>
           </Box>
           <Modal
             open={isModalOpen}
