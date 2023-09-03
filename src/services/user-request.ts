@@ -1,8 +1,8 @@
 import axios from "axios";
 
-import { IUserUpdate } from "@interfaces/user-update";
+import { IAddressUpdate, IUserUpdate } from "@interfaces/user-update";
 
-const userRequest = async (data: IUserUpdate) => {
+const userRequest = async (data: IUserUpdate | IAddressUpdate) => {
   const tokenObject = JSON.parse(localStorage.getItem("tokenObject") || "null");
   const accessToken = tokenObject?.access_token || "";
   const apiHost = process.env.REACT_APP_API_HOST;

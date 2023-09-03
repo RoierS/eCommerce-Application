@@ -1,26 +1,14 @@
-/* eslint-disable import/no-duplicates */
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
-
-// import React from "react";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
-// import { SubtitleText, BodyText } from "@components/input/typography";
-
-// import { IRegisterFormData } from "@interfaces/registration-form-data";
 import countries from "@constants/countries";
 import schemaAddress from "@constants/schema-address";
 import { IBaseAddress } from "@interfaces/registration-form-data";
-// import { IUserDataResponse } from "@interfaces/user-response";
-// import { IRegisterFormData } from "@interfaces/registration-form-data";
-// import getUser from "@services/get-user";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Autocomplete, Box, Button, TextField } from "@mui/material";
-
-// import testUser from "./testUserData";
 
 import styles from "./forms.module.scss";
 
@@ -56,26 +44,25 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
     const setValues = () => {
       updatedFields.forEach((f: string) => {
         const fkey = f as keyof IBaseAddress;
-        // eslint-disable-next-line react/destructuring-assignment
         setValue(f as keyof IBaseAddress, address[fkey]);
       });
     };
     setValues();
   }, [setValue, address]);
 
-  const [isPersonalDataDisabled, setPersonalDataDisabled] = useState(true);
+  const [isAddressDisabled, setAddressDisabled] = useState(true);
 
   // Handle form submission
   const onSubmit: SubmitHandler<IBaseAddress> = (data) => {
     console.log("submit data:", data, "version", version);
-    setPersonalDataDisabled(true);
+    setAddressDisabled(true);
   };
 
   // switch edit mode
   const setEditMode = () => {
     // eslint-disable-next-line no-restricted-globals
     event?.preventDefault();
-    setPersonalDataDisabled(false);
+    setAddressDisabled(false);
   };
 
   const onDelete = () => {
@@ -96,7 +83,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
             defaultValue=""
             render={({ field }) => (
               <TextField
-                disabled={isPersonalDataDisabled}
+                disabled={isAddressDisabled}
                 label="Street"
                 fullWidth
                 error={!!errors.streetName}
@@ -124,7 +111,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
             defaultValue=""
             render={({ field }) => (
               <TextField
-                disabled={isPersonalDataDisabled}
+                disabled={isAddressDisabled}
                 label="City"
                 fullWidth
                 error={!!errors.city}
@@ -157,7 +144,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
                 : null;
               return (
                 <Autocomplete
-                  disabled={isPersonalDataDisabled}
+                  disabled={isAddressDisabled}
                   value={country}
                   options={countries}
                   onChange={(event, newValue) => {
@@ -200,7 +187,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
             defaultValue=""
             render={({ field }) => (
               <TextField
-                disabled={isPersonalDataDisabled}
+                disabled={isAddressDisabled}
                 label="Postal code"
                 fullWidth
                 error={!!errors.postalCode}
@@ -222,7 +209,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
               />
             )}
           />
-          {isPersonalDataDisabled ? (
+          {isAddressDisabled ? (
             <Button
               type="button"
               variant="contained"

@@ -6,6 +6,7 @@ import axios from "axios";
 import AddressesList from "@components/forms/addresses-list";
 import PersonalDataForm from "@components/forms/personal-data-form";
 import AppHeader from "@components/header/header";
+import AddressPopup from "@components/modal/address-popup";
 import InfoPopup from "@components/modal/info-popup";
 import PasswordPopup from "@components/modal/password-popup";
 import makeAddressArray from "@helpers/make-address-array";
@@ -16,7 +17,11 @@ import {
   IUserFullDataResponse,
   IUserPersonalDataResponse,
 } from "@interfaces/user-response";
-import { IPasswordUpdate, IUserUpdate } from "@interfaces/user-update";
+import {
+  IAddressUpdate,
+  IPasswordUpdate,
+  IUserUpdate,
+} from "@interfaces/user-update";
 
 import { getTokenAndLogin } from "@services/authentication-service";
 import changePasswordRequest from "@services/change-password";
@@ -89,7 +94,7 @@ const Profile = () => {
     setModalPasswordOpen(true);
   };
 
-  const handlePasswordModalClose = () => {
+  const closePasswordPopup = () => {
     setModalPasswordOpen(false);
   };
 
@@ -118,7 +123,7 @@ const Profile = () => {
       version
     );
 
-    handlePasswordModalClose();
+    closePasswordPopup();
     const dataObj: IPasswordUpdate = {
       version,
       currentPassword,
@@ -189,10 +194,14 @@ const Profile = () => {
     setUser(response);
   };
 
-  const setDefaultAddress = async (id: string, action: string) => {
-    const { version } = user;
+  const setDefaultAddress = async (
+    id: string,
+    action: string,
+    version: number | undefined
+  ) => {
+    const upVersion = version ?? user.version;
     const dataObj: IUserUpdate = {
-      version,
+      version: upVersion,
       actions: [
         {
           action,
@@ -215,13 +224,16 @@ const Profile = () => {
   };
 
   // Set default Shipping address
-  const setDefaultShipping = async (id: string) => {
-    await setDefaultAddress(id, "setDefaultShippingAddress");
+  const setDefaultShipping = async (
+    id: string,
+    version: number | undefined
+  ) => {
+    await setDefaultAddress(id, "setDefaultShippingAddress", version);
   };
 
   // Set default Billing address
-  const setDefaultBilling = async (id: string) => {
-    await setDefaultAddress(id, "setDefaultBillingAddress");
+  const setDefaultBilling = async (id: string, version: number | undefined) => {
+    await setDefaultAddress(id, "setDefaultBillingAddress", version);
   };
 
   // Delete address from server
@@ -294,6 +306,107 @@ const Profile = () => {
     onAddressDelete(id, "removeBillingAddressId", user.shippingAddressIds);
   };
 
+  // States and functions for address modal popup
+  const [isOpenAddressModal, setModalAddressOpen] = useState(false);
+  const [addressModalAction, setAddressModalAction] = useState("");
+
+  const showShippingAddressPopup = () => {
+    setModalAddressOpen(true);
+    setAddressModalAction("addShippingAddressId");
+  };
+
+  const showBillingAddressPopup = () => {
+    setModalAddressOpen(true);
+    setAddressModalAction("addBillingAddressId");
+  };
+
+  const closeAddressPopup = () => {
+    setModalAddressOpen(false);
+  };
+
+  // Add address to address-array on server
+  const addAddress = async (address: IBaseAddress) => {
+    const { version } = user;
+    const dataObj: IAddressUpdate = {
+      version,
+      actions: [
+        {
+          action: "addAddress",
+          address,
+        },
+      ],
+    };
+
+    let response;
+    try {
+      response = await userRequest(dataObj);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        showInfoPopup(error.message);
+      }
+    }
+
+    // await fetchUser();
+    return {
+      version: response.version,
+      addressId: response.addresses[response.addresses.length - 1].id,
+    };
+  };
+
+  // Add addressId to addressIds-array
+  const addAddressId = async (addressId: string, version: number) => {
+    const upVersion = version ?? user.version;
+    const dataObj: IUserUpdate = {
+      version: upVersion,
+      actions: [
+        {
+          action: addressModalAction,
+          addressId,
+        },
+      ],
+    };
+
+    console.log(
+      "Add addressId to addressIds-array // addressId",
+      addressId,
+      "addressModalAction",
+      addressModalAction
+    );
+
+    let response;
+    try {
+      response = await userRequest(dataObj);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        showInfoPopup(error.message);
+      }
+    }
+    return response.version;
+    // await fetchUser();
+  };
+
+  // handling click on "add address" button
+  const onNewAddressSubmit = async (
+    address: IBaseAddress,
+    isDefault: boolean
+  ) => {
+    const { addressId, version } = await addAddress(address);
+    console.log("NEW addressId", addressId);
+    const newVersion = await addAddressId(addressId, version);
+
+    if (isDefault) {
+      if (addressModalAction === "addShippingAddressId") {
+        await setDefaultShipping(addressId, newVersion);
+      } else {
+        await setDefaultBilling(addressId, newVersion);
+      }
+    }
+
+    showInfoPopup("Address is added successfully");
+    closeAddressPopup();
+    await fetchUser();
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -316,6 +429,7 @@ const Profile = () => {
           typography="Shipping addresses"
           onSetDefault={setDefaultShipping}
           onDelete={deleteShippingAddress}
+          onAddAddress={showShippingAddressPopup}
         />
         <AddressesList
           addresses={billingAddresses ?? []}
@@ -324,6 +438,7 @@ const Profile = () => {
           typography="Billing addresses"
           onSetDefault={setDefaultBilling}
           onDelete={deleteBillingAddress}
+          onAddAddress={showBillingAddressPopup}
         />
         <InfoPopup
           open={isOpenInfoModal}
@@ -332,8 +447,14 @@ const Profile = () => {
         />
         <PasswordPopup
           open={isOpenPasswordModal}
-          onClose={handlePasswordModalClose}
+          onClose={closePasswordPopup}
           onFormSubmit={onPasswordSubmit}
+        />
+        <AddressPopup
+          user={user}
+          open={isOpenAddressModal}
+          onClose={closeAddressPopup}
+          onFormSubmit={onNewAddressSubmit}
         />
       </Box>
     </>

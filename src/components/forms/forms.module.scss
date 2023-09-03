@@ -41,8 +41,12 @@ ul {
   padding: 0;
 }
 
-.h4default {
+.h4default,
+.h4basic {
   padding: 10px 0;
+}
+
+.h4default {
   color: $color-default-address;
 }
 

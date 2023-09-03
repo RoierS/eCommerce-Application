@@ -14,8 +14,9 @@ interface IAddressesListProps {
   version: number;
   defaultAddressId: string;
   typography: string;
-  onSetDefault: (id: string) => void;
+  onSetDefault: (id: string, version: number | undefined) => void;
   onDelete: (id: string) => void;
+  onAddAddress: () => void;
 }
 
 const AddressesList = (props: IAddressesListProps) => {
@@ -26,12 +27,13 @@ const AddressesList = (props: IAddressesListProps) => {
     typography,
     onSetDefault,
     onDelete,
+    onAddAddress,
   } = props;
 
   const listItems = addresses.map((address: IBaseAddress, index: number) => {
     const setDefaultAddress = () => {
       if (address.id) {
-        onSetDefault(address.id);
+        onSetDefault(address.id, undefined);
       }
     };
 
@@ -62,7 +64,12 @@ const AddressesList = (props: IAddressesListProps) => {
       </li>
     ) : (
       <li className={styles.basic} key={`${address.id}${address.postalCode}`}>
-        <Typography align="center" variant="subtitle2" color="primary">
+        <Typography
+          className={styles.h4basic}
+          align="center"
+          variant="subtitle2"
+          color="primary"
+        >
           Address {index + 1}:
         </Typography>
         <AddressDataForm
@@ -77,10 +84,6 @@ const AddressesList = (props: IAddressesListProps) => {
       </li>
     );
   });
-
-  const addAddress = () => {
-    console.log("add Address");
-  };
 
   return (
     <Accordion>
@@ -100,7 +103,7 @@ const AddressesList = (props: IAddressesListProps) => {
           type="button"
           variant="contained"
           color="info"
-          onClick={addAddress}
+          onClick={onAddAddress}
         >
           Add address
         </Button>

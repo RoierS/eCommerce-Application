@@ -47,7 +47,6 @@ const PersonalDataForm = (props: IPersonalDataFormProps) => {
     const setValues = () => {
       updatedFields.forEach((f: string) => {
         const fkey = f as keyof IUserPersonalDataResponse;
-        // eslint-disable-next-line react/destructuring-assignment
         setValue(f as keyof IUserPersonalDataResponse, user[fkey]);
       });
     };
