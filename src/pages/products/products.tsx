@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import AppHeader from "@components/header/header";
 import { IProductResponse } from "@interfaces/product-response";
 
+import ProductEstimation from "@pages/products/product-estimation";
 import getProductById from "@services/get-product-by-id";
 import { Navigate, useParams } from "react-router-dom";
 
@@ -171,19 +172,7 @@ const ProductInformation = () => {
                   {isDescription ? "Read Less" : "Show More"}
                 </Button>
               </div>
-              <div className={styles.price}>
-                <Typography variant="h4">
-                  $
-                  {(
-                    parseFloat(
-                      String(
-                        product.masterData.current.masterVariant.prices[0].value
-                          .centAmount
-                      )
-                    ) / 100
-                  ).toFixed(2)}
-                </Typography>
-              </div>
+              <ProductEstimation product={product} />
             </div>
           </Box>
           <Modal
