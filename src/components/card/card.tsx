@@ -3,6 +3,7 @@ import React from "react";
 import calculateDiscount from "@helpers/claculate-discount";
 
 import sliceText from "@helpers/slice-text";
+
 import { IProductData } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
 import { Link } from "react-router-dom";

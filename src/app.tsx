@@ -10,6 +10,7 @@ import Login from "./pages/login/login";
 import Logout from "./pages/logout/logout";
 import Home from "./pages/main/main";
 import PrivateRoute from "./pages/private-router/private-router";
+import Product from "./pages/products/products";
 import Registration from "./pages/registration/registration";
 
 import "./app.scss";
@@ -35,6 +36,7 @@ const App = () => {
                 }
               />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/catalog/:id" element={<Product />} />
               <Route path="*" element={<Page404 />} />
             </Routes>
           </main>
