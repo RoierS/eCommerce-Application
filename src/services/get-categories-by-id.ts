@@ -1,12 +1,17 @@
 /* eslint-disable no-console */
 import axios from "axios";
 
+import { ITokenResponse } from "@interfaces/token-response";
+
 const getCategories = async () => {
   try {
-    const tokenObject = JSON.parse(
-      localStorage.getItem("tokenObject") || "null"
+    const tokenObject: ITokenResponse = JSON.parse(
+      localStorage.getItem("tokenObject") ||
+        localStorage.getItem("unauthorizedTokenObject") ||
+        "null"
     );
-    const accessToken = tokenObject?.access_token || "";
+
+    const accessToken = tokenObject.access_token;
     const apiHost = process.env.REACT_APP_API_HOST;
     const projectKey = process.env.REACT_APP_PROJECT_KEY;
 
