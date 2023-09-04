@@ -7,6 +7,7 @@ interface IAction {
 
 interface IAddressAction {
   action: string;
+  addressId?: string;
   address: IBaseAddress;
 }
 

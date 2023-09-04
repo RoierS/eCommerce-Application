@@ -261,54 +261,6 @@ const Profile = () => {
     await fetchUser();
   };
 
-  // Delete address id from addresses-id-array on server
-  // const deleteAddressId = async (id: string, action: string) => {
-  //   const { version } = user;
-  //   const dataObj: IUserUpdate = {
-  //     version,
-  //     actions: [
-  //       {
-  //         action,
-  //         addressId: id,
-  //       },
-  //     ],
-  //   };
-
-  //   try {
-  //     await userRequest(dataObj);
-  //   } catch (error) {
-  //     if (axios.isAxiosError(error)) {
-  //       showInfoPopup(error.message);
-  //     }
-  //   }
-  // };
-
-  // Check - delete from addressIds-array or completly from server
-  // const onAddressDelete = async (
-  //   id: string,
-  //   action: string,
-  //   otherAddresses: string[]
-  // ) => {
-  //   if (otherAddresses.includes(id)) {
-  //     await deleteAddressId(id, action);
-  //   } else {
-  //     await deleteAddress(id);
-  //   }
-
-  //   showInfoPopup("Address deleted successfully");
-  //   await fetchUser();
-  // };
-
-  // Delete shipping address
-  // const deleteShippingAddress = (id: string) => {
-  //   onAddressDelete(id, "removeShippingAddressId", user.billingAddressIds);
-  // };
-
-  // Delete billing address
-  // const deleteBillingAddress = (id: string) => {
-  //   onAddressDelete(id, "removeBillingAddressId", user.shippingAddressIds);
-  // };
-
   // States and functions for address modal popup
   const [isOpenAddressModal, setModalAddressOpen] = useState(false);
   const [addressModalAction, setAddressModalAction] = useState("");
@@ -410,6 +362,32 @@ const Profile = () => {
     await fetchUser();
   };
 
+  // update address
+  const onEdit = async (addressId: string, address: IBaseAddress) => {
+    const { version } = user;
+    const dataObj: IAddressUpdate = {
+      version,
+      actions: [
+        {
+          action: "changeAddress",
+          addressId,
+          address,
+        },
+      ],
+    };
+
+    try {
+      await userRequest(dataObj);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        showInfoPopup(error.message);
+      }
+    }
+
+    showInfoPopup("Address is updated successfully");
+    await fetchUser();
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -431,9 +409,9 @@ const Profile = () => {
           defaultAddressId={user.defaultShippingAddressId}
           typography="Shipping addresses"
           onSetDefault={setDefaultShipping}
-          // onDelete={deleteShippingAddress}
           onDelete={deleteAddress}
           onAddAddress={showShippingAddressPopup}
+          onEdit={onEdit}
         />
         <AddressesList
           addresses={billingAddresses ?? []}
@@ -441,9 +419,9 @@ const Profile = () => {
           defaultAddressId={user.defaultBillingAddressId}
           typography="Billing addresses"
           onSetDefault={setDefaultBilling}
-          // onDelete={deleteBillingAddress}
           onDelete={deleteAddress}
           onAddAddress={showBillingAddressPopup}
+          onEdit={onEdit}
         />
         <InfoPopup
           open={isOpenInfoModal}

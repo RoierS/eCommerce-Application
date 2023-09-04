@@ -17,6 +17,7 @@ interface IAddressesListProps {
   onSetDefault: (id: string, version: number | undefined) => void;
   onDelete: (id: string) => void;
   onAddAddress: () => void;
+  onEdit: (id: string, address: IBaseAddress) => void;
 }
 
 const AddressesList = (props: IAddressesListProps) => {
@@ -28,6 +29,7 @@ const AddressesList = (props: IAddressesListProps) => {
     onSetDefault,
     onDelete,
     onAddAddress,
+    onEdit,
   } = props;
 
   const listItems = addresses.map((address: IBaseAddress, index: number) => {
@@ -40,6 +42,12 @@ const AddressesList = (props: IAddressesListProps) => {
     const deleteAddress = () => {
       if (address.id) {
         onDelete(address.id);
+      }
+    };
+
+    const onParentSubmit = (data: IBaseAddress) => {
+      if (address.id) {
+        onEdit(address.id, data);
       }
     };
 
@@ -59,6 +67,7 @@ const AddressesList = (props: IAddressesListProps) => {
             setDefaultAddress,
             defaultBtnDisabled: true,
             deleteAddress,
+            onParentSubmit,
           }}
         />
       </li>
@@ -79,6 +88,7 @@ const AddressesList = (props: IAddressesListProps) => {
             setDefaultAddress,
             defaultBtnDisabled: false,
             deleteAddress,
+            onParentSubmit,
           }}
         />
       </li>

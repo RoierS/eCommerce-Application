@@ -18,15 +18,16 @@ interface IAddressDataFormProps {
   setDefaultAddress: () => void;
   deleteAddress: () => void;
   defaultBtnDisabled: boolean;
+  onParentSubmit: (address: IBaseAddress) => void;
 }
 
 const AddressDataForm = (addressData: IAddressDataFormProps) => {
   const {
     address,
-    version,
     setDefaultAddress,
     deleteAddress,
     defaultBtnDisabled,
+    onParentSubmit,
   } = addressData;
   const {
     handleSubmit,
@@ -54,7 +55,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
 
   // Handle form submission
   const onSubmit: SubmitHandler<IBaseAddress> = (data) => {
-    console.log("submit data:", data, "version", version);
+    onParentSubmit(data);
     setAddressDisabled(true);
   };
 
