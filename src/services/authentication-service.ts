@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import axios, { AxiosResponse } from "axios";
 
 import { ILoginData } from "@interfaces/login-form-data";
@@ -33,7 +34,6 @@ export const getAccessToken = async () => {
 
     return response.data;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
     throw error;
   }

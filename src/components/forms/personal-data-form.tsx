@@ -57,7 +57,6 @@ const PersonalDataForm = (props: IPersonalDataFormProps) => {
 
   // Handle form submission
   const onSubmit: SubmitHandler<IUserPersonalDataResponse> = (data) => {
-    console.log("submit data:", data);
     setPersonalDataDisabled(true);
     onParentSubmit(data);
   };

@@ -174,11 +174,9 @@ const Registration: React.FC = () => {
       billingChecked,
       shippingChecked
     );
-    let customerInfo;
-    console.log("submit data:", data);
 
     try {
-      customerInfo = await getTokenAndRegistrate(user);
+      await getTokenAndRegistrate(user);
     } catch (error) {
       // Handle error messages from response
       if (axios.isAxiosError(error)) {
@@ -205,7 +203,6 @@ const Registration: React.FC = () => {
       return;
     }
 
-    console.log("Customer registrated successfully", customerInfo);
     setCredentials({
       email: data.email,
       password: data.password,

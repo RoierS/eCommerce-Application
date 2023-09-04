@@ -13,7 +13,6 @@ const getUser = async () => {
   };
 
   try {
-    console.log("token in get user service", accessToken);
     const response = await axios.get(`${apiHost}/${projectKey}/me`, {
       headers,
     });

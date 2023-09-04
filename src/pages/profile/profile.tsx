@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 
@@ -116,13 +117,6 @@ const Profile = () => {
     const { currentPassword, newPassword } = data;
     const { version } = user;
 
-    console.log(
-      "onPasswordSubmit: currentPassword, newPassword, version",
-      currentPassword,
-      newPassword,
-      version
-    );
-
     closePasswordPopup();
     const dataObj: IPasswordUpdate = {
       version,
@@ -130,11 +124,9 @@ const Profile = () => {
       newPassword,
     };
 
-    let response;
     try {
-      response = await changePasswordRequest(dataObj);
-      console.log("change Password Request response", response);
-      showInfoPopup("Data is updated successfully");
+      await changePasswordRequest(dataObj);
+      showInfoPopup("Password is updated successfully");
 
       // relogin
       const customerInfo = await login({
@@ -146,7 +138,7 @@ const Profile = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        showInfoPopup(error.message);
+        showInfoPopup("The given current password does not match.");
       }
     }
   };
@@ -321,13 +313,6 @@ const Profile = () => {
       ],
     };
 
-    console.log(
-      "Add addressId to addressIds-array // addressId",
-      addressId,
-      "addressModalAction",
-      addressModalAction
-    );
-
     let response;
     try {
       response = await userRequest(dataObj);
@@ -346,7 +331,6 @@ const Profile = () => {
     isDefault: boolean
   ) => {
     const { addressId, version } = await addAddress(address);
-    console.log("NEW addressId", addressId);
     const newVersion = await addAddressId(addressId, version);
 
     if (isDefault) {
@@ -391,8 +375,6 @@ const Profile = () => {
   useEffect(() => {
     fetchUser();
   }, []);
-
-  console.log("user", user);
 
   return (
     <>

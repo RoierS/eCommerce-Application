@@ -14,7 +14,6 @@ const changePasswordRequest = async (data: IPasswordUpdate) => {
   };
 
   try {
-    console.log("token in request user service", accessToken);
     const response = await axios.post(
       `${apiHost}/${projectKey}/me/password`,
       data,
@@ -22,9 +21,9 @@ const changePasswordRequest = async (data: IPasswordUpdate) => {
         headers,
       }
     );
-    console.log("response.data", response.data);
     return response.data;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log("Error fetching user data (in get user service):", error);
     throw error;
   }
