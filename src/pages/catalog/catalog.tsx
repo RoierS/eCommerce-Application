@@ -4,7 +4,6 @@
 import { useCallback, useEffect, useState } from "react";
 
 import CardComponent from "@components/card/card";
-// import CategoryNavigation from "@components/category-navigation/category-navigation";
 import CategoryNavigation from "@components/category-navigation/category-navigation";
 import FilterComponent from "@components/filter/filter";
 import AppHeader from "@components/header/header";
@@ -22,12 +21,7 @@ import {
   Box,
   CircularProgress,
   Typography,
-  // ListItem,
-  // List,
-  // Link,
-  // Chip,
   Stack,
-  // Button,
 } from "@mui/material";
 
 import styles from "./catalog.module.scss";
@@ -76,6 +70,7 @@ const Catalog = () => {
     }
   }, []);
 
+  // fetching categories
   const fetchCategories = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -93,16 +88,11 @@ const Catalog = () => {
   ) => {
     setSelectedCategory(categoryId);
     if (categoryId === selectedCategory) {
-      console.log(selectedCategory);
-      console.log(categoryId);
       setSelectedCategory(null);
-      // fetchFilteredAndSortedProducts();
     } else {
       const newFilterCriteria: Record<string, string> = {};
       newFilterCriteria["categories.id"] = ` subtree("${categoryId}")`;
       setFilterCriteria(newFilterCriteria);
-      console.log(newFilterCriteria);
-      // fetchFilteredAndSortedProducts();
     }
   };
 
@@ -112,13 +102,11 @@ const Catalog = () => {
       console.log("fetchProducts");
       fetchProducts();
       fetchCategories();
-      console.log("fetchCategories");
     }
 
     if (!selectedCategory) {
       delete filterCriteria["categories.id"];
       fetchFilteredAndSortedProducts();
-      console.log("!selected fetchFilteredAndSortedProducts");
     }
 
     if (
@@ -127,11 +115,6 @@ const Catalog = () => {
       selectedCategory
     ) {
       fetchFilteredAndSortedProducts();
-      console.log("fetchFilteredAndSortedProducts");
-      console.log(selectedCategory);
-      console.log(filterCriteria);
-      // fetchCategories();
-      // console.log("fetchCategories");
     }
   }, [sortingOption, filterCriteria, selectedCategory]);
 
@@ -171,7 +154,10 @@ const Catalog = () => {
         <Typography variant="h6" gutterBottom>
           Filters
         </Typography>
-        <FilterComponent onFilterChange={setFilterCriteria} />
+        <FilterComponent
+          onFilterChange={setFilterCriteria}
+          selectedCategory={selectedCategory}
+        />
         <Box className={styles.container}>
           {isLoading ? (
             <CircularProgress />
