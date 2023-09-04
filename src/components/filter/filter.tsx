@@ -32,28 +32,24 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
     const newFilterCriteria: Record<string, string> = {};
 
     if (countryFilter !== "All") {
-      newFilterCriteria[
-        "filter=variants.attributes.country"
-      ] = `"${countryFilter}"`;
+      newFilterCriteria["variants.attributes.country"] = `"${countryFilter}"`;
     }
 
     if (!countryFilter) {
-      delete newFilterCriteria["filter=variants.attributes.country"];
+      delete newFilterCriteria["variants.attributes.country"];
     }
 
     if (starRating !== "Any") {
-      newFilterCriteria[
-        "filter=variants.attributes.Star-Rating"
-      ] = `${starRating}`;
+      newFilterCriteria["variants.attributes.Star-Rating"] = `${starRating}`;
     }
 
     if (!starRating) {
-      delete newFilterCriteria["filter=variants.attributes.Star-Rating"];
+      delete newFilterCriteria["variants.attributes.Star-Rating"];
     }
 
     const [minPrice, maxPrice] = priceRange;
     newFilterCriteria[
-      "filter=variants.price.centAmount"
+      "variants.price.centAmount"
     ] = `range(${minPrice} to ${maxPrice})`;
 
     onFilterChange(newFilterCriteria);

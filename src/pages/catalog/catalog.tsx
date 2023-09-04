@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import CardComponent from "@components/card/card";
 // import CategoryNavigation from "@components/category-navigation/category-navigation";
+import CategoryNavigation from "@components/category-navigation/category-navigation";
 import FilterComponent from "@components/filter/filter";
 import AppHeader from "@components/header/header";
 import SearchField from "@components/search/search-field";
@@ -24,7 +25,7 @@ import {
   // ListItem,
   // List,
   // Link,
-  Chip,
+  // Chip,
   Stack,
   // Button,
 } from "@mui/material";
@@ -41,6 +42,7 @@ const Catalog = () => {
     {}
   );
   const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   // fetching products with filters and/or sorting applied
   const fetchFilteredAndSortedProducts = useCallback(async () => {
@@ -74,7 +76,7 @@ const Catalog = () => {
     }
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await getCategories();
@@ -83,17 +85,25 @@ const Catalog = () => {
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
-  };
+  }, []);
 
   const handleCategoryClick = (
     event: React.MouseEvent<HTMLDivElement>,
     categoryId: string
   ) => {
-    const newFilterCriteria: Record<string, string> = {};
-    newFilterCriteria["filter=categories.id"] = `"${categoryId}"`;
-
-    setFilterCriteria(newFilterCriteria);
-    fetchFilteredAndSortedProducts();
+    setSelectedCategory(categoryId);
+    if (categoryId === selectedCategory) {
+      console.log(selectedCategory);
+      console.log(categoryId);
+      setSelectedCategory(null);
+      // fetchFilteredAndSortedProducts();
+    } else {
+      const newFilterCriteria: Record<string, string> = {};
+      newFilterCriteria["categories.id"] = ` subtree("${categoryId}")`;
+      setFilterCriteria(newFilterCriteria);
+      console.log(newFilterCriteria);
+      // fetchFilteredAndSortedProducts();
+    }
   };
 
   // handle fetching, filtering, sorting, and searching based on dependencies
@@ -101,14 +111,29 @@ const Catalog = () => {
     if (!sortingOption && Object.keys(filterCriteria).length === 0) {
       console.log("fetchProducts");
       fetchProducts();
+      fetchCategories();
+      console.log("fetchCategories");
     }
 
-    if (sortingOption || Object.keys(filterCriteria).length > 0) {
+    if (!selectedCategory) {
+      delete filterCriteria["categories.id"];
+      fetchFilteredAndSortedProducts();
+      console.log("!selected fetchFilteredAndSortedProducts");
+    }
+
+    if (
+      sortingOption ||
+      Object.keys(filterCriteria).length > 0 ||
+      selectedCategory
+    ) {
       fetchFilteredAndSortedProducts();
       console.log("fetchFilteredAndSortedProducts");
+      console.log(selectedCategory);
+      console.log(filterCriteria);
+      // fetchCategories();
+      // console.log("fetchCategories");
     }
-    fetchCategories();
-  }, [sortingOption, filterCriteria]);
+  }, [sortingOption, filterCriteria, selectedCategory]);
 
   return (
     <>
@@ -123,14 +148,11 @@ const Catalog = () => {
             pb={2}
             sx={{ overflow: "auto" }}
           >
-            {categories.map((category: Category) => (
-              <Chip
-                label={category.name["en-US"]}
-                key={category.id}
-                onClick={(event) => handleCategoryClick(event, category.id)}
-                // onClick={handleCategoryClick}
-              />
-            ))}
+            <CategoryNavigation
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onClick={handleCategoryClick}
+            />
           </Stack>
         </Box>
         <SearchField
