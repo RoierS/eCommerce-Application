@@ -53,7 +53,7 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
         alt={product.masterData.current.name["en-US"]}
       />
       <CardContent className={styles.content}>
-        <Typography variant="h6">
+        <Typography variant="h6" color="secondary">
           {product.masterData.current.name["en-US"]}
         </Typography>
         <Typography variant="body2">{briefDescription}</Typography>

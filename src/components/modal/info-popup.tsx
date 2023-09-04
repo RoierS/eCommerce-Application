@@ -14,7 +14,9 @@ const InfoPopup = (props: IInfoModal) => {
           boxShadow: 24,
         }}
       >
-        <Typography variant="h6">{message}</Typography>
+        <Typography variant="h6" color="primary">
+          {message}
+        </Typography>
       </Box>
     </Modal>
   );

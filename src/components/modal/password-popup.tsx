@@ -124,7 +124,7 @@ const PasswordPopup = (props: IPasswordModal) => {
               className={styles.passButton}
               type="submit"
               variant="contained"
-              color="success"
+              color="info"
             >
               Save
             </Button>

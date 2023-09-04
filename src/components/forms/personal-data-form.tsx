@@ -75,7 +75,7 @@ const PersonalDataForm = (props: IPersonalDataFormProps) => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography align="center" variant="h6" color="primary">
+        <Typography align="center" variant="h6" color="secondary">
           Personal data
         </Typography>
       </AccordionSummary>
@@ -214,7 +214,7 @@ const PersonalDataForm = (props: IPersonalDataFormProps) => {
               className="big-button"
               type="submit"
               variant="contained"
-              color="success"
+              color="info"
             >
               Save
             </Button>

@@ -220,7 +220,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
               Edit
             </Button>
           ) : (
-            <Button type="submit" variant="contained" color="success">
+            <Button type="submit" variant="contained" color="info">
               Save
             </Button>
           )}
@@ -230,7 +230,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
         <Button
           type="button"
           variant="contained"
-          color="primary"
+          color="secondary"
           onClick={onDelete}
         >
           Delete

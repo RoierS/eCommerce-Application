@@ -182,7 +182,7 @@ const AddressPopup = (addressData: IAddressModal) => {
               className={styles.passButton}
               type="submit"
               variant="contained"
-              color="success"
+              color="info"
             >
               Save
             </Button>

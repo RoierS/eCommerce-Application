@@ -1,5 +1,7 @@
+import theme from "@constants/theme";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
+import { ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
@@ -21,23 +23,25 @@ import "./index.scss";
 const App = () => {
   return (
     <Router>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div className="app">
-          <main className="main">
-            <Routes>
-              <Route path="/registration" element={<Registration />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/logout" element={<Logout />} />
-              <Route path="/catalog" element={<Catalog />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/catalog/:id" element={<Product />} />
-              <Route path="*" element={<Page404 />} />
-            </Routes>
-          </main>
-        </div>
-      </LocalizationProvider>
+      <ThemeProvider theme={theme}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div className="app">
+            <main className="main">
+              <Routes>
+                <Route path="/registration" element={<Registration />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/catalog" element={<Catalog />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/catalog/:id" element={<Product />} />
+                <Route path="*" element={<Page404 />} />
+              </Routes>
+            </main>
+          </div>
+        </LocalizationProvider>
+      </ThemeProvider>
     </Router>
   );
 };

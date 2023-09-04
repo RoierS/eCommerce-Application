@@ -103,7 +103,7 @@ const AddressesList = (props: IAddressesListProps) => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography align="center" variant="h6" color="primary">
+        <Typography align="center" variant="h6" color="secondary">
           {typography}
         </Typography>
       </AccordionSummary>

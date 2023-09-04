@@ -130,8 +130,8 @@ const Registration: React.FC = () => {
       } else {
         setValue("billingStreet", "street");
         setValue("billingCity", "city");
-        setValue("billingCountry", "country");
-        setValue("billingPostcode", "code");
+        setValue("billingCountry", "AT");
+        setValue("billingPostcode", "1111");
       }
     } else {
       setValue("billingStreet", "");
@@ -215,7 +215,7 @@ const Registration: React.FC = () => {
       <AppHeader />
       <Box sx={{ display: "flex" }} className={styles.container}>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-          <Typography variant="h6" color="primary">
+          <Typography variant="h6" color="secondary">
             Login data
           </Typography>
           <Controller
@@ -260,7 +260,7 @@ const Registration: React.FC = () => {
               />
             )}
           />
-          <Typography variant="h6" color="primary">
+          <Typography variant="h6" color="secondary">
             Personal data
           </Typography>
           <Controller
@@ -320,7 +320,7 @@ const Registration: React.FC = () => {
               );
             }}
           />
-          <Typography variant="h6" color="primary">
+          <Typography variant="h6" color="secondary">
             Shipping address
           </Typography>
           <FormControlLabel
@@ -423,7 +423,7 @@ const Registration: React.FC = () => {
               />
             )}
           />
-          <Typography variant="h6" color="primary">
+          <Typography variant="h6" color="secondary">
             Billing address
           </Typography>
           <FormControlLabel
