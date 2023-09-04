@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import CardComponent from "@components/card/card";
 import CategoryNavigation from "@components/category-navigation/category-navigation";
+
 import FilterComponent from "@components/filter/filter";
 import AppHeader from "@components/header/header";
 import SearchField from "@components/search/search-field";
