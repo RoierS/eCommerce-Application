@@ -293,7 +293,6 @@ const Profile = () => {
       }
     }
 
-    // await fetchUser();
     return {
       version: response.version,
       addressId: response.addresses[response.addresses.length - 1].id,
@@ -322,7 +321,6 @@ const Profile = () => {
       }
     }
     return response.version;
-    // await fetchUser();
   };
 
   // handling click on "add address" button

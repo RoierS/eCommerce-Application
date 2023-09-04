@@ -1,4 +1,3 @@
-// import validationErrors from "@constants/validation-errors";
 import * as yup from "yup";
 
 // Schema for validation of passwords reset form
