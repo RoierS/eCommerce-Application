@@ -256,55 +256,58 @@ const Profile = () => {
         showInfoPopup(error.message);
       }
     }
-  };
 
-  // Delete address id from addresses-id-array on server
-  const deleteAddressId = async (id: string, action: string) => {
-    const { version } = user;
-    const dataObj: IUserUpdate = {
-      version,
-      actions: [
-        {
-          action,
-          addressId: id,
-        },
-      ],
-    };
-
-    try {
-      await userRequest(dataObj);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        showInfoPopup(error.message);
-      }
-    }
-  };
-
-  // Check - delete from addressIds-array or completly from server
-  const onAddressDelete = async (
-    id: string,
-    action: string,
-    otherAddresses: string[]
-  ) => {
-    if (otherAddresses.includes(id)) {
-      await deleteAddressId(id, action);
-    } else {
-      await deleteAddress(id);
-    }
-
-    showInfoPopup("Address deleted successfully");
+    showInfoPopup("Address is deleted successfully");
     await fetchUser();
   };
 
+  // Delete address id from addresses-id-array on server
+  // const deleteAddressId = async (id: string, action: string) => {
+  //   const { version } = user;
+  //   const dataObj: IUserUpdate = {
+  //     version,
+  //     actions: [
+  //       {
+  //         action,
+  //         addressId: id,
+  //       },
+  //     ],
+  //   };
+
+  //   try {
+  //     await userRequest(dataObj);
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       showInfoPopup(error.message);
+  //     }
+  //   }
+  // };
+
+  // Check - delete from addressIds-array or completly from server
+  // const onAddressDelete = async (
+  //   id: string,
+  //   action: string,
+  //   otherAddresses: string[]
+  // ) => {
+  //   if (otherAddresses.includes(id)) {
+  //     await deleteAddressId(id, action);
+  //   } else {
+  //     await deleteAddress(id);
+  //   }
+
+  //   showInfoPopup("Address deleted successfully");
+  //   await fetchUser();
+  // };
+
   // Delete shipping address
-  const deleteShippingAddress = (id: string) => {
-    onAddressDelete(id, "removeShippingAddressId", user.billingAddressIds);
-  };
+  // const deleteShippingAddress = (id: string) => {
+  //   onAddressDelete(id, "removeShippingAddressId", user.billingAddressIds);
+  // };
 
   // Delete billing address
-  const deleteBillingAddress = (id: string) => {
-    onAddressDelete(id, "removeBillingAddressId", user.shippingAddressIds);
-  };
+  // const deleteBillingAddress = (id: string) => {
+  //   onAddressDelete(id, "removeBillingAddressId", user.shippingAddressIds);
+  // };
 
   // States and functions for address modal popup
   const [isOpenAddressModal, setModalAddressOpen] = useState(false);
@@ -428,7 +431,8 @@ const Profile = () => {
           defaultAddressId={user.defaultShippingAddressId}
           typography="Shipping addresses"
           onSetDefault={setDefaultShipping}
-          onDelete={deleteShippingAddress}
+          // onDelete={deleteShippingAddress}
+          onDelete={deleteAddress}
           onAddAddress={showShippingAddressPopup}
         />
         <AddressesList
@@ -437,7 +441,8 @@ const Profile = () => {
           defaultAddressId={user.defaultBillingAddressId}
           typography="Billing addresses"
           onSetDefault={setDefaultBilling}
-          onDelete={deleteBillingAddress}
+          // onDelete={deleteBillingAddress}
+          onDelete={deleteAddress}
           onAddAddress={showBillingAddressPopup}
         />
         <InfoPopup

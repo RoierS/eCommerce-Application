@@ -175,7 +175,7 @@ const AddressPopup = (addressData: IAddressModal) => {
                 checkedIcon={<Favorite />}
               />
             }
-            label="Make default shipping address"
+            label="Make default address"
           />
           <Box className={styles.box}>
             <Button
