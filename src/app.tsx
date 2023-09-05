@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+import { ITokenResponse } from "@interfaces/token-response";
+import { getAccessToken } from "@services/authentication-service";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -16,6 +19,28 @@ import "./app.scss";
 import "./index.scss";
 
 const App = () => {
+  const checkToken = async () => {
+    let tokenObject: ITokenResponse = JSON.parse(
+      localStorage.getItem("tokenObject") ||
+        localStorage.getItem("unauthorizedTokenObject") ||
+        "null"
+    );
+    if (!tokenObject || !tokenObject.access_token) {
+      try {
+        tokenObject = await getAccessToken();
+
+        localStorage.setItem(
+          "unauthorizedTokenObject",
+          JSON.stringify(tokenObject)
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  checkToken();
+
   return (
     <Router>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
