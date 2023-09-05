@@ -3,14 +3,12 @@ import axios from "axios";
 
 import { ITokenResponse } from "@interfaces/token-response";
 
-const getProducts = async () => {
-  const tokenObject: ITokenResponse = JSON.parse(
-    localStorage.getItem("tokenObject") ||
-      localStorage.getItem("unauthorizedTokenObject") ||
-      "null"
-  );
+import { getAccessToken } from "./authentication-service";
 
-  const accessToken = tokenObject?.access_token;
+const getProducts = async () => {
+  const tokenObject: ITokenResponse = await getAccessToken();
+
+  const accessToken = tokenObject?.access_token || "";
   const apiHost = process.env.REACT_APP_API_HOST;
   const projectKey = process.env.REACT_APP_PROJECT_KEY;
 

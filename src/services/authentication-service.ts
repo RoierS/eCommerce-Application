@@ -13,7 +13,7 @@ import {
   IUserFullDataResponse,
 } from "@interfaces/user-response";
 
-//  get an access token from the CommerceTools
+//  get basic access token from the CommerceTools (credentials flow)
 export const getAccessToken = async () => {
   const authHost = process.env.REACT_APP_AUTH_HOST;
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -32,6 +32,7 @@ export const getAccessToken = async () => {
       { headers }
     );
 
+    // localStorage.setItem("basicTokenObject", JSON.stringify(response.data));
     return response.data;
   } catch (error) {
     console.error(error);
@@ -39,7 +40,7 @@ export const getAccessToken = async () => {
   }
 };
 
-//  Obtain an access token from the CommerceTools with Password
+//  Obtain an access token from the CommerceTools with Password (password flow)
 export const getAccessTokenPassFlow = async (
   email: string,
   password: string
