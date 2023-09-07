@@ -13,7 +13,8 @@ import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTo
 import ArrowForwardIosTwoToneIcon from "@mui/icons-material/ArrowForwardIosTwoTone";
 
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import { Modal, ImageList, ImageListItem } from "@mui/material";
+import { Modal } from "@mui/material";
+// import { Modal, ImageList, ImageListItem } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -162,7 +163,7 @@ const ProductInformation = () => {
               </div>
               <ProductEstimation product={product} />
             </div>
-            <ImageList
+            {/* <ImageList
               className={styles.imageList}
               style={isMobile ? { width: "100%" } : {}}
               rowHeight={200}
@@ -181,7 +182,6 @@ const ProductInformation = () => {
                       onClick={() => openModal(index)}
                       key={uniqueKey}
                     >
-                      {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
                       <img
                         src={image.url}
                         alt="product image"
@@ -192,7 +192,38 @@ const ProductInformation = () => {
                   );
                 }
               )}
-            </ImageList>
+            </ImageList> */}
+            <div>
+              <div className={styles.cross}>
+                <CancelOutlinedIcon
+                  fontSize="large"
+                  className={styles.close}
+                  onClick={closeModal}
+                />
+              </div>
+
+              <div className={styles.arrows}>
+                <ArrowBackIosNewTwoToneIcon
+                  className={styles.arrowLeft}
+                  onClick={prevSlide}
+                />
+                {/* eslint-disable-next-line jsx-a11y/img-redundant-alt, jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
+                <img
+                  className={styles.image}
+                  onClick={() => openModal(currentSlideIndex)}
+                  src={
+                    product.masterData.current.masterVariant.images[
+                      currentSlideIndex
+                    ].url
+                  }
+                  alt="product image"
+                />
+                <ArrowForwardIosTwoToneIcon
+                  className={styles.arrowRight}
+                  onClick={nextSlide}
+                />
+              </div>
+            </div>
           </Box>
           <Modal
             open={isModalOpen}
