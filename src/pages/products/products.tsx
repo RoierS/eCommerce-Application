@@ -188,15 +188,7 @@ const ProductInformation = () => {
               </div>
               <ProductEstimation product={product} />
             </div>
-            <div>
-              <div className={styles.cross}>
-                <CancelOutlinedIcon
-                  fontSize="large"
-                  className={styles.close}
-                  onClick={closeModal}
-                />
-              </div>
-
+            <div style={{ maxWidth: 400 }}>
               <div className={styles.arrows}>
                 <ArrowBackIosNewTwoToneIcon
                   className={styles.arrowLeft}
@@ -205,6 +197,7 @@ const ProductInformation = () => {
                 {/* eslint-disable-next-line jsx-a11y/img-redundant-alt, jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
                 <img
                   className={styles.image}
+                  // style={{ maxWidth: "300px" }}
                   onClick={() => openModal(currentSlideBasicIndex)}
                   src={
                     product.masterData.current.masterVariant.images[
@@ -225,7 +218,7 @@ const ProductInformation = () => {
             onClose={closeModal}
             className={styles.modal}
           >
-            <div>
+            <div className={styles.moooo}>
               <div className={styles.cross}>
                 <CancelOutlinedIcon
                   fontSize="large"
