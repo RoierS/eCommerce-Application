@@ -27,6 +27,7 @@ const dataDelta = today.getTime() - minAge13;
 interface IPersonalDataFormEstimationProps {
   user: IUserPersonalDataResponse;
   isPersonalDataDisabled: boolean;
+  onClickPassword: () => void;
 }
 
 const PersonalDataFormEstimation = (
@@ -42,7 +43,7 @@ const PersonalDataFormEstimation = (
     mode: "onChange",
   });
 
-  const { user, isPersonalDataDisabled } = props;
+  const { user, isPersonalDataDisabled, onClickPassword } = props;
 
   useEffect(() => {
     const updatedFields = ["email", "firstName", "lastName", "dateOfBirth"];
@@ -217,6 +218,7 @@ const PersonalDataFormEstimation = (
         </form>
         <Button
           data-testid="password"
+          onClick={onClickPassword}
           className="big-button"
           type="button"
           variant="contained"
