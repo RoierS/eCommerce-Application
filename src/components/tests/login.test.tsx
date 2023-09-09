@@ -1,7 +1,6 @@
+import Login from "@pages/login/login";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-
-import Login from "./login";
 
 describe("Login Component", () => {
   it("renders the login form", () => {

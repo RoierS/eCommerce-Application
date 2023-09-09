@@ -1,31 +1,9 @@
-import { Category } from "@interfaces/category";
+import CategoryNavigation from "@components/category-navigation/category-navigation";
+import categories from "@components/tests/test-data-categories";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import CategoryNavigation from "./category-navigation";
-
 describe("CategoryNavigation", () => {
-  const categories: Category[] = [
-    {
-      id: "1",
-      name: { "en-US": "Spain" },
-      key: "Spain",
-      slug: { "en-US": "Spain" },
-      description: { "en-US": "Spain" },
-      ancestors: [
-        {
-          typeId: "test",
-          id: "test",
-        },
-      ],
-      parent: {
-        typeId: "test",
-        id: "test",
-      },
-      orderHint: "test",
-    },
-  ];
-
   it("renders category chips", () => {
     render(
       <MemoryRouter>
