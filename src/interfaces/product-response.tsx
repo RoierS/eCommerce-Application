@@ -5,13 +5,10 @@ interface IMasterData {
 export interface IImage {
   url: string;
 }
-
-export interface IAttributes {
-  filter(arg0: (attribute: IAttributes) => boolean): IAttributes[];
+export interface IAttribute {
   name: string;
   value: number;
 }
-
 interface IPrice {
   value: {
     centAmount: number;
@@ -26,9 +23,9 @@ interface IPrice {
 interface IVariant {
   images: IImage[];
   prices: IPrice[];
-  attributes: IAttributes;
+  attributes: IAttribute[];
 }
-enum Locale {
+export enum Locale {
   EnUS = "en-US",
 }
 
@@ -43,7 +40,6 @@ interface IProductData {
 
   masterVariant: IVariant;
 }
-
 export interface IProductResponse {
   id: string;
   version: number;
