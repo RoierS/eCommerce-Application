@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable no-console */
+import React, { useState } from "react";
 
 import calculateDiscount from "@helpers/claculate-discount";
 
@@ -9,6 +10,7 @@ import { IProductSearchResult } from "@interfaces/product-search-result";
 import { Link } from "react-router-dom";
 
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {
   CardMedia,
   CardContent,
@@ -26,6 +28,19 @@ import styles from "./card.module.scss";
 const CardComponent: React.FC<{
   product: IProductData | IProductSearchResult;
 }> = ({ product }) => {
+  const [isInCart, setIsInCart] = useState(false);
+
+  // handling adding to card
+  // TODO: integration with api
+  const handleAddToCart = () => {
+    if (isInCart) {
+      console.log("Already in Cart");
+    } else {
+      console.log("add to cart");
+    }
+    setIsInCart(!isInCart);
+  };
+
   // check needed to use appropriate interface
   const isProductData = "masterData" in product;
 
@@ -121,6 +136,17 @@ const CardComponent: React.FC<{
               More
             </Button>
           </Link>
+          <Button
+            className={styles.button}
+            variant="contained"
+            size="small"
+            color={isInCart ? "secondary" : "success"}
+            onClick={() => handleAddToCart()}
+            startIcon={<ShoppingCartIcon />}
+            disabled={isInCart}
+          >
+            {isInCart ? "Added" : "Add to Cart"}
+          </Button>
         </CardActions>
       </CardContent>
     </Card>
