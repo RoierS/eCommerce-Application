@@ -22,6 +22,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
   selectedCategory,
   onFilterChange,
   onCountryFilterChange,
+  onCloseFilter,
 }) => {
   const [countryFilter, setCountryFilter] = useState("");
   const [priceRange, setPriceRange] = useState<number[]>([0, 300000]);
@@ -58,6 +59,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
 
     onFilterChange(newFilterCriteria);
     onCountryFilterChange(countryFilter);
+    onCloseFilter();
   };
 
   // clears the filters

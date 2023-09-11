@@ -18,6 +18,8 @@ import getCategories from "@services/get-categories-by-id";
 import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
 import getProducts from "@services/get-products";
 
+import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
+import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import {
   Container,
   Box,
@@ -26,6 +28,9 @@ import {
   Stack,
   Link,
   Breadcrumbs,
+  Drawer,
+  IconButton,
+  Badge,
 } from "@mui/material";
 
 import styles from "./catalog.module.scss";
@@ -43,6 +48,9 @@ const Catalog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentCategoryPath, setCurrentCategoryPath] = useState<string[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [areFiltersApplied, setAreFiltersApplied] = useState(false);
 
   // get category name using its id
   const getCategoryNameById = (
@@ -98,6 +106,33 @@ const Catalog = () => {
       updateCurrentBreadcrumpPath(
         filterCriteria["variants.attributes.country"]
       );
+
+      let filtersApplied;
+
+      switch (true) {
+        case Object.keys(filterCriteria).length === 0:
+          filtersApplied = false;
+          break;
+        case Object.keys(filterCriteria).some(
+          (key) =>
+            key === "variants.price.centAmount" &&
+            filterCriteria[key] !== "range(0 to 300000)"
+        ):
+          filtersApplied = true;
+          break;
+        case Object.keys(filterCriteria).some(
+          (key) =>
+            key === "variants.attributes.country" ||
+            key === "variants.attributes.Star-Rating"
+        ):
+          filtersApplied = true;
+          break;
+        default:
+          filtersApplied = false;
+      }
+
+      setAreFiltersApplied(filtersApplied);
+      console.log(Object.keys(filterCriteria), filtersApplied);
     } catch (error) {
       setSearchError(true);
       console.error("Error fetching products:", error);
@@ -158,6 +193,7 @@ const Catalog = () => {
     categoryId: string
   ) => {
     setSelectedCategory(categoryId);
+    // setIsCategoryFilterApplied(true);
     if (categoryId === selectedCategory) {
       setSelectedCategory(null);
       setCurrentCategoryPath([]);
@@ -199,14 +235,8 @@ const Catalog = () => {
       <AppHeader />
       <Container className={styles.catalogContainer}>
         <Box>
-          <Typography mb={2}>Categories:</Typography>
-          <Stack
-            direction="row"
-            spacing={1}
-            mb={2}
-            pb={2}
-            sx={{ overflow: "auto" }}
-          >
+          <Typography mb={1}>Categories:</Typography>
+          <Stack direction="row" spacing={1} pb={2} sx={{ overflow: "auto" }}>
             <CategoryNavigation
               categories={categories}
               selectedCategory={selectedCategory}
@@ -214,7 +244,7 @@ const Catalog = () => {
             />
           </Stack>
         </Box>
-        <Box mb={2}>
+        <Box mb={1}>
           <Breadcrumbs separator=" / ">
             <Link
               underline="hover"
@@ -243,21 +273,52 @@ const Catalog = () => {
           searchHandler={fetchFilteredAndSortedProducts}
           isLoading={isLoading}
         />
-        <Typography variant="h6" gutterBottom>
-          Sorting
-        </Typography>
-        <SortingField
-          sortingOption={sortingOption}
-          setSortingOption={setSortingOption}
-        />
-        <Typography variant="h6" gutterBottom>
-          Filters
-        </Typography>
-        <FilterComponent
-          onFilterChange={setFilterCriteria}
-          selectedCategory={selectedCategory}
-          onCountryFilterChange={setSelectedCountry}
-        />
+        <Box className={styles.sortFilterConatiner}>
+          <IconButton
+            className={styles.IconButton}
+            onClick={() => setIsFilterOpen(true)}
+          >
+            <Badge
+              badgeContent={areFiltersApplied ? "!" : null}
+              color="error"
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <TuneRoundedIcon />
+            </Badge>
+          </IconButton>
+          <IconButton
+            className={styles.IconButton}
+            onClick={() => setIsSortOpen(true)}
+          >
+            <SortByAlphaRoundedIcon />
+          </IconButton>
+        </Box>
+        <Drawer
+          anchor="bottom"
+          open={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+        >
+          <FilterComponent
+            onFilterChange={setFilterCriteria}
+            selectedCategory={selectedCategory}
+            onCountryFilterChange={setSelectedCountry}
+            onCloseFilter={() => setIsFilterOpen(false)}
+          />
+        </Drawer>
+        <Drawer
+          anchor="bottom"
+          open={isSortOpen}
+          onClose={() => setIsSortOpen(false)}
+        >
+          <SortingField
+            sortingOption={sortingOption}
+            setSortingOption={setSortingOption}
+            onCloseSort={() => setIsSortOpen(false)}
+          />
+        </Drawer>
         <Box className={styles.container}>
           {isLoading ? (
             <CircularProgress />

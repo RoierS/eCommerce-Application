@@ -8,3 +8,16 @@
   justify-items: center;
   align-content: center;
 }
+
+.sortFilterConatiner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto 0.5em auto;
+  justify-content: space-around;
+}
+
+.IconButton {
+  width: auto;
+}
