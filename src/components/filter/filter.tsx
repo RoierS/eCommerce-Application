@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { IFilterComponentProps } from "@components/filter/filter-props";
 
@@ -23,11 +23,13 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
   onFilterChange,
   onCountryFilterChange,
   onCloseFilter,
+  countryFilter,
+  setCountryFilter,
+  priceRange,
+  setPriceRange,
+  starRating,
+  setStarRating,
 }) => {
-  const [countryFilter, setCountryFilter] = useState("");
-  const [priceRange, setPriceRange] = useState<number[]>([0, 300000]);
-  const [starRating, setStarRating] = useState("");
-
   // apply filters by country and price range
   const handleApplyFilters = () => {
     const newFilterCriteria: Record<string, string> = {};
@@ -64,9 +66,12 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
 
   // clears the filters
   const clearFilters = () => {
+    const newFilterCriteria: Record<string, string> = {};
     setCountryFilter("");
     setPriceRange([0, 300000]);
     setStarRating("");
+    onFilterChange(newFilterCriteria);
+    onCloseFilter();
   };
 
   return (

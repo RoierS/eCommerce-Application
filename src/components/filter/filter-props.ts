@@ -3,4 +3,10 @@ export interface IFilterComponentProps {
   selectedCategory: string | null;
   onCountryFilterChange: (countryFilter: string) => void;
   onCloseFilter: () => void;
+  countryFilter: string;
+  setCountryFilter: React.Dispatch<React.SetStateAction<string>>;
+  priceRange: number[];
+  setPriceRange: React.Dispatch<React.SetStateAction<number[]>>;
+  starRating: string;
+  setStarRating: React.Dispatch<React.SetStateAction<string>>;
 }

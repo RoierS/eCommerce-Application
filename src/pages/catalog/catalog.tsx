@@ -51,6 +51,9 @@ const Catalog = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [areFiltersApplied, setAreFiltersApplied] = useState(false);
+  const [countryFilter, setCountryFilter] = useState("");
+  const [priceRange, setPriceRange] = useState([0, 300000]);
+  const [starRating, setStarRating] = useState("");
 
   // get category name using its id
   const getCategoryNameById = (
@@ -132,7 +135,6 @@ const Catalog = () => {
       }
 
       setAreFiltersApplied(filtersApplied);
-      console.log(Object.keys(filterCriteria), filtersApplied);
     } catch (error) {
       setSearchError(true);
       console.error("Error fetching products:", error);
@@ -306,6 +308,12 @@ const Catalog = () => {
             selectedCategory={selectedCategory}
             onCountryFilterChange={setSelectedCountry}
             onCloseFilter={() => setIsFilterOpen(false)}
+            countryFilter={countryFilter}
+            setCountryFilter={setCountryFilter}
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            starRating={starRating}
+            setStarRating={setStarRating}
           />
         </Drawer>
         <Drawer
