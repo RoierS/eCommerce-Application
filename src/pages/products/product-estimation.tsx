@@ -1,5 +1,6 @@
 import React from "react";
 
+import Cart from "@components/cart/cart";
 import { IProductResponse } from "@interfaces/product-response";
 
 import Rating from "@mui/material/Rating";
@@ -71,6 +72,7 @@ const ProductEstimation = ({ product }: { product: IProductResponse }) => {
               USD
             </>
           )}
+          <Cart />
         </Typography>
       </div>
     </div>
