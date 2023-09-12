@@ -86,7 +86,7 @@ export const getAccessTokenPassFlow = async (
     { headers }
   );
 
-  await setTokenObject(response.data, "tokenObject");
+  setTokenObject(response.data, "tokenObject");
 
   return response.data;
 };
@@ -110,13 +110,20 @@ const loginCustomer = async (
     password,
   };
 
-  const response = await axios.post<ILoginResponse>(
-    `${apiHost}/${projectKey}/me/login`,
-    data,
-    { headers }
-  );
+  let response;
+  try {
+    response = await axios.post<ILoginResponse>(
+      `${apiHost}/${projectKey}/me/login`,
+      data,
+      { headers }
+    );
+  } catch (err) {
+    console.log(err);
+  }
 
-  return response?.data?.customer;
+  localStorage.removeItem("unauthorizedTokenObject");
+
+  return response?.data?.customer as IUserFullDataResponse;
 };
 
 export const getTokenAndLogin = async (data: ILoginData) => {
