@@ -16,7 +16,6 @@ import { IProductData } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
 import getCategories from "@services/get-categories-by-id";
 import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
-import getProducts from "@services/get-products";
 
 import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
@@ -105,7 +104,6 @@ const Catalog = () => {
         searchQuery
       );
       setProducts(response);
-      setIsLoading(false);
       updateCurrentBreadcrumpPath(
         filterCriteria["variants.attributes.country"]
       );
@@ -133,27 +131,14 @@ const Catalog = () => {
         default:
           filtersApplied = false;
       }
-
       setAreFiltersApplied(filtersApplied);
+      setIsLoading(false);
     } catch (error) {
       setSearchError(true);
       console.error("Error fetching products:", error);
       setIsLoading(false);
     }
   }, [searchQuery, sortingOption, filterCriteria]);
-
-  // fetching the list of products
-  const fetchProducts = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const response = await getProducts();
-      setProducts(response.results);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error fetching products:", error);
-    }
-  }, []);
 
   // fetching categories
   const fetchCategories = useCallback(async () => {
@@ -204,23 +189,29 @@ const Catalog = () => {
       newFilterCriteria["categories.id"] = ` subtree("${categoryId}")`;
       setFilterCriteria(newFilterCriteria);
       updateCurrentBreadcrumpPath(categoryId);
+      setCountryFilter("");
+      setPriceRange([0, 300000]);
+      setStarRating("");
     }
   };
 
+  useEffect(() => {
+    console.log("fetchcatego");
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    fetchFilteredAndSortedProducts();
+  }, []);
+
   // handle fetching, filtering, sorting, and searching based on dependencies
   useEffect(() => {
-    if (!sortingOption && Object.keys(filterCriteria).length === 0) {
-      console.log("fetchProducts");
-      fetchProducts();
-      fetchCategories();
-    }
-
     if (!selectedCategory) {
       delete filterCriteria["categories.id"];
       fetchFilteredAndSortedProducts();
-    }
-
-    if (
+      updateCurrentBreadcrumpPathByCountry(selectedCountry);
+      updateCurrentBreadcrumpPath(selectedCategory || "");
+    } else if (
       sortingOption ||
       Object.keys(filterCriteria).length > 0 ||
       selectedCategory ||
@@ -332,7 +323,9 @@ const Catalog = () => {
             <CircularProgress />
           ) : searchError ? (
             <p>Too short request</p>
-          ) : !searchError && products.length === 0 ? (
+          ) : !searchError &&
+            products.length === 0 &&
+            (searchQuery || Object.keys(filterCriteria).length > 0) ? (
             <p>No such product found. Try again</p>
           ) : (
             products.map((product: IProductData | IProductSearchResult) => (

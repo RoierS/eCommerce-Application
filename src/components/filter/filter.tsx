@@ -67,6 +67,11 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
   // clears the filters
   const clearFilters = () => {
     const newFilterCriteria: Record<string, string> = {};
+
+    if (selectedCategory) {
+      newFilterCriteria["categories.id"] = `subtree("${selectedCategory}")`;
+    }
+
     setCountryFilter("");
     setPriceRange([0, 300000]);
     setStarRating("");
