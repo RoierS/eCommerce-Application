@@ -1,0 +1,66 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+.stack,
+.paper {
+  padding: 7px;
+}
+
+.paper,
+.price,
+.quantity {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paper {
+  gap: 15px;
+}
+
+.price {
+  justify-content: space-around;
+}
+
+.title,
+.image,
+.quantity {
+  width: 30%;
+}
+
+.input {
+  width: 30%;
+  min-width: 35px;
+  text-align: center;
+  border: 1.5px solid #435b66;
+  border-radius: 5px;
+}
+
+@media (max-width: 700px) {
+  .paper {
+    flex-direction: column;
+  }
+
+  .image {
+    width: 40%;
+  }
+
+  .price {
+    width: 100%;
+  }
+
+  .title {
+    width: 100%;
+  }
+}
