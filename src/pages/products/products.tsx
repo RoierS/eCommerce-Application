@@ -1,11 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 
+import Cart from "@components/cart/cart";
 import AppHeader from "@components/header/header";
+import { ICartResponse } from "@interfaces/get-cart";
 import { IProductResponse } from "@interfaces/product-response";
 
 import ProductEstimation from "@pages/products/product-estimation";
 
+import getCartByCustomerId from "@services/get-cart-by-customer-id";
 import getProductById from "@services/get-product-by-id";
 import { Navigate, useParams } from "react-router-dom";
 
@@ -74,6 +77,26 @@ const ProductInformation = () => {
     };
 
     requestData().then();
+  }, [id]);
+
+  // State to toggle button activity
+  const [active, setActive] = useState(true);
+
+  // Fetch cart data and check if a product is already in the cart.
+  useEffect(() => {
+    const cartResponse = async () => {
+      try {
+        const data: ICartResponse = await getCartByCustomerId();
+        if (data.lineItems.filter((item) => item.productId === id).length > 0) {
+          setActive(false);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      }
+    };
+
+    cartResponse().then();
   }, [id]);
 
   // Toggle the description when the button is clicked
@@ -213,6 +236,7 @@ const ProductInformation = () => {
               </div>
             </div>
           </Box>
+          <Cart product={product} active={active} />
           <Modal
             open={isModalOpen}
             onClose={closeModal}
