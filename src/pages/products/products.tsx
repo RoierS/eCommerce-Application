@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 
-import Cart from "@components/cart/cart";
+import CartButton from "@components/cart/cart-button";
 import AppHeader from "@components/header/header";
 import { ICartResponse } from "@interfaces/get-cart";
 import { IProductResponse } from "@interfaces/product-response";
@@ -236,7 +236,7 @@ const ProductInformation = () => {
               </div>
             </div>
           </Box>
-          <Cart product={product} active={active} />
+          <CartButton product={product} active={active} />
           <Modal
             open={isModalOpen}
             onClose={closeModal}
