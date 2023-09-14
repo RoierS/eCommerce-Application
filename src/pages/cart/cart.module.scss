@@ -11,27 +11,62 @@ input[type="number"] {
   appearance: none;
 }
 
-.stack,
-.paper {
+.cartContainer,
+.paper,
+.totalContainer,
+.total {
+  width: 100%;
+}
+
+.cartContainer,
+.paper,
+.total {
   padding: 7px;
 }
 
+.totalContainer {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.stack {
+  padding: 0;
+}
+
+.cartContainer,
 .paper,
 .price,
 .quantity,
-.empty {
+.empty,
+.total,
+.promocode {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
 
-.paper {
-  gap: 15px;
+.cartContainer,
+.empty,
+.promocode {
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cartContainer {
+  align-items: flex-end;
 }
 
 .price {
   justify-content: space-around;
+}
+
+.paper {
+  gap: 15px;
 }
 
 .title,
@@ -48,14 +83,19 @@ input[type="number"] {
   border-radius: 5px;
 }
 
+.promocode {
+  width: 30%;
+  min-width: 250px;
+}
+
+.promocode input,
+.promocode button {
+  width: 80%;
+}
+
 .spinner {
   display: flex;
   justify-content: center;
-}
-
-.empty {
-  flex-direction: column;
-  gap: 20px;
 }
 
 @media (max-width: 700px) {

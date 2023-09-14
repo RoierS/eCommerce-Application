@@ -14,7 +14,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-import styles from "./cart.module.scss";
+import styles from "../../pages/cart/cart.module.scss";
 
 const CartItem = (props: { product: ILineItem }) => {
   const theme = useTheme();

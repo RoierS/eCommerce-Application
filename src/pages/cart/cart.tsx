@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import CartList from "@components/cart/cart-list";
+import OrderSum from "@components/cart/order-sum";
 import AppHeader from "@components/header/header";
 // import { ILineItem } from "@interfaces/cart";
 
@@ -11,9 +12,9 @@ import getCart from "@services/get-cart";
 
 import { Navigate } from "react-router-dom";
 
-import { Box, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 
-import EmptyCart from "./empty-cart";
+import EmptyCart from "../../components/cart/empty-cart";
 
 import styles from "./cart.module.scss";
 
@@ -54,7 +55,16 @@ const Cart = () => {
       ) : requestError ? (
         <Navigate to="*" />
       ) : basket.lineItems ? (
-        <CartList products={basket.lineItems || []} />
+        <Box className={styles.cartContainer}>
+          <Button className="button" variant="contained" color="secondary">
+            Clear cart
+          </Button>
+          <CartList products={basket.lineItems || []} />
+          <OrderSum price={basket.totalPrice.centAmount} />
+          <Button className="button" variant="contained" color="secondary">
+            Payment and delivery
+          </Button>
+        </Box>
       ) : (
         <EmptyCart />
       )}

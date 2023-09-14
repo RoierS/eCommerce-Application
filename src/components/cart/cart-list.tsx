@@ -2,9 +2,9 @@ import { ILineItem } from "@interfaces/cart";
 
 import { Stack } from "@mui/material";
 
-import CartItem from "./cart-item";
+import styles from "../../pages/cart/cart.module.scss";
 
-import styles from "./cart.module.scss";
+import CartItem from "./cart-item";
 
 const CartList = (props: { products: ILineItem[] }) => {
   const { products } = props;
