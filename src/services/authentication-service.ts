@@ -133,6 +133,7 @@ const loginCustomer = async (
   return response?.data?.customer as IUserFullDataResponse;
 };
 
+// login with anonymous token
 export const getTokenAndLogin = async (data: ILoginData) => {
   const token = await getValidAccessToken();
   getAccessTokenPassFlow(data.email, data.password);
@@ -141,6 +142,7 @@ export const getTokenAndLogin = async (data: ILoginData) => {
   // return loginCustomer(tokenObject.access_token, data.email, data.password);
 };
 
+// login with passflow token
 export const getTokenAndLoginAfterRegistrate = async (data: ILoginData) => {
   const tokenObject = await getAccessTokenPassFlow(data.email, data.password);
 

@@ -1,13 +1,14 @@
 /* eslint-disable no-console */
 import axios from "axios";
 
-// const apiHost = process.env.REACT_APP_API_HOST;
+const apiHost = process.env.REACT_APP_API_HOST;
 const projectKey = process.env.REACT_APP_PROJECT_KEY;
 
+// create new cart
 const createCart = async (accessToken: string) => {
   try {
     const newCartResponse = await axios.post(
-      `https://api.commercetools.com/${projectKey}/me/carts`,
+      `${apiHost}/${projectKey}/me/carts`,
       {
         currency: "USD",
       },
@@ -19,18 +20,19 @@ const createCart = async (accessToken: string) => {
       }
     );
 
-    console.log("New cart created");
-    return newCartResponse.data.id;
+    console.log("New cart created", newCartResponse.data);
+    return newCartResponse.data;
   } catch (error) {
     console.error("Error creating cart:", error);
     throw error;
   }
 };
 
+// get existing cart (if not exist, creates new one)
 const getCart = async (accessToken: string) => {
   try {
     const activeCartResponse = await axios.get(
-      `https://api.commercetools.com/${projectKey}/me/active-cart`,
+      `${apiHost}/${projectKey}/me/active-cart`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -39,36 +41,26 @@ const getCart = async (accessToken: string) => {
       }
     );
 
-    console.log("Active cart exists");
-    return activeCartResponse.data.id;
+    console.log("Active cart exists", activeCartResponse.data);
+    return activeCartResponse.data;
   } catch (error) {
     const newCart = await createCart(accessToken);
-    localStorage.setItem("anonymCardID", newCart);
+    localStorage.setItem("anonymCardID", newCart.id);
+    console.log("New cart created", newCart);
     return newCart;
   }
 };
 
+// add product to cart
 const addProductToCart = async (
-  // cartId: string,
+  currentCartId: string,
+  currentCartVersion: number,
   productId: string,
   accessToken: string
 ) => {
   try {
-    const cartResponse = await axios.get(
-      `https://api.commercetools.com/${projectKey}/me/active-cart`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-
-    const currentCartVersion = cartResponse.data.version;
-    const currentCartId = cartResponse.data.id;
-
     const addToCartResponse = await axios.post(
-      `https://api.commercetools.com/${projectKey}/me/carts/${currentCartId}`,
+      `${apiHost}/${projectKey}/me/carts/${currentCartId}`,
       {
         version: currentCartVersion,
         actions: [

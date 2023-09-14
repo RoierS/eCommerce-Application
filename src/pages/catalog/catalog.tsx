@@ -15,7 +15,7 @@ import getValidAccessToken from "@helpers/check-token";
 import { Category } from "@interfaces/category";
 import { IProductData } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
-import { addProductToCart, getCart, createCart } from "@services/add-to-cart";
+import { addProductToCart, getCart } from "@services/add-to-cart";
 import getCategories from "@services/get-categories-by-id";
 import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
 
@@ -62,28 +62,16 @@ const Catalog = () => {
   const addToCart = async (productId: string) => {
     try {
       const accessToken = await getValidAccessToken();
-      // let currentCartId = localStorage.getItem("cartId");
+      const currentCart = await getCart(accessToken.access_token);
+      const currentCartId = currentCart.id;
+      const currentCartVersion = currentCart.version;
 
-      // if (!currentCartId) {
-      //   currentCartId = await getCart(accessToken.access_token);
-      //   if (!currentCartId) {
-      //     currentCartId = await createCart(accessToken.access_token);
-      //   }
-      //   localStorage.setItem("cartId", currentCartId || "");
-      // }
-      let currentCartId;
-      console.log(currentCartId);
-      currentCartId = await getCart(accessToken.access_token);
-
-      if (!currentCartId) {
-        currentCartId = await createCart(accessToken.access_token);
-      }
       await addProductToCart(
-        // currentCartId,
+        currentCartId,
+        currentCartVersion,
         productId,
         accessToken.access_token
       );
-      console.log("Product added to Cart");
     } catch (error) {
       console.error("Error adding product to cart:", error);
     }
