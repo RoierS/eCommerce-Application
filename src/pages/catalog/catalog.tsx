@@ -58,6 +58,7 @@ const Catalog = () => {
 
   // const [cartId, setCartId] = useState<string>("");
 
+  // adding product to cart
   const addToCart = async (productId: string) => {
     try {
       const accessToken = await getValidAccessToken();
@@ -73,11 +74,12 @@ const Catalog = () => {
       let currentCartId;
       console.log(currentCartId);
       currentCartId = await getCart(accessToken.access_token);
+
       if (!currentCartId) {
         currentCartId = await createCart(accessToken.access_token);
       }
       await addProductToCart(
-        currentCartId,
+        // currentCartId,
         productId,
         accessToken.access_token
       );

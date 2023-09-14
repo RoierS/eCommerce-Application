@@ -67,6 +67,8 @@ const CardComponent: React.FC<{
   onAddToCart: (productId: string) => void;
 }> = ({ product, onAddToCart }) => {
   const [isInCart, setIsInCart] = useState(false);
+
+  // handling adding product to cart
   const handleAddToCart = () => {
     try {
       onAddToCart(product.id);
@@ -78,6 +80,7 @@ const CardComponent: React.FC<{
       console.error("Error adding product to cart:", error);
     }
   };
+
   // check needed to use appropriate interface
   const isProductData = "masterData" in product;
 

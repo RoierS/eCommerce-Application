@@ -27,30 +27,6 @@ const createCart = async (accessToken: string) => {
   }
 };
 
-// const getCart = async (accessToken: string) => {
-//   try {
-//     const existingCartResponse = await axios.get(
-//       `https://api.commercetools.com/${projectKey}/me/carts`,
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       }
-//     );
-
-//     if (existingCartResponse.data.results.length > 0) {
-//       console.log("Cart exists");
-//       return existingCartResponse.data.results[0].id;
-//     }
-
-//     console.log("Cart not found");
-//     return null;
-//   } catch (error) {
-//     console.error("Error getting cart:", error);
-//     throw error;
-//   }
-// };
 const getCart = async (accessToken: string) => {
   try {
     const activeCartResponse = await axios.get(
@@ -63,20 +39,17 @@ const getCart = async (accessToken: string) => {
       }
     );
 
-    // if (!activeCartResponse.data.id) {
-    //   const newCart = await createCart(accessToken);
-    //   return newCart;
-    // }
     console.log("Active cart exists");
     return activeCartResponse.data.id;
   } catch (error) {
     const newCart = await createCart(accessToken);
+    localStorage.setItem("anonymCardID", newCart);
     return newCart;
   }
 };
 
 const addProductToCart = async (
-  cartId: string,
+  // cartId: string,
   productId: string,
   accessToken: string
 ) => {

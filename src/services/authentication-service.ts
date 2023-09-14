@@ -105,10 +105,16 @@ const loginCustomer = async (
     Authorization: `Bearer ${accessToken}`,
   };
 
+  const anonymCartID = localStorage.getItem("anonymCardID");
+
   const data = {
     email,
     password,
     activeCartSignInMode: "MergeWithExistingCustomerCart",
+    anonymousCart: {
+      id: anonymCartID,
+      typeId: "cart",
+    },
   };
 
   let response;
@@ -128,6 +134,14 @@ const loginCustomer = async (
 };
 
 export const getTokenAndLogin = async (data: ILoginData) => {
+  const token = await getValidAccessToken();
+  getAccessTokenPassFlow(data.email, data.password);
+  return loginCustomer(token.access_token, data.email, data.password);
+  // const tokenObject = await getAccessTokenPassFlow(data.email, data.password);
+  // return loginCustomer(tokenObject.access_token, data.email, data.password);
+};
+
+export const getTokenAndLoginAfterRegistrate = async (data: ILoginData) => {
   const tokenObject = await getAccessTokenPassFlow(data.email, data.password);
 
   return loginCustomer(tokenObject.access_token, data.email, data.password);
@@ -147,7 +161,7 @@ const registrateCustomer = async (
   };
 
   try {
-    const newCartResponse = await axios.post(
+    await axios.post(
       `${apiHost}/${projectKey}/me/carts`,
       {
         currency: "USD",
@@ -155,15 +169,9 @@ const registrateCustomer = async (
       { headers }
     );
 
-    const cartId = newCartResponse.data.id;
     const userDataWithCart = {
       ...data,
       activeCartSignInMode: "MergeWithExistingCustomerCart",
-      anonymousCart: {
-        id: cartId,
-        typeId: "cart",
-      },
-      // anonymousCartId: cartId,
     };
     const response = await axios.post<ICustomerRegistrationResponse>(
       `${apiHost}/${projectKey}/me/signup`,
