@@ -28,7 +28,6 @@ const addProductToCart = async (
       },
     ],
   };
-  const requestBodyString = JSON.stringify(requestBody);
   const cartData = localStorage.getItem("cart");
   let cartId = null;
   if (cartData) {
@@ -38,7 +37,7 @@ const addProductToCart = async (
   try {
     const response = await axios.post<IProductResponse>(
       `${apiHost}/${projectKey}/carts/${cartId}`,
-      requestBodyString,
+      requestBody,
       { headers }
     );
     return response.data;
