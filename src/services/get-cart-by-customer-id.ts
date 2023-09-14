@@ -10,12 +10,6 @@ const getCartByCustomerId = async (): Promise<ICartResponse> => {
 
   const apiHost = process.env.REACT_APP_API_HOST;
   const projectKey = process.env.REACT_APP_PROJECT_KEY;
-  const dataUser = localStorage.getItem("user");
-  let clientId = null;
-  if (dataUser) {
-    const userData = JSON.parse(dataUser);
-    clientId = userData.id;
-  }
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${tokenObject.access_token}`,
@@ -23,7 +17,7 @@ const getCartByCustomerId = async (): Promise<ICartResponse> => {
 
   try {
     const response = await axios.get<ICartResponse>(
-      `${apiHost}/${projectKey}/carts/customer-id=${clientId}`,
+      `${apiHost}/${projectKey}/me/active-cart`,
       { headers }
     );
     return response.data;
