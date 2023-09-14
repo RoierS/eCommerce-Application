@@ -91,7 +91,8 @@ export const getAccessTokenPassFlow = async (
 
   try {
     const userData = await getUser();
-    setTokenObject(userData, "user");
+    const userDataJSON = JSON.stringify(userData);
+    localStorage.setItem("user", userDataJSON);
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
