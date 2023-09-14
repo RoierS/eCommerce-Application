@@ -4,7 +4,7 @@
 /* eslint-disable no-console */
 import { useCallback, useEffect, useState } from "react";
 
-import CardComponent from "@components/card/card";
+import CardComponent, { ILineItem } from "@components/card/card";
 import CategoryNavigation from "@components/category-navigation/category-navigation";
 
 import FilterComponent from "@components/filter/filter";
@@ -13,9 +13,8 @@ import SearchField from "@components/search/search-field";
 import SortingField from "@components/sorting/sort-field";
 import getValidAccessToken from "@helpers/check-token";
 import { Category } from "@interfaces/category";
-import { IProductData } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
-import { addProductToCart, getCart } from "@services/add-to-cart";
+import { getCart } from "@services/cart-services";
 import getCategories from "@services/get-categories-by-id";
 import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
 
@@ -37,7 +36,7 @@ import {
 import styles from "./catalog.module.scss";
 
 const Catalog = () => {
-  const [products, setProducts] = useState<IProductData[]>([]);
+  const [products, setProducts] = useState<IProductSearchResult[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchError, setSearchError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,27 +54,6 @@ const Catalog = () => {
   const [countryFilter, setCountryFilter] = useState("");
   const [priceRange, setPriceRange] = useState([0, 300000]);
   const [starRating, setStarRating] = useState("");
-
-  // const [cartId, setCartId] = useState<string>("");
-
-  // adding product to cart
-  const addToCart = async (productId: string) => {
-    try {
-      const accessToken = await getValidAccessToken();
-      const currentCart = await getCart(accessToken.access_token);
-      const currentCartId = currentCart.id;
-      const currentCartVersion = currentCart.version;
-
-      await addProductToCart(
-        currentCartId,
-        currentCartVersion,
-        productId,
-        accessToken.access_token
-      );
-    } catch (error) {
-      console.error("Error adding product to cart:", error);
-    }
-  };
 
   // get category name using its id
   const getCategoryNameById = (
@@ -217,15 +195,26 @@ const Catalog = () => {
       setStarRating("");
     }
   };
+  const [cartItems, setCartItems] = useState<ILineItem[]>([]);
 
   useEffect(() => {
-    console.log("fetchcatego");
-    fetchCategories();
+    // Fetch the cart items and update state
+    const fetchCartItems = async () => {
+      try {
+        const accessToken = await getValidAccessToken();
+        const currentCart = await getCart(accessToken.access_token);
+        setCartItems(currentCart.lineItems);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+
+    fetchCartItems();
   }, []);
 
-  // useEffect(() => {
-  //   fetchFilteredAndSortedProducts();
-  // }, []);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   // handle fetching, filtering, sorting, and searching based on dependencies
   useEffect(() => {
@@ -351,11 +340,11 @@ const Catalog = () => {
             (searchQuery || Object.keys(filterCriteria).length > 0) ? (
             <p>No such product found. Try again</p>
           ) : (
-            products.map((product: IProductData | IProductSearchResult) => (
+            products.map((product: IProductSearchResult) => (
               <CardComponent
                 key={product.id}
                 product={product}
-                onAddToCart={addToCart}
+                cartItems={cartItems}
               />
             ))
           )}

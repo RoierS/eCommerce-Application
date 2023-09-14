@@ -46,7 +46,6 @@ const getCart = async (accessToken: string) => {
   } catch (error) {
     const newCart = await createCart(accessToken);
     localStorage.setItem("anonymCardID", newCart.id);
-    console.log("New cart created", newCart);
     return newCart;
   }
 };
@@ -79,7 +78,10 @@ const addProductToCart = async (
       }
     );
 
-    console.log("Product added to active cart:", addToCartResponse.data);
+    console.log(
+      `Product ${productId} added to active cart:`,
+      addToCartResponse.data
+    );
     return addToCartResponse.data;
   } catch (error) {
     console.error("Error adding product to active cart:", error);

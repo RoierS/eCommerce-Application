@@ -4,7 +4,6 @@ import axios, { AxiosResponse } from "axios";
 import getValidAccessToken from "@helpers/check-token";
 import setTokenObject from "@helpers/set-token-expiration";
 import { ILoginData } from "@interfaces/login-form-data";
-// import { ICustomerLoginResponse } from "@interfaces/login-response";
 import {
   IRegistrateData,
   ICustomerRegistrationResponse,

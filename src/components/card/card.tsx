@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
 
+import getValidAccessToken from "@helpers/check-token";
 import calculateDiscount from "@helpers/claculate-discount";
 
 import sliceText from "@helpers/slice-text";
@@ -10,9 +11,10 @@ import {
   IImage,
   ILocalizedText,
   IPrice,
-  IProductData,
+  // IProductData,
 } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
+import { addProductToCart, getCart } from "@services/cart-services";
 import { Link } from "react-router-dom";
 
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -63,15 +65,34 @@ interface IVariant {
 }
 
 const CardComponent: React.FC<{
-  product: IProductData | IProductSearchResult;
-  onAddToCart: (productId: string) => void;
-}> = ({ product, onAddToCart }) => {
+  product: IProductSearchResult;
+  cartItems: ILineItem[];
+}> = ({ product, cartItems }) => {
   const [isInCart, setIsInCart] = useState(false);
+
+  const addToCart = async (productId: string) => {
+    try {
+      const accessToken = await getValidAccessToken();
+      const currentCart = await getCart(accessToken.access_token);
+      const currentCartId = currentCart.id;
+      const currentCartVersion = currentCart.version;
+
+      await addProductToCart(
+        currentCartId,
+        currentCartVersion,
+        productId,
+        accessToken.access_token
+      );
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    }
+  };
 
   // handling adding product to cart
   const handleAddToCart = () => {
     try {
-      onAddToCart(product.id);
+      addToCart(product.id);
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
       cartItems.push({ productId: product.id });
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
@@ -81,48 +102,30 @@ const CardComponent: React.FC<{
     }
   };
 
-  // check needed to use appropriate interface
-  const isProductData = "masterData" in product;
-
-  const originalPrice = isProductData
-    ? product.masterData.current.masterVariant.prices[0].value.centAmount
-    : product.masterVariant.prices[0].value.centAmount;
-  const discountPrice = isProductData
-    ? product.masterData.current.masterVariant.prices[0].discounted?.value
-        .centAmount
-    : product.masterVariant.prices[0].discounted?.value.centAmount;
+  const originalPrice = product.masterVariant.prices[0].value.centAmount;
+  const discountPrice =
+    product.masterVariant.prices[0].discounted?.value.centAmount;
 
   // calculate discount
   const discountPercentage = calculateDiscount(originalPrice, discountPrice);
 
   // trim the discription of product
-  const briefDescription = isProductData
-    ? sliceText(product.masterData.current.description["en-US"], 150)
-    : sliceText(product.description["en-US"], 150);
+  const briefDescription = sliceText(product.description["en-US"], 150);
 
-  const imageUrl = isProductData
-    ? product.masterData.current.masterVariant.images[0].url
-    : product.masterVariant.images[0].url;
+  const imageUrl = product.masterVariant.images[0].url;
 
-  const productName = isProductData
-    ? product.masterData.current.name["en-US"]
-    : product.name["en-US"];
+  const productName = product.name["en-US"];
 
-  const starRating = isProductData
-    ? product.masterData.current.masterVariant.attributes.find(
-        (attribute) => attribute.name === "Star-Rating"
-      )?.value
-    : product.masterVariant.attributes.find(
-        (attribute) => attribute.name === "Star-Rating"
-      )?.value;
+  const starRating = product.masterVariant.attributes.find(
+    (attribute) => attribute.name === "Star-Rating"
+  )?.value;
 
   useEffect(() => {
-    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-    const isItemInCart = cartItems.some(
+    const isProductInCart = cartItems.some(
       (item: ILineItem) => item.productId === product.id
     );
-    setIsInCart(isItemInCart);
-  }, [product.id]);
+    setIsInCart(isProductInCart);
+  }, [cartItems, product.id]);
 
   return (
     <Card className={styles.card}>
@@ -189,7 +192,6 @@ const CardComponent: React.FC<{
             variant="contained"
             size="small"
             color={isInCart ? "secondary" : "success"}
-            // onClick={() => handleAddToCart()}
             onClick={handleAddToCart}
             startIcon={<ShoppingCartIcon />}
             disabled={isInCart}
