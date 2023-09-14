@@ -1,24 +1,20 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
 
+import AddToCartButton from "@components/buttons/add-to-cart-btn";
 import getValidAccessToken from "@helpers/check-token";
 import calculateDiscount from "@helpers/claculate-discount";
 
 import sliceText from "@helpers/slice-text";
 
-import {
-  IAttribute,
-  IImage,
-  ILocalizedText,
-  IPrice,
-  // IProductData,
-} from "@interfaces/product-data";
+import { ILineItem } from "@interfaces/line-item";
 import { IProductSearchResult } from "@interfaces/product-search-result";
 import { addProductToCart, getCart } from "@services/cart-services";
+
 import { Link } from "react-router-dom";
 
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
 import {
   CardMedia,
   CardContent,
@@ -33,41 +29,15 @@ import {
 
 import styles from "./card.module.scss";
 
-export interface ILineItem {
-  addedAt: string;
-  id: string;
-  lastModifiedAt: string;
-  lineItemMode: string;
-  name: ILocalizedText;
-  price: IPrice[];
-  priceMode: string;
-  productId: string;
-  productKey: string;
-  productSlug: ILocalizedText;
-  quantity: number;
-  totalPrice: {
-    type: string;
-    currencyCode: string;
-    centAmount: number;
-    fractionDigits: number;
-  };
-  variant: IVariant[];
-}
-
-interface IVariant {
-  id: number;
-  sku: string;
-  key: string;
-  prices: IPrice[];
-  images: IImage[];
-  attributes: IAttribute[];
-  assets: IAttribute[];
-}
-
-const CardComponent: React.FC<{
+interface ICardComponentProps {
   product: IProductSearchResult;
   cartItems: ILineItem[];
-}> = ({ product, cartItems }) => {
+}
+
+const CardComponent: React.FC<ICardComponentProps> = ({
+  product,
+  cartItems,
+}) => {
   const [isInCart, setIsInCart] = useState(false);
 
   const addToCart = async (productId: string) => {
@@ -111,11 +81,8 @@ const CardComponent: React.FC<{
 
   // trim the discription of product
   const briefDescription = sliceText(product.description["en-US"], 150);
-
   const imageUrl = product.masterVariant.images[0].url;
-
   const productName = product.name["en-US"];
-
   const starRating = product.masterVariant.attributes.find(
     (attribute) => attribute.name === "Star-Rating"
   )?.value;
@@ -187,17 +154,10 @@ const CardComponent: React.FC<{
               More
             </Button>
           </Link>
-          <Button
-            className={styles.button}
-            variant="contained"
-            size="small"
-            color={isInCart ? "secondary" : "success"}
-            onClick={handleAddToCart}
-            startIcon={<ShoppingCartIcon />}
-            disabled={isInCart}
-          >
-            {isInCart ? "Added" : "Add to Cart"}
-          </Button>
+          <AddToCartButton
+            isInCart={isInCart}
+            handleAddToCart={handleAddToCart}
+          />
         </CardActions>
       </CardContent>
     </Card>

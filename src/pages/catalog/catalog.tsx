@@ -4,7 +4,7 @@
 /* eslint-disable no-console */
 import { useCallback, useEffect, useState } from "react";
 
-import CardComponent, { ILineItem } from "@components/card/card";
+import CardComponent from "@components/card/card";
 import CategoryNavigation from "@components/category-navigation/category-navigation";
 
 import FilterComponent from "@components/filter/filter";
@@ -13,6 +13,7 @@ import SearchField from "@components/search/search-field";
 import SortingField from "@components/sorting/sort-field";
 import getValidAccessToken from "@helpers/check-token";
 import { Category } from "@interfaces/category";
+import { ILineItem } from "@interfaces/line-item";
 import { IProductSearchResult } from "@interfaces/product-search-result";
 import { getCart } from "@services/cart-services";
 import getCategories from "@services/get-categories-by-id";
