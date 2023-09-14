@@ -14,7 +14,6 @@ import {
   ILoginResponse,
   IUserFullDataResponse,
 } from "@interfaces/user-response";
-import getUser from "@services/get-user";
 
 // token requests data
 const authHost = process.env.REACT_APP_AUTH_HOST;
@@ -88,14 +87,6 @@ export const getAccessTokenPassFlow = async (
   );
 
   setTokenObject(response.data, "tokenObject");
-
-  try {
-    const userData = await getUser();
-    const userDataJSON = JSON.stringify(userData);
-    localStorage.setItem("user", userDataJSON);
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
 
   return response.data;
 };
