@@ -23,7 +23,6 @@ const createCart = async (): Promise<ICartResponse> => {
       requestData,
       { headers }
     );
-    localStorage.setItem("cart", JSON.stringify(response.data));
     return response.data;
   } catch (error) {
     // eslint-disable-next-line no-console

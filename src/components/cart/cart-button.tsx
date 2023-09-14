@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ICartResponse } from "@interfaces/get-cart";
 import { IProductResponse } from "@interfaces/product-response";
 import addProductToCart from "@services/add-product-to-cart";
-import getCartByCustomerId from "@services/get-cart-by-customer-id";
+import getCart from "@services/get-cart";
 
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Button from "@mui/material/Button";
@@ -23,7 +23,7 @@ const CartButton = ({
   // Event handler for adding a product to the cart
   const handleAddToCartClick = async () => {
     try {
-      const cart: ICartResponse = await getCartByCustomerId();
+      const cart: ICartResponse = await getCart();
       await addProductToCart(product, cart);
       setActiveState(false);
     } catch (error) {

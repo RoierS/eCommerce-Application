@@ -5,7 +5,7 @@ import { ICartResponse } from "@interfaces/get-cart";
 import { ITokenResponse } from "@interfaces/token-response";
 import createCart from "@services/create-cart";
 
-const getCartByCustomerId = async (): Promise<ICartResponse> => {
+const getCart = async (): Promise<ICartResponse> => {
   const tokenObject: ITokenResponse = await getValidAccessToken();
 
   const apiHost = process.env.REACT_APP_API_HOST;
@@ -25,4 +25,4 @@ const getCartByCustomerId = async (): Promise<ICartResponse> => {
     return await createCart();
   }
 };
-export default getCartByCustomerId;
+export default getCart;

@@ -8,7 +8,7 @@ import { IProductResponse } from "@interfaces/product-response";
 
 import ProductEstimation from "@pages/products/product-estimation";
 
-import getCartByCustomerId from "@services/get-cart-by-customer-id";
+import getCart from "@services/get-cart";
 import getProductById from "@services/get-product-by-id";
 import { Navigate, useParams } from "react-router-dom";
 
@@ -86,7 +86,7 @@ const ProductInformation = () => {
   useEffect(() => {
     const cartResponse = async () => {
       try {
-        const data: ICartResponse = await getCartByCustomerId();
+        const data: ICartResponse = await getCart();
         if (data.lineItems.filter((item) => item.productId === id).length > 0) {
           setActive(false);
         }

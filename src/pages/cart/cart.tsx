@@ -4,7 +4,7 @@ import AppHeader from "@components/header/header";
 
 import { ICartResponse } from "@interfaces/get-cart";
 import styles from "@pages/cart/cart.module.scss";
-import getCartByCustomerId from "@services/get-cart-by-customer-id";
+import getCart from "@services/get-cart";
 
 import { Navigate } from "react-router-dom";
 
@@ -27,7 +27,7 @@ const Cart = () => {
   useEffect(() => {
     const requestData = async () => {
       try {
-        const data: ICartResponse = await getCartByCustomerId();
+        const data: ICartResponse = await getCart();
         setCartData(data);
         setLoading(false);
       } catch (error) {

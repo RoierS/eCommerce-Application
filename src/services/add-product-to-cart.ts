@@ -4,6 +4,7 @@ import getValidAccessToken from "@helpers/check-token";
 import { ICartResponse } from "@interfaces/get-cart";
 import { IProductResponse } from "@interfaces/product-response";
 import { ITokenResponse } from "@interfaces/token-response";
+import getCart from "@services/get-cart";
 
 const addProductToCart = async (
   product: IProductResponse,
@@ -28,12 +29,8 @@ const addProductToCart = async (
       },
     ],
   };
-  const cartData = localStorage.getItem("cart");
-  let cartId = null;
-  if (cartData) {
-    const userData = JSON.parse(cartData);
-    cartId = userData.id;
-  }
+  const data: ICartResponse = await getCart();
+  const cartId = data.id;
   try {
     const response = await axios.post<IProductResponse>(
       `${apiHost}/${projectKey}/me/carts/${cartId}`,
