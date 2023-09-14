@@ -32,7 +32,11 @@ const getCart = async () => {
       }
     );
 
-    [cart] = response.data.results;
+    if (response.data.results.length) {
+      [cart] = response.data.results;
+    } else {
+      cart = {} as ICart;
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.log("Error getting cart:", error);
