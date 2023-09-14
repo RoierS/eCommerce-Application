@@ -36,7 +36,7 @@ const addProductToCart = async (
   }
   try {
     const response = await axios.post<IProductResponse>(
-      `${apiHost}/${projectKey}/carts/${cartId}`,
+      `${apiHost}/${projectKey}/me/carts/${cartId}`,
       requestBody,
       { headers }
     );
