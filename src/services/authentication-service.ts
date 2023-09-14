@@ -108,6 +108,7 @@ const loginCustomer = async (
   const data = {
     email,
     password,
+    activeCartSignInMode: "MergeWithExistingCustomerCart",
   };
 
   let response;
@@ -146,9 +147,27 @@ const registrateCustomer = async (
   };
 
   try {
+    const newCartResponse = await axios.post(
+      `${apiHost}/${projectKey}/me/carts`,
+      {
+        currency: "USD",
+      },
+      { headers }
+    );
+
+    const cartId = newCartResponse.data.id;
+    const userDataWithCart = {
+      ...data,
+      activeCartSignInMode: "MergeWithExistingCustomerCart",
+      anonymousCart: {
+        id: cartId,
+        typeId: "cart",
+      },
+      // anonymousCartId: cartId,
+    };
     const response = await axios.post<ICustomerRegistrationResponse>(
       `${apiHost}/${projectKey}/me/signup`,
-      data,
+      userDataWithCart,
       { headers }
     );
 

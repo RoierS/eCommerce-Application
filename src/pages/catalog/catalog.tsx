@@ -11,9 +11,11 @@ import FilterComponent from "@components/filter/filter";
 import AppHeader from "@components/header/header";
 import SearchField from "@components/search/search-field";
 import SortingField from "@components/sorting/sort-field";
+import getValidAccessToken from "@helpers/check-token";
 import { Category } from "@interfaces/category";
 import { IProductData } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
+import { addProductToCart, getCart, createCart } from "@services/add-to-cart";
 import getCategories from "@services/get-categories-by-id";
 import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
 
@@ -53,6 +55,37 @@ const Catalog = () => {
   const [countryFilter, setCountryFilter] = useState("");
   const [priceRange, setPriceRange] = useState([0, 300000]);
   const [starRating, setStarRating] = useState("");
+
+  // const [cartId, setCartId] = useState<string>("");
+
+  const addToCart = async (productId: string) => {
+    try {
+      const accessToken = await getValidAccessToken();
+      // let currentCartId = localStorage.getItem("cartId");
+
+      // if (!currentCartId) {
+      //   currentCartId = await getCart(accessToken.access_token);
+      //   if (!currentCartId) {
+      //     currentCartId = await createCart(accessToken.access_token);
+      //   }
+      //   localStorage.setItem("cartId", currentCartId || "");
+      // }
+      let currentCartId;
+      console.log(currentCartId);
+      currentCartId = await getCart(accessToken.access_token);
+      if (!currentCartId) {
+        currentCartId = await createCart(accessToken.access_token);
+      }
+      await addProductToCart(
+        currentCartId,
+        productId,
+        accessToken.access_token
+      );
+      console.log("Product added to Cart");
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    }
+  };
 
   // get category name using its id
   const getCategoryNameById = (
@@ -200,9 +233,9 @@ const Catalog = () => {
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    fetchFilteredAndSortedProducts();
-  }, []);
+  // useEffect(() => {
+  //   fetchFilteredAndSortedProducts();
+  // }, []);
 
   // handle fetching, filtering, sorting, and searching based on dependencies
   useEffect(() => {
@@ -329,7 +362,11 @@ const Catalog = () => {
             <p>No such product found. Try again</p>
           ) : (
             products.map((product: IProductData | IProductSearchResult) => (
-              <CardComponent key={product.id} product={product} />
+              <CardComponent
+                key={product.id}
+                product={product}
+                onAddToCart={addToCart}
+              />
             ))
           )}
         </Box>

@@ -1,11 +1,17 @@
 /* eslint-disable no-console */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import calculateDiscount from "@helpers/claculate-discount";
 
 import sliceText from "@helpers/slice-text";
 
-import { IProductData } from "@interfaces/product-data";
+import {
+  IAttribute,
+  IImage,
+  ILocalizedText,
+  IPrice,
+  IProductData,
+} from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
 import { Link } from "react-router-dom";
 
@@ -25,22 +31,53 @@ import {
 
 import styles from "./card.module.scss";
 
+export interface ILineItem {
+  addedAt: string;
+  id: string;
+  lastModifiedAt: string;
+  lineItemMode: string;
+  name: ILocalizedText;
+  price: IPrice[];
+  priceMode: string;
+  productId: string;
+  productKey: string;
+  productSlug: ILocalizedText;
+  quantity: number;
+  totalPrice: {
+    type: string;
+    currencyCode: string;
+    centAmount: number;
+    fractionDigits: number;
+  };
+  variant: IVariant[];
+}
+
+interface IVariant {
+  id: number;
+  sku: string;
+  key: string;
+  prices: IPrice[];
+  images: IImage[];
+  attributes: IAttribute[];
+  assets: IAttribute[];
+}
+
 const CardComponent: React.FC<{
   product: IProductData | IProductSearchResult;
-}> = ({ product }) => {
+  onAddToCart: (productId: string) => void;
+}> = ({ product, onAddToCart }) => {
   const [isInCart, setIsInCart] = useState(false);
-
-  // handling adding to card
-  // TODO: integration with api
   const handleAddToCart = () => {
-    if (isInCart) {
-      console.log("Already in Cart");
-    } else {
-      console.log("add to cart");
+    try {
+      onAddToCart(product.id);
+      const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      cartItems.push({ productId: product.id });
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      setIsInCart(true);
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
     }
-    setIsInCart(!isInCart);
   };
-
   // check needed to use appropriate interface
   const isProductData = "masterData" in product;
 
@@ -75,6 +112,14 @@ const CardComponent: React.FC<{
     : product.masterVariant.attributes.find(
         (attribute) => attribute.name === "Star-Rating"
       )?.value;
+
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    const isItemInCart = cartItems.some(
+      (item: ILineItem) => item.productId === product.id
+    );
+    setIsInCart(isItemInCart);
+  }, [product.id]);
 
   return (
     <Card className={styles.card}>
@@ -141,7 +186,8 @@ const CardComponent: React.FC<{
             variant="contained"
             size="small"
             color={isInCart ? "secondary" : "success"}
-            onClick={() => handleAddToCart()}
+            // onClick={() => handleAddToCart()}
+            onClick={handleAddToCart}
             startIcon={<ShoppingCartIcon />}
             disabled={isInCart}
           >
