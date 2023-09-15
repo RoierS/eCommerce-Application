@@ -28,9 +28,13 @@ const OrderSum = (props: { price: number }) => {
         </Typography>
       </Box>
       <Box className={styles.promocode}>
-        <TextField variant="outlined" label="Promocode" />
-        <Button className={styles.button} variant="contained" color="info">
-          Apply promocode
+        <TextField
+          className={styles.promoText}
+          variant="outlined"
+          label="Promo Code"
+        />
+        <Button className={styles.promoBtn} variant="contained" color="info">
+          Apply promo code
         </Button>
       </Box>
     </Paper>

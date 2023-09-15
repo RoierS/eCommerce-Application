@@ -56,12 +56,20 @@ const Cart = () => {
         <Navigate to="*" />
       ) : basket.lineItems ? (
         <Box className={styles.cartContainer}>
-          <Button className="button" variant="contained" color="secondary">
+          <Button
+            className={styles.clearBtn}
+            variant="contained"
+            color="secondary"
+          >
             Clear cart
           </Button>
           <CartList products={basket.lineItems || []} />
           <OrderSum price={basket.totalPrice.centAmount} />
-          <Button className="button" variant="contained" color="secondary">
+          <Button
+            className={styles.payBtn}
+            variant="contained"
+            color="secondary"
+          >
             Payment and delivery
           </Button>
         </Box>

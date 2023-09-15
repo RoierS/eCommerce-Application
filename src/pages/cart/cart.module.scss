@@ -25,7 +25,7 @@ input[type="number"] {
 }
 
 .totalContainer {
-  padding: 15px;
+  padding: 15px 25px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -34,6 +34,7 @@ input[type="number"] {
 }
 
 .stack {
+  width: 100%;
   padding: 0;
 }
 
@@ -50,15 +51,26 @@ input[type="number"] {
   align-items: center;
 }
 
-.cartContainer,
 .empty,
 .promocode {
   flex-direction: column;
   gap: 20px;
 }
 
+.empty {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.empty svg {
+  max-height: 700px;
+}
 .cartContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-direction: column;
   align-items: flex-end;
+  gap: 30px;
 }
 
 .price {
@@ -75,6 +87,10 @@ input[type="number"] {
   width: 30%;
 }
 
+.image {
+  max-height: 200px;
+}
+
 .input {
   width: 30%;
   min-width: 35px;
@@ -83,14 +99,20 @@ input[type="number"] {
   border-radius: 5px;
 }
 
-.promocode {
-  width: 30%;
-  min-width: 250px;
+.promocode,
+.payBtn {
+  box-sizing: border-box;
+  width: 250px;
 }
 
-.promocode input,
-.promocode button {
-  width: 80%;
+.promoText,
+.promoBtn {
+  width: 100%;
+}
+
+.clearBtn,
+.payBtn {
+  right: 25px;
 }
 
 .spinner {

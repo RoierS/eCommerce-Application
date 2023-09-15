@@ -40,8 +40,10 @@ const CartItem = (props: { product: ILineItem }) => {
       />
       <Box className={styles.price}>
         <Box className={styles.quantity}>
-          <IconButton aria-label="delete">
-            <RemoveCircleIcon color="primary" />
+          <IconButton disabled={product.quantity === 1} aria-label="delete">
+            <RemoveCircleIcon
+              color={product.quantity === 1 ? "disabled" : "primary"}
+            />
           </IconButton>
           <input
             disabled
