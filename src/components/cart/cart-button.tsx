@@ -1,9 +1,4 @@
-import React, { useState } from "react";
-
-import { ICartResponse } from "@interfaces/get-cart";
-import { IProductResponse } from "@interfaces/product-response";
-import addProductToCart from "@services/add-product-to-cart";
-import getCart from "@services/get-cart";
+import React from "react";
 
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Button from "@mui/material/Button";
@@ -11,34 +6,22 @@ import Button from "@mui/material/Button";
 import styles from "./cart-button.module.scss";
 
 const CartButton = ({
-  product,
   active,
+  clickCallback,
 }: {
-  product: IProductResponse;
   active: boolean;
+  clickCallback: () => void;
 }) => {
-  // State to toggle button activity
-  const [activeState, setActiveState] = useState(active);
-
-  // Event handler for adding a product to the cart
-  const handleAddToCartClick = async () => {
-    try {
-      const cart: ICartResponse = await getCart();
-      await addProductToCart(product, cart);
-      setActiveState(false);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
-  };
   return (
     <div className={styles.cart}>
-      {activeState ? (
+      {active ? (
         <Button
           variant="contained"
           size="large"
           endIcon={<ShoppingCartOutlinedIcon />}
-          onClick={handleAddToCartClick}
+          onClick={() => {
+            clickCallback();
+          }}
           disabled={false}
         >
           Add to cart
@@ -48,7 +31,9 @@ const CartButton = ({
           variant="contained"
           size="large"
           endIcon={<ShoppingCartOutlinedIcon />}
-          onClick={handleAddToCartClick}
+          onClick={() => {
+            clickCallback();
+          }}
           disabled
         >
           Add to cart

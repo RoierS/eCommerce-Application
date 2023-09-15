@@ -8,6 +8,7 @@ import { IProductResponse } from "@interfaces/product-response";
 
 import ProductEstimation from "@pages/products/product-estimation";
 
+import addProductToCart from "@services/add-product-to-cart";
 import getCart from "@services/get-cart";
 import getProductById from "@services/get-product-by-id";
 import { Navigate, useParams } from "react-router-dom";
@@ -63,6 +64,9 @@ const ProductInformation = () => {
     setModalOpen(false);
   };
 
+  // State to toggle button activity
+  const [active, setActive] = useState(true);
+
   // Fetch product data when the component mounts
   useEffect(() => {
     const requestData = async () => {
@@ -77,13 +81,7 @@ const ProductInformation = () => {
     };
 
     requestData().then();
-  }, [id]);
 
-  // State to toggle button activity
-  const [active, setActive] = useState(true);
-
-  // Fetch cart data and check if a product is already in the cart.
-  useEffect(() => {
     const cartResponse = async () => {
       try {
         const data: ICartResponse = await getCart();
@@ -236,7 +234,16 @@ const ProductInformation = () => {
               </div>
             </div>
           </Box>
-          <CartButton product={product} active={active} />
+          <CartButton
+            active={active}
+            clickCallback={() => {
+              (async () => {
+                const cart: ICartResponse = await getCart();
+                await addProductToCart(product, cart);
+                setActive(false);
+              })().then();
+            }}
+          />
           <Modal
             open={isModalOpen}
             onClose={closeModal}
