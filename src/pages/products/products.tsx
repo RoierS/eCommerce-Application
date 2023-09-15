@@ -1,15 +1,16 @@
+/* eslint-disable no-console */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 
-import CartButton from "@components/cart/cart-button";
+import AddToCartButton from "@components/buttons/add-to-cart-btn";
 import AppHeader from "@components/header/header";
-import { ICartResponse } from "@interfaces/get-cart";
+import getValidAccessToken from "@helpers/check-token";
+import { ILineItem } from "@interfaces/line-item";
 import { IProductResponse } from "@interfaces/product-response";
 
 import ProductEstimation from "@pages/products/product-estimation";
 
-import addProductToCart from "@services/add-product-to-cart";
-import getCart from "@services/get-cart";
+import { addProductToCart, getCart } from "@services/cart-services";
 import getProductById from "@services/get-product-by-id";
 import { Navigate, useParams } from "react-router-dom";
 
@@ -41,6 +42,8 @@ const ProductInformation = () => {
   // State to track when the data is currently being loaded
   const [isLoading, setLoading] = useState(true);
 
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
+
   // State to track when get error
   const [requestError, setError] = useState<boolean>(false);
 
@@ -58,14 +61,28 @@ const ProductInformation = () => {
     setCurrentSlideIndex(index);
     setModalOpen(true);
   };
+  const [isInCart, setIsInCart] = useState(false);
 
   // Function to close the modal
   const closeModal = () => {
     setModalOpen(false);
   };
+  const [cartItems, setCartItems] = useState<ILineItem[]>([]);
 
-  // State to toggle button activity
-  const [active, setActive] = useState(true);
+  useEffect(() => {
+    // Fetch the cart items and update state
+    const fetchCartItems = async () => {
+      try {
+        const accessToken = await getValidAccessToken();
+        const currentCart = await getCart(accessToken.access_token);
+        setCartItems(currentCart.lineItems);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
 
   // Fetch product data when the component mounts
   useEffect(() => {
@@ -81,20 +98,6 @@ const ProductInformation = () => {
     };
 
     requestData().then();
-
-    const cartResponse = async () => {
-      try {
-        const data: ICartResponse = await getCart();
-        if (data.lineItems.filter((item) => item.productId === id).length > 0) {
-          setActive(false);
-        }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
-      }
-    };
-
-    cartResponse().then();
   }, [id]);
 
   // Toggle the description when the button is clicked
@@ -147,6 +150,49 @@ const ProductInformation = () => {
       return index;
     });
   };
+  const addToCart = async (productId: string) => {
+    try {
+      setIsLoadingButton(true);
+      const accessToken = await getValidAccessToken();
+      const currentCart = await getCart(accessToken.access_token);
+      const currentCartId = currentCart.id;
+      const currentCartVersion = currentCart.version;
+
+      await addProductToCart(
+        currentCartId,
+        currentCartVersion,
+        productId,
+        accessToken.access_token
+      );
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    } finally {
+      setIsLoadingButton(false);
+    }
+  };
+
+  // handling adding product to cart
+  const handleAddToCart = () => {
+    try {
+      if (product) {
+        addToCart(product.id);
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+        cartItems.push({ productId: product?.id });
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        setIsInCart(true);
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    }
+  };
+
+  useEffect(() => {
+    const isProductInCart = cartItems.some(
+      (item: ILineItem) => item.productId === product?.id
+    );
+    setIsInCart(isProductInCart);
+  }, [cartItems, product?.id]);
 
   // Add keyboard navigation within the modal
   useEffect(() => {
@@ -208,6 +254,11 @@ const ProductInformation = () => {
                 </Button>
               </div>
               <ProductEstimation product={product} />
+              <AddToCartButton
+                isInCart={isInCart}
+                handleAddToCart={handleAddToCart}
+                isLoadingButton={isLoadingButton}
+              />
             </div>
             <div style={{ maxWidth: 400 }}>
               <div className={styles.arrows}>
@@ -234,16 +285,6 @@ const ProductInformation = () => {
               </div>
             </div>
           </Box>
-          <CartButton
-            active={active}
-            clickCallback={() => {
-              (async () => {
-                const cart: ICartResponse = await getCart();
-                await addProductToCart(product, cart);
-                setActive(false);
-              })().then();
-            }}
-          />
           <Modal
             open={isModalOpen}
             onClose={closeModal}
