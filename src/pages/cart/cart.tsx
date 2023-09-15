@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import CartList from "@components/cart/cart-list";
 import OrderSum from "@components/cart/order-sum";
 import AppHeader from "@components/header/header";
-// import { ILineItem } from "@interfaces/cart";
 
+import getValidAccessToken from "@helpers/check-token";
 import { ICart } from "@interfaces/cart";
-import getCart from "@services/get-cart";
+import { getCart } from "@services/cart-services";
 
 import { Navigate } from "react-router-dom";
 
@@ -29,12 +29,10 @@ const Cart = () => {
   useEffect(() => {
     const loadBasket = async () => {
       try {
-        const cart: ICart = await getCart();
+        const tokenObject = await getValidAccessToken();
+        const cart: ICart = await getCart(tokenObject.access_token);
         setBasket(cart);
         setLoading(false);
-
-        console.log("basket", basket);
-        console.log("cart in cart page component", cart);
       } catch {
         setError(true);
         setLoading(false);
@@ -54,7 +52,7 @@ const Cart = () => {
         </Box>
       ) : requestError ? (
         <Navigate to="*" />
-      ) : basket.lineItems ? (
+      ) : basket.lineItems.length ? (
         <Box className={styles.cartContainer}>
           <Button
             className={styles.clearBtn}
