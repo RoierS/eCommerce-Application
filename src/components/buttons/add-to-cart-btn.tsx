@@ -1,16 +1,20 @@
+/* eslint-disable no-nested-ternary */
 import React from "react";
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
 
 interface AddToCartButtonProps {
   isInCart: boolean;
   handleAddToCart: () => void;
+  isLoadingButton: boolean;
 }
 
 const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   isInCart,
   handleAddToCart,
+  isLoadingButton,
 }) => {
   return (
     <Button
@@ -19,9 +23,15 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       color={isInCart ? "secondary" : "success"}
       onClick={handleAddToCart}
       startIcon={<ShoppingCartIcon />}
-      disabled={isInCart}
+      disabled={isInCart || isLoadingButton}
     >
-      {isInCart ? "Added" : "Add to Cart"}
+      {isLoadingButton ? (
+        <CircularProgress size={20} color="inherit" />
+      ) : isInCart ? (
+        "Added"
+      ) : (
+        "Add to Cart"
+      )}
     </Button>
   );
 };

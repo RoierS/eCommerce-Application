@@ -42,6 +42,8 @@ const ProductInformation = () => {
   // State to track when the data is currently being loaded
   const [isLoading, setLoading] = useState(true);
 
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
+
   // State to track when get error
   const [requestError, setError] = useState<boolean>(false);
 
@@ -150,6 +152,7 @@ const ProductInformation = () => {
   };
   const addToCart = async (productId: string) => {
     try {
+      setIsLoadingButton(true);
       const accessToken = await getValidAccessToken();
       const currentCart = await getCart(accessToken.access_token);
       const currentCartId = currentCart.id;
@@ -163,6 +166,8 @@ const ProductInformation = () => {
       );
     } catch (error) {
       console.error("Error adding product to cart:", error);
+    } finally {
+      setIsLoadingButton(false);
     }
   };
 
@@ -252,6 +257,7 @@ const ProductInformation = () => {
               <AddToCartButton
                 isInCart={isInCart}
                 handleAddToCart={handleAddToCart}
+                isLoadingButton={isLoadingButton}
               />
             </div>
             <div style={{ maxWidth: 400 }}>

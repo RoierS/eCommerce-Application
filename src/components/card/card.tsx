@@ -39,9 +39,11 @@ const CardComponent: React.FC<ICardComponentProps> = ({
   cartItems,
 }) => {
   const [isInCart, setIsInCart] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addToCart = async (productId: string) => {
     try {
+      setIsLoading(true);
       const accessToken = await getValidAccessToken();
       const currentCart = await getCart(accessToken.access_token);
       const currentCartId = currentCart.id;
@@ -55,6 +57,8 @@ const CardComponent: React.FC<ICardComponentProps> = ({
       );
     } catch (error) {
       console.error("Error adding product to cart:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -157,6 +161,7 @@ const CardComponent: React.FC<ICardComponentProps> = ({
           <AddToCartButton
             isInCart={isInCart}
             handleAddToCart={handleAddToCart}
+            isLoadingButton={isLoading}
           />
         </CardActions>
       </CardContent>
