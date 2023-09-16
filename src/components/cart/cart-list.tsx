@@ -6,10 +6,21 @@ import styles from "../../pages/cart/cart.module.scss";
 
 import CartItem from "./cart-item";
 
-const CartList = (props: { products: ILineItem[] }) => {
-  const { products } = props;
+interface ICartListProps {
+  products: ILineItem[];
+  changeProductQuantity: (id: string, quantity: number) => void;
+}
+
+const CartList = (props: ICartListProps) => {
+  const { products, changeProductQuantity } = props;
   const cartItems = products.map((product) => {
-    return <CartItem key={product.productId} product={product} />;
+    return (
+      <CartItem
+        key={product.productId}
+        product={product}
+        changeProductQuantity={changeProductQuantity}
+      />
+    );
   });
 
   return (

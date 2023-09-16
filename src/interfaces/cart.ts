@@ -1,4 +1,5 @@
 export interface ILineItem {
+  id: string;
   productId: string;
   productKey: string;
   variant: {

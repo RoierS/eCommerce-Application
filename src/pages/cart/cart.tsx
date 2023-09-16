@@ -8,7 +8,7 @@ import AppHeader from "@components/header/header";
 
 import getValidAccessToken from "@helpers/check-token";
 import { ICart } from "@interfaces/cart";
-import { getCart } from "@services/cart-services";
+import { changeLineItemQuantity, getCart } from "@services/cart-services";
 
 import { Navigate } from "react-router-dom";
 
@@ -27,6 +27,17 @@ const Cart = () => {
 
   // State to track when get error
   const [requestError, setError] = useState<boolean>(false);
+
+  const changeProductQuantity = async (id: string, quantity: number) => {
+    const cart = await changeLineItemQuantity(
+      basket.id,
+      basket.version,
+      id,
+      quantity
+    );
+
+    setBasket(cart);
+  };
 
   useEffect(() => {
     const loadBasket = async () => {
@@ -63,7 +74,10 @@ const Cart = () => {
           >
             Clear cart
           </Button>
-          <CartList products={basket.lineItems || []} />
+          <CartList
+            products={basket.lineItems || []}
+            changeProductQuantity={changeProductQuantity}
+          />
           <OrderSum
             price={basket.totalPrice.centAmount}
             version={basket.version}

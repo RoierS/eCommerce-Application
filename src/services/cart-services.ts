@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import axios from "axios";
 
+import getValidAccessToken from "@helpers/check-token";
+
 const apiHost = process.env.REACT_APP_API_HOST;
 const projectKey = process.env.REACT_APP_PROJECT_KEY;
 
@@ -89,4 +91,45 @@ const addProductToCart = async (
   }
 };
 
-export { getCart, createCart, addProductToCart };
+const changeLineItemQuantity = async (
+  currentCartId: string,
+  currentCartVersion: number,
+  lineItemId: string,
+  quantity: number
+) => {
+  const tokenObject = await getValidAccessToken();
+  const accessToken = tokenObject.access_token;
+
+  try {
+    const changeQuantityResponse = await axios.post(
+      `${apiHost}/${projectKey}/me/carts/${currentCartId}`,
+      {
+        version: currentCartVersion,
+        actions: [
+          {
+            action: "changeLineItemQuantity",
+            lineItemId,
+            quantity,
+          },
+        ],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    console.log(
+      "LineItem quantity changed, cart:",
+      changeQuantityResponse.data
+    );
+    return changeQuantityResponse.data;
+  } catch (error) {
+    console.error("Error adding product to active cart:", error);
+    throw error;
+  }
+};
+
+export { getCart, createCart, addProductToCart, changeLineItemQuantity };
