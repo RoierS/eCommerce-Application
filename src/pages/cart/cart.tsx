@@ -19,7 +19,9 @@ import EmptyCart from "../../components/cart/empty-cart";
 import styles from "./cart.module.scss";
 
 const Cart = () => {
+  // State for active cart data
   const [basket, setBasket] = useState({} as ICart);
+
   // State to track when the data is currently being loaded
   const [isLoading, setLoading] = useState(true);
 
@@ -62,7 +64,11 @@ const Cart = () => {
             Clear cart
           </Button>
           <CartList products={basket.lineItems || []} />
-          <OrderSum price={basket.totalPrice.centAmount} />
+          <OrderSum
+            price={basket.totalPrice.centAmount}
+            version={basket.version}
+            setBasket={setBasket}
+          />
           <Button
             className={styles.payBtn}
             variant="contained"

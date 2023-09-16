@@ -1,19 +1,19 @@
-import {
-  Box,
-  Button,
-  Paper,
-  TextField,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { ICart } from "@interfaces/cart";
 
-// import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 import styles from "../../pages/cart/cart.module.scss";
 
-const OrderSum = (props: { price: number }) => {
-  const { price } = props;
+import Promocode from "./promocode";
+
+interface IOrderSumProps {
+  price: number;
+  version: number;
+  setBasket: (cart: ICart) => void;
+}
+
+const OrderSum = (props: IOrderSumProps) => {
+  const { price, version, setBasket } = props;
   const theme = useTheme();
   const large = useMediaQuery(theme.breakpoints.up("lg"));
   const medium = useMediaQuery(theme.breakpoints.up("md"));
@@ -27,16 +27,7 @@ const OrderSum = (props: { price: number }) => {
           {(price / 100).toFixed()} USD
         </Typography>
       </Box>
-      <Box className={styles.promocode}>
-        <TextField
-          className={styles.promoText}
-          variant="outlined"
-          label="Promo Code"
-        />
-        <Button className={styles.promoBtn} variant="contained" color="info">
-          Apply promo code
-        </Button>
-      </Box>
+      <Promocode version={version} setBasket={setBasket} />
     </Paper>
   );
 };

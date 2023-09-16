@@ -26,7 +26,7 @@ export interface ILineItem {
 
 export interface ICart {
   id: string;
-  version: string;
+  version: number;
   lineItems: ILineItem[];
   totalPrice: {
     currencyCode: string;
