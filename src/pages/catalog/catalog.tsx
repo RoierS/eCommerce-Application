@@ -32,6 +32,7 @@ import {
   Drawer,
   IconButton,
   Badge,
+  Pagination,
 } from "@mui/material";
 
 import styles from "./catalog.module.scss";
@@ -55,6 +56,10 @@ const Catalog = () => {
   const [countryFilter, setCountryFilter] = useState("");
   const [priceRange, setPriceRange] = useState([0, 300000]);
   const [starRating, setStarRating] = useState("");
+  const [offset, setOffset] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 9;
 
   // get category name using its id
   const getCategoryNameById = (
@@ -95,17 +100,31 @@ const Catalog = () => {
     }
   };
 
+  // handling page change
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page);
+    const newOffset = (page - 1) * cardsPerPage;
+    setOffset(newOffset);
+  };
+
   // fetching products with filters and/or sorting applied
   const fetchFilteredAndSortedProducts = useCallback(async () => {
     try {
       setSearchError(false);
       setIsLoading(true);
+
       const response = await getFilteredAndSortedProducts(
         filterCriteria,
         sortingOption,
-        searchQuery
+        searchQuery,
+        cardsPerPage,
+        offset
       );
-      setProducts(response);
+      setProducts(response.results);
+      setTotal(response.total);
       updateCurrentBreadcrumpPath(
         filterCriteria["variants.attributes.country"]
       );
@@ -140,9 +159,9 @@ const Catalog = () => {
       console.error("Error fetching products:", error);
       setIsLoading(false);
     }
-  }, [searchQuery, sortingOption, filterCriteria]);
+  }, [searchQuery, sortingOption, filterCriteria, cardsPerPage, offset]);
 
-  // fetching categories
+  // fetching categories from api
   const fetchCategories = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -234,7 +253,14 @@ const Catalog = () => {
       updateCurrentBreadcrumpPathByCountry(selectedCountry);
       updateCurrentBreadcrumpPath(selectedCategory || "");
     }
-  }, [sortingOption, filterCriteria, selectedCategory, selectedCountry]);
+  }, [
+    sortingOption,
+    filterCriteria,
+    selectedCategory,
+    selectedCountry,
+    cardsPerPage,
+    offset,
+  ]);
 
   return (
     <>
@@ -349,6 +375,21 @@ const Catalog = () => {
               />
             ))
           )}
+        </Box>
+        <Box className={styles.paginationContainer}>
+          <Stack spacing={2} mt={2} mb={2}>
+            <Pagination
+              className={styles.pagination}
+              count={Math.ceil(total / cardsPerPage)}
+              page={currentPage}
+              variant="outlined"
+              onChange={handlePageChange}
+              color="primary"
+              showFirstButton
+              showLastButton
+              boundaryCount={2}
+            />
+          </Stack>
         </Box>
       </Container>
     </>
