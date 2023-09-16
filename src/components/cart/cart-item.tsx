@@ -17,7 +17,7 @@ import {
 import styles from "../../pages/cart/cart.module.scss";
 
 interface ICartItemProps {
-  product: ILineItem;
+  lineItem: ILineItem;
   changeProductQuantity: (id: string, quantity: number) => void;
 }
 
@@ -26,16 +26,20 @@ const CartItem = (props: ICartItemProps) => {
   const large = useMediaQuery(theme.breakpoints.up("lg"));
   const medium = useMediaQuery(theme.breakpoints.up("md"));
 
-  const { product, changeProductQuantity } = props;
+  const { lineItem, changeProductQuantity } = props;
 
   const decreaseQuantity = () => {
-    const quantity = product.quantity - 1;
-    changeProductQuantity(product.id, quantity);
+    const quantity = lineItem.quantity - 1;
+    changeProductQuantity(lineItem.id, quantity);
   };
 
   const increaseQuantity = () => {
-    const quantity = product.quantity + 1;
-    changeProductQuantity(product.id, quantity);
+    const quantity = lineItem.quantity + 1;
+    changeProductQuantity(lineItem.id, quantity);
+  };
+
+  const deleteProduct = () => {
+    changeProductQuantity(lineItem.id, 0);
   };
 
   return (
@@ -45,29 +49,29 @@ const CartItem = (props: ICartItemProps) => {
         color="primary"
         className={styles.title}
       >
-        {product.productKey}
+        {lineItem.productKey}
       </Typography>
       <img
-        src={product.variant.images[0].url}
+        src={lineItem.variant.images[0].url}
         alt="hotel"
         className={styles.image}
       />
       <Box className={styles.price}>
         <Box className={styles.quantity}>
           <IconButton
-            disabled={product.quantity === 1}
+            disabled={lineItem.quantity === 1}
             onClick={decreaseQuantity}
             aria-label="delete"
           >
             <RemoveCircleIcon
-              color={product.quantity === 1 ? "disabled" : "primary"}
+              color={lineItem.quantity === 1 ? "disabled" : "primary"}
             />
           </IconButton>
           <input
             disabled
             type="number"
             min="1"
-            value={product.quantity}
+            value={lineItem.quantity}
             className={styles.input}
           />
           <IconButton onClick={increaseQuantity} aria-label="delete">
@@ -75,9 +79,13 @@ const CartItem = (props: ICartItemProps) => {
           </IconButton>
         </Box>
         <Typography>
-          {(product.totalPrice.centAmount / 100).toFixed()} USD
+          {(lineItem.totalPrice.centAmount / 100).toFixed()} USD
         </Typography>
-        <IconButton className={styles.deleteBtn} aria-label="delete">
+        <IconButton
+          onClick={deleteProduct}
+          className={styles.deleteBtn}
+          aria-label="delete"
+        >
           <DeleteForeverIcon color="info" />
         </IconButton>
       </Box>

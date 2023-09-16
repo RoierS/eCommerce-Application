@@ -17,7 +17,7 @@ const CartList = (props: ICartListProps) => {
     return (
       <CartItem
         key={product.productId}
-        product={product}
+        lineItem={product}
         changeProductQuantity={changeProductQuantity}
       />
     );
