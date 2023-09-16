@@ -14,31 +14,17 @@ const CartButton = ({
 }) => {
   return (
     <div className={styles.cart}>
-      {active ? (
-        <Button
-          variant="contained"
-          size="large"
-          endIcon={<ShoppingCartOutlinedIcon />}
-          onClick={() => {
-            clickCallback();
-          }}
-          disabled={false}
-        >
-          Add to cart
-        </Button>
-      ) : (
-        <Button
-          variant="contained"
-          size="large"
-          endIcon={<ShoppingCartOutlinedIcon />}
-          onClick={() => {
-            clickCallback();
-          }}
-          disabled
-        >
-          Add to cart
-        </Button>
-      )}
+      <Button
+        variant="contained"
+        size="large"
+        endIcon={<ShoppingCartOutlinedIcon />}
+        onClick={() => {
+          clickCallback();
+        }}
+        disabled={active}
+      >
+        Add to cart
+      </Button>
     </div>
   );
 };
