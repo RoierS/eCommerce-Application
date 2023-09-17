@@ -19,6 +19,7 @@ import styles from "../../pages/cart/cart.module.scss";
 interface ICartItemProps {
   lineItem: ILineItem;
   changeProductQuantity: (id: string, quantity: number) => void;
+  disabled: boolean;
 }
 
 const CartItem = (props: ICartItemProps) => {
@@ -26,7 +27,7 @@ const CartItem = (props: ICartItemProps) => {
   const large = useMediaQuery(theme.breakpoints.up("lg"));
   const medium = useMediaQuery(theme.breakpoints.up("md"));
 
-  const { lineItem, changeProductQuantity } = props;
+  const { lineItem, changeProductQuantity, disabled } = props;
 
   const decreaseQuantity = () => {
     const quantity = lineItem.quantity - 1;
@@ -59,7 +60,7 @@ const CartItem = (props: ICartItemProps) => {
       <Box className={styles.price}>
         <Box className={styles.quantity}>
           <IconButton
-            disabled={lineItem.quantity === 1}
+            disabled={lineItem.quantity === 1 || disabled}
             onClick={decreaseQuantity}
             aria-label="delete"
           >
@@ -74,7 +75,11 @@ const CartItem = (props: ICartItemProps) => {
             value={lineItem.quantity}
             className={styles.input}
           />
-          <IconButton onClick={increaseQuantity} aria-label="delete">
+          <IconButton
+            disabled={disabled}
+            onClick={increaseQuantity}
+            aria-label="delete"
+          >
             <AddCircleIcon color="secondary" />
           </IconButton>
         </Box>
@@ -82,6 +87,7 @@ const CartItem = (props: ICartItemProps) => {
           {(lineItem.totalPrice.centAmount / 100).toFixed()} USD
         </Typography>
         <IconButton
+          disabled={disabled}
           onClick={deleteProduct}
           className={styles.deleteBtn}
           aria-label="delete"

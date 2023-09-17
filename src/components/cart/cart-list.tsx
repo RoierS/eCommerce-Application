@@ -9,16 +9,18 @@ import CartItem from "./cart-item";
 interface ICartListProps {
   products: ILineItem[];
   changeProductQuantity: (id: string, quantity: number) => void;
+  disabled: boolean;
 }
 
 const CartList = (props: ICartListProps) => {
-  const { products, changeProductQuantity } = props;
+  const { products, changeProductQuantity, disabled } = props;
   const cartItems = products.map((product) => {
     return (
       <CartItem
         key={product.productId}
         lineItem={product}
         changeProductQuantity={changeProductQuantity}
+        disabled={disabled}
       />
     );
   });

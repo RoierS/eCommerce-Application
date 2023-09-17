@@ -10,10 +10,11 @@ interface IOrderSumProps {
   price: number;
   version: number;
   setBasket: (cart: ICart) => void;
+  disabled: boolean;
 }
 
 const OrderSum = (props: IOrderSumProps) => {
-  const { price, version, setBasket } = props;
+  const { price, version, setBasket, disabled } = props;
   const theme = useTheme();
   const large = useMediaQuery(theme.breakpoints.up("lg"));
   const medium = useMediaQuery(theme.breakpoints.up("md"));
@@ -27,7 +28,7 @@ const OrderSum = (props: IOrderSumProps) => {
           {(price / 100).toFixed()} USD
         </Typography>
       </Box>
-      <Promocode version={version} setBasket={setBasket} />
+      <Promocode version={version} setBasket={setBasket} disabled={disabled} />
     </Paper>
   );
 };

@@ -91,6 +91,7 @@ const addProductToCart = async (
   }
 };
 
+// change product quantity in cart or delete product
 const changeLineItemQuantity = async (
   currentCartId: string,
   currentCartVersion: number,
@@ -132,4 +133,35 @@ const changeLineItemQuantity = async (
   }
 };
 
-export { getCart, createCart, addProductToCart, changeLineItemQuantity };
+// clear cart
+const deleteCart = async (
+  currentCartId: string,
+  currentCartVersion: number
+) => {
+  const tokenObject = await getValidAccessToken();
+  const accessToken = tokenObject.access_token;
+
+  try {
+    const deleteCartResponse = await axios.delete(
+      `${apiHost}/${projectKey}/me/carts/${currentCartId}/?version=${currentCartVersion}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    return deleteCartResponse.data;
+  } catch (error) {
+    console.error("Error adding product to active cart:", error);
+    throw error;
+  }
+};
+
+export {
+  getCart,
+  createCart,
+  addProductToCart,
+  changeLineItemQuantity,
+  deleteCart,
+};

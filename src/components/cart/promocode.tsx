@@ -7,10 +7,11 @@ import styles from "../../pages/cart/cart.module.scss";
 interface IPromocodeProps {
   version: number;
   setBasket: (cart: ICart) => void;
+  disabled: boolean;
 }
 
 const Promocode = (props: IPromocodeProps) => {
-  const { version, setBasket } = props;
+  const { version, setBasket, disabled } = props;
   // eslint-disable-next-line no-console
   console.log("cart version for server request", version, setBasket);
 
@@ -22,7 +23,12 @@ const Promocode = (props: IPromocodeProps) => {
         variant="outlined"
         label="Promo Code"
       />
-      <Button className={styles.promoBtn} variant="contained" color="info">
+      <Button
+        disabled={disabled}
+        className={styles.promoBtn}
+        variant="contained"
+        color="info"
+      >
         Apply promo code
       </Button>
     </form>
