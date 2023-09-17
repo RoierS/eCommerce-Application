@@ -2,6 +2,7 @@
 import theme from "@constants/theme";
 import getValidAccessToken from "@helpers/check-token";
 
+import AboutUs from "@pages/about-us/about-us";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import { ThemeProvider } from "@mui/material";
@@ -40,6 +41,7 @@ const App = () => {
                 <Route path="/catalog" element={<Catalog />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/catalog/:id" element={<Product />} />
                 <Route path="*" element={<Page404 />} />
               </Routes>
