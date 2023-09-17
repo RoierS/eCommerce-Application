@@ -1,19 +1,17 @@
-/* eslint-disable no-nested-ternary */
 import React from "react";
 
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import { CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
 
-interface AddToCartButtonProps {
+interface RemoveFromCartButtonProps {
   isInCart: boolean;
-  handleAddToCart: () => void;
+  handleRemoveFromCart: () => void;
   isLoadingButton: boolean;
 }
-
-const AddToCartButton: React.FC<AddToCartButtonProps> = ({
+const RemoveFromCartButton: React.FC<RemoveFromCartButtonProps> = ({
   isInCart,
-  handleAddToCart,
+  handleRemoveFromCart,
   isLoadingButton,
 }) => {
   return (
@@ -21,20 +19,18 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       variant="contained"
       size="small"
       color={isInCart ? "secondary" : "success"}
-      onClick={handleAddToCart}
-      startIcon={<ShoppingCartIcon />}
-      disabled={isInCart || isLoadingButton}
+      onClick={handleRemoveFromCart}
+      startIcon={<RemoveShoppingCartIcon />}
+      disabled={!isInCart || isLoadingButton}
       style={{ marginTop: "10px" }}
     >
       {isLoadingButton ? (
         <CircularProgress size={20} color="inherit" />
-      ) : isInCart ? (
-        "Added"
       ) : (
-        "Add to Cart"
+        "Remove from Cart"
       )}
     </Button>
   );
 };
 
-export default AddToCartButton;
+export default RemoveFromCartButton;

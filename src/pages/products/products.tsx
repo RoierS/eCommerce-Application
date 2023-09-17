@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import AddToCartButton from "@components/buttons/add-to-cart-btn";
+import RemoveFromCartBtn from "@components/buttons/remove-from-cart-btn";
 import AppHeader from "@components/header/header";
 import getValidAccessToken from "@helpers/check-token";
 import { ILineItem } from "@interfaces/line-item";
@@ -12,6 +13,7 @@ import ProductEstimation from "@pages/products/product-estimation";
 
 import { addProductToCart, getCart } from "@services/cart-services";
 import getProductById from "@services/get-product-by-id";
+import RemoveProductFromCart from "@services/remove-product-from-cart";
 import { Navigate, useParams } from "react-router-dom";
 
 import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTone";
@@ -171,6 +173,28 @@ const ProductInformation = () => {
     }
   };
 
+  // remove product from cart
+  const removeFromCart = async (lineItemId: string) => {
+    try {
+      setIsLoadingButton(true);
+      const accessToken = await getValidAccessToken();
+      const currentCart = await getCart(accessToken.access_token);
+      const currentCartId = currentCart.id;
+      const currentCartVersion = currentCart.version;
+
+      await RemoveProductFromCart(
+        currentCartId,
+        currentCartVersion,
+        lineItemId,
+        accessToken.access_token
+      );
+    } catch (error) {
+      console.error("Error removing product from cart:", error);
+    } finally {
+      setIsLoadingButton(false);
+    }
+  };
+
   // handling adding product to cart
   const handleAddToCart = () => {
     try {
@@ -184,6 +208,29 @@ const ProductInformation = () => {
       }
     } catch (error) {
       console.error("Error adding product to cart:", error);
+    }
+  };
+
+  // handling removing product from cart
+  const handleRemoveFromCart = async () => {
+    try {
+      if (product) {
+        const accessToken = await getValidAccessToken();
+        const currentCart = await getCart(accessToken.access_token);
+        const lineItemId = currentCart.lineItems.filter(
+          (item: { productId: string }) => item.productId === product.id
+        );
+        await removeFromCart(lineItemId[0].id);
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+        const updateCartItems = cartItems.filter(
+          (item: { productId: string }) => item.productId !== product.id
+        );
+        localStorage.setItem("cartItems", JSON.stringify(updateCartItems));
+        setIsInCart(false);
+      }
+    } catch (error) {
+      console.error("Error removing product from cart:", error);
     }
   };
 
@@ -257,6 +304,11 @@ const ProductInformation = () => {
               <AddToCartButton
                 isInCart={isInCart}
                 handleAddToCart={handleAddToCart}
+                isLoadingButton={isLoadingButton}
+              />
+              <RemoveFromCartBtn
+                isInCart={isInCart}
+                handleRemoveFromCart={handleRemoveFromCart}
                 isLoadingButton={isLoadingButton}
               />
             </div>

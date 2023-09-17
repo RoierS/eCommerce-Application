@@ -14,6 +14,7 @@ export interface ILineItem {
   price: IPrice;
 
   productId: string;
+  id: string;
 }
 export interface ICartResponse {
   version: number;
