@@ -133,6 +133,43 @@ const changeLineItemQuantity = async (
   }
 };
 
+// apply promo code
+const applyPromoCode = async (
+  currentCartId: string,
+  currentCartVersion: number,
+  promoCode: string
+) => {
+  const tokenObject = await getValidAccessToken();
+  const accessToken = tokenObject.access_token;
+
+  try {
+    const response = await axios.post(
+      `${apiHost}/${projectKey}/me/carts/${currentCartId}`,
+      {
+        version: currentCartVersion,
+        actions: [
+          {
+            action: "addDiscountCode",
+            code: promoCode,
+          },
+        ],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    console.log("Promo code successfully applied!");
+    return response.data;
+  } catch (error) {
+    console.error("Error sending request", error);
+    throw error;
+  }
+};
+
 // clear cart
 const deleteCart = async (
   currentCartId: string,
@@ -164,4 +201,5 @@ export {
   addProductToCart,
   changeLineItemQuantity,
   deleteCart,
+  applyPromoCode,
 };
