@@ -6,6 +6,7 @@ import AddToCartButton from "@components/buttons/add-to-cart-btn";
 import RemoveFromCartBtn from "@components/buttons/remove-from-cart-btn";
 import AppHeader from "@components/header/header";
 import getValidAccessToken from "@helpers/check-token";
+import { ICartResponse } from "@interfaces/get-cart";
 import { ILineItem } from "@interfaces/line-item";
 import { IProductResponse } from "@interfaces/product-response";
 
@@ -20,11 +21,15 @@ import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTo
 import ArrowForwardIosTwoToneIcon from "@mui/icons-material/ArrowForwardIosTwoTone";
 
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 import { Modal } from "@mui/material";
 
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
@@ -57,6 +62,9 @@ const ProductInformation = () => {
 
   // State to track current slide index
   const [currentSlideBasicIndex, setCurrentSlideBasicIndex] = React.useState(0);
+
+  // State to track alert
+  const [removeAlertOpen, setRemoveAlertOpen] = React.useState(false);
 
   // Function to open the modal and set the current slide index
   const openModal = (index: number) => {
@@ -174,11 +182,13 @@ const ProductInformation = () => {
   };
 
   // remove product from cart
-  const removeFromCart = async (lineItemId: string) => {
+  const removeFromCart = async (
+    lineItemId: string,
+    currentCart: ICartResponse
+  ) => {
     try {
       setIsLoadingButton(true);
       const accessToken = await getValidAccessToken();
-      const currentCart = await getCart(accessToken.access_token);
       const currentCartId = currentCart.id;
       const currentCartVersion = currentCart.version;
 
@@ -205,6 +215,7 @@ const ProductInformation = () => {
         cartItems.push({ productId: product?.id });
         localStorage.setItem("cartItems", JSON.stringify(cartItems));
         setIsInCart(true);
+        setRemoveAlertOpen(false);
       }
     } catch (error) {
       console.error("Error adding product to cart:", error);
@@ -220,7 +231,7 @@ const ProductInformation = () => {
         const lineItemId = currentCart.lineItems.filter(
           (item: { productId: string }) => item.productId === product.id
         );
-        await removeFromCart(lineItemId[0].id);
+        await removeFromCart(lineItemId[0].id, currentCart);
         // eslint-disable-next-line @typescript-eslint/no-shadow
         const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
         const updateCartItems = cartItems.filter(
@@ -228,6 +239,7 @@ const ProductInformation = () => {
         );
         localStorage.setItem("cartItems", JSON.stringify(updateCartItems));
         setIsInCart(false);
+        setRemoveAlertOpen(true);
       }
     } catch (error) {
       console.error("Error removing product from cart:", error);
@@ -306,11 +318,33 @@ const ProductInformation = () => {
                 handleAddToCart={handleAddToCart}
                 isLoadingButton={isLoadingButton}
               />
-              <RemoveFromCartBtn
-                isInCart={isInCart}
-                handleRemoveFromCart={handleRemoveFromCart}
-                isLoadingButton={isLoadingButton}
-              />
+              <Box sx={{ width: "100%" }}>
+                <RemoveFromCartBtn
+                  isInCart={isInCart}
+                  handleRemoveFromCart={handleRemoveFromCart}
+                  isLoadingButton={isLoadingButton}
+                  aria-describedby={id}
+                />
+                <Collapse in={removeAlertOpen}>
+                  <Alert
+                    action={
+                      <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                          setRemoveAlertOpen(false);
+                        }}
+                      >
+                        <CloseIcon fontSize="inherit" />
+                      </IconButton>
+                    }
+                    sx={{ mb: 2 }}
+                  >
+                    Product removed from cart.
+                  </Alert>
+                </Collapse>
+              </Box>
             </div>
             <div style={{ maxWidth: 400 }}>
               <div className={styles.arrows}>

@@ -15,21 +15,23 @@ const RemoveFromCartButton: React.FC<RemoveFromCartButtonProps> = ({
   isLoadingButton,
 }) => {
   return (
-    <Button
-      variant="contained"
-      size="small"
-      color={isInCart ? "secondary" : "success"}
-      onClick={handleRemoveFromCart}
-      startIcon={<RemoveShoppingCartIcon />}
-      disabled={!isInCart || isLoadingButton}
-      style={{ marginTop: "10px" }}
-    >
-      {isLoadingButton ? (
-        <CircularProgress size={20} color="inherit" />
-      ) : (
-        "Remove from Cart"
-      )}
-    </Button>
+    <div>
+      <Button
+        variant="contained"
+        size="small"
+        color={isInCart ? "secondary" : "success"}
+        onClick={handleRemoveFromCart}
+        startIcon={<RemoveShoppingCartIcon />}
+        disabled={!isInCart || isLoadingButton}
+        style={{ marginTop: "10px" }}
+      >
+        {isLoadingButton ? (
+          <CircularProgress size={20} color="inherit" />
+        ) : (
+          "Remove from Cart"
+        )}
+      </Button>
+    </div>
   );
 };
 

@@ -19,5 +19,5 @@ export interface ILineItem {
 export interface ICartResponse {
   version: number;
   lineItems: ILineItem[];
-  id: number;
+  id: string;
 }
