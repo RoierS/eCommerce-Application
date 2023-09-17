@@ -56,10 +56,11 @@ const Catalog = () => {
   const [countryFilter, setCountryFilter] = useState("");
   const [priceRange, setPriceRange] = useState([0, 300000]);
   const [starRating, setStarRating] = useState("");
+  const [cartItems, setCartItems] = useState<ILineItem[]>([]);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 9;
+  const cardsPerPage = 6;
 
   // get category name using its id
   const getCategoryNameById = (
@@ -175,6 +176,8 @@ const Catalog = () => {
 
   // handle the click on breadcrump
   const handleBreadcrumbClick = (categoryName = "Catalog") => {
+    setOffset(0);
+    setCurrentPage(1);
     const categoryId = categories.find(
       (c) => c.name["en-US"] === categoryName
     )?.id;
@@ -200,6 +203,8 @@ const Catalog = () => {
     event: React.MouseEvent<HTMLDivElement>,
     categoryId: string
   ) => {
+    setOffset(0);
+    setCurrentPage(1);
     setSelectedCategory(categoryId);
     // setIsCategoryFilterApplied(true);
     if (categoryId === selectedCategory) {
@@ -215,7 +220,6 @@ const Catalog = () => {
       setStarRating("");
     }
   };
-  const [cartItems, setCartItems] = useState<ILineItem[]>([]);
 
   useEffect(() => {
     // Fetch the cart items and update state
