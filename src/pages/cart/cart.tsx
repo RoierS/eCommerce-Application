@@ -6,6 +6,7 @@ import CartList from "@components/cart/cart-list";
 import OrderSum from "@components/cart/order-sum";
 import AppHeader from "@components/header/header";
 
+import ClearCartPopup from "@components/modal/clear-cart-popup";
 import getValidAccessToken from "@helpers/check-token";
 import { ICart } from "@interfaces/cart";
 import {
@@ -33,7 +34,10 @@ const Cart = () => {
   const [requestError, setError] = useState<boolean>(false);
 
   // State to disable all buttons when requests are sending
-  const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [isButtonsDisabled, setButtonsDisabled] = useState(false);
+
+  // State to open/close clear-cart-popup
+  const [isModalOpen, setModalOpen] = useState(false);
 
   // Gets cart from server and saves it's state
   const loadBasket = async () => {
@@ -63,6 +67,15 @@ const Cart = () => {
     setButtonsDisabled(false);
   };
 
+  // Open/close popup to confirm cart cleaning
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   // Clears cart
   const clearCart = async () => {
     setButtonsDisabled(true);
@@ -90,9 +103,9 @@ const Cart = () => {
       ) : basket.lineItems.length ? (
         <Box className={styles.cartContainer}>
           <Button
-            onClick={clearCart}
+            onClick={openModal}
             className={styles.clearBtn}
-            disabled={buttonsDisabled}
+            disabled={isButtonsDisabled}
             variant="contained"
             color="secondary"
           >
@@ -101,21 +114,26 @@ const Cart = () => {
           <CartList
             products={basket.lineItems || []}
             changeProductQuantity={changeProductQuantity}
-            disabled={buttonsDisabled}
+            disabled={isButtonsDisabled}
           />
           <OrderSum
             price={basket.totalPrice.centAmount}
             version={basket.version}
             setBasket={setBasket}
-            disabled={buttonsDisabled}
+            disabled={isButtonsDisabled}
           />
           <Button
             className={styles.payBtn}
             variant="contained"
             color="secondary"
           >
-            Payment and delivery
+            Checkout
           </Button>
+          <ClearCartPopup
+            open={isModalOpen}
+            onClose={closeModal}
+            clearCart={clearCart}
+          />
         </Box>
       ) : (
         <EmptyCart />
