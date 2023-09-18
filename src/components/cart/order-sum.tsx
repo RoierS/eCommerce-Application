@@ -4,6 +4,7 @@ import { Box, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 import styles from "../../pages/cart/cart.module.scss";
 
+// eslint-disable-next-line import/no-named-as-default
 import Promocode from "./promocode";
 
 interface IOrderSumProps {
