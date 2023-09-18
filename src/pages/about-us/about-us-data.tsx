@@ -81,7 +81,7 @@ const cardsData: CardData[] = [
         link: "https://learn.javascript.ru/",
       },
       {
-        name: "RSSchool Course JavaScript/Front-end stage 0, 1, 2",
+        name: "RSSchool Course JavaScript/Front-end stages 0, 1, 2",
         link: "https://rs.school/js/",
       },
     ],
@@ -93,6 +93,45 @@ const cardsData: CardData[] = [
       "Registration page: render, forms validation, integration with commercetools for User Profiles and Addresses",
       "User Profile page: render, profile edit-mode implementation, integration with commercetools",
       "Basket page: display items, actions for modifying product quantity, remove product from cart and clearing whole cart with price recalculating",
+    ],
+  },
+  {
+    name: "Inesa Smarhunova",
+    jobTitle: "Junior Frontend Developer",
+    skills: [
+      "HTML5, CSS3",
+      "JavaScript Basics",
+      "Git, GitHub",
+      "React",
+      "TypeScript",
+    ],
+    education: "Vitebsk State Order of Peoples' Friendship Medical University",
+    courses: [
+      {
+        name: "Полный курс по JavaScript + React",
+        link: "https://www.udemy.com/course/javascript_full/",
+      },
+      {
+        name: "Build Responsive Real-World Websites with HTML and CSS",
+        link: "https://www.udemy.com/course/design-and-develop-a-killer-website-with-html5-and-css3/",
+      },
+      {
+        name: "RS School (In process): Course JavaScript/Front-end",
+        link: "https://rs.school/index.html",
+      },
+    ],
+    englishLevel: "EPAM English test result - B2",
+    githubProfile: "https://github.com/papryca",
+    imageSrc: InesaImage,
+    implemented: [
+      "Create the project in CommerceTools",
+      "Implement routing for navigation",
+      "Implement a 404 (Not Found) page",
+      "Display Product Information",
+      "Image Modal with Slider",
+      "Header",
+      "Add or remove product from cart",
+      "Introduction to the Development team",
     ],
   },
 ];
