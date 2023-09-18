@@ -1,6 +1,22 @@
 import InesaImage from "@assets/images/about-us/inesa.jpg";
 
-const cardsData = [
+interface Course {
+  name: string;
+  link: string;
+}
+
+export interface CardData {
+  name: string;
+  jobTitle: string;
+  skills: string[];
+  education: string;
+  courses: Course[];
+  englishLevel: string;
+  githubProfile: string;
+  imageSrc: string;
+  implemented: string[];
+}
+const cardsData: CardData[] = [
   {
     name: "Inesa Smarhunova",
     jobTitle: "Junior Frontend Developer",
