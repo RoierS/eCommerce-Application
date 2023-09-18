@@ -23,7 +23,7 @@ const RemoveFromCartButton: React.FC<RemoveFromCartButtonProps> = ({
         onClick={handleRemoveFromCart}
         startIcon={<RemoveShoppingCartIcon />}
         disabled={!isInCart || isLoadingButton}
-        style={{ marginTop: "10px" }}
+        style={{ marginTop: "10px", width: "100%" }}
       >
         {isLoadingButton ? (
           <CircularProgress size={20} color="inherit" />
