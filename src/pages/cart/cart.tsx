@@ -1,125 +1,144 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-console */
+import { useEffect, useState } from "react";
 
+import CartList from "@components/cart/cart-list";
+import OrderSum from "@components/cart/order-sum";
 import AppHeader from "@components/header/header";
 
-import { ICartResponse } from "@interfaces/get-cart";
-import styles from "@pages/cart/cart.module.scss";
-import getCart from "@services/get-cart";
+import ClearCartPopup from "@components/modal/clear-cart-popup";
+import getValidAccessToken from "@helpers/check-token";
+import { ICart } from "@interfaces/cart";
+import {
+  changeLineItemQuantity,
+  deleteCart,
+  getCart,
+} from "@services/cart-services";
 
 import { Navigate } from "react-router-dom";
 
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
+import { Box, Button, CircularProgress } from "@mui/material";
 
-import Typography from "@mui/material/Typography";
+import EmptyCart from "../../components/cart/empty-cart";
+
+import styles from "./cart.module.scss";
 
 const Cart = () => {
-  // State to store the fetched cart data
-  const [cartData, setCartData] = useState<ICartResponse | null>(null);
+  // State for active cart data
+  const [basket, setBasket] = useState({} as ICart);
 
-  // State to track when the data is currently being loaded
+  // State to track if the data is currently loading
   const [isLoading, setLoading] = useState(true);
 
-  // State to track when get error
+  // State to track error
   const [requestError, setError] = useState<boolean>(false);
 
-  // Fetch cart data when the component mounts
-  useEffect(() => {
-    const requestData = async () => {
-      try {
-        const data: ICartResponse = await getCart();
-        setCartData(data);
-        setLoading(false);
-      } catch (error) {
-        setError(true);
-        setLoading(false);
-      }
-    };
+  // State to disable all buttons when requests are sending
+  const [isButtonsDisabled, setButtonsDisabled] = useState(false);
 
-    requestData().then();
+  // State to open/close clear-cart-popup
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  // Gets cart from server and saves it's state
+  const loadBasket = async () => {
+    try {
+      const tokenObject = await getValidAccessToken();
+      const cart: ICart = await getCart(tokenObject.access_token);
+      setBasket(cart);
+      setLoading(false);
+    } catch {
+      setError(true);
+      setLoading(false);
+    }
+  };
+
+  // Change product quantity in cart or delete product (if quantity is set to 0)
+  const changeProductQuantity = async (id: string, quantity: number) => {
+    setButtonsDisabled(true);
+
+    const cart = await changeLineItemQuantity(
+      basket.id,
+      basket.version,
+      id,
+      quantity
+    );
+
+    setBasket(cart);
+    setButtonsDisabled(false);
+  };
+
+  // Open/close popup to confirm cart cleaning
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  // Clears cart
+  const clearCart = async () => {
+    setButtonsDisabled(true);
+
+    await deleteCart(basket.id, basket.version);
+    await loadBasket();
+
+    setButtonsDisabled(false);
+  };
+
+  useEffect(() => {
+    loadBasket();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div>
+    <>
       <AppHeader />
-      {/* eslint-disable-next-line no-nested-ternary */}
       {isLoading ? (
         <Box className={styles.spinner}>
           <CircularProgress />
         </Box>
-      ) : // eslint-disable-next-line no-nested-ternary
-      requestError ? (
+      ) : requestError ? (
         <Navigate to="*" />
-      ) : cartData ? (
-        <div>
-          <div className={styles.article}>
-            <Typography variant="h6" fontWeight="bold">
-              Shopping bag ({cartData.lineItems.length})
-            </Typography>
-            {cartData.lineItems.map((item) => (
-              <Box className={styles.product}>
-                <div>
-                  <div className={styles.cart}>
-                    {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-                    <img
-                      className={styles.image}
-                      src={item.variant.images[0].url}
-                      alt="product image"
-                    />
-                    <Typography
-                      variant="h4"
-                      gutterBottom
-                      style={{ fontSize: "1.2rem", width: "250px" }}
-                    >
-                      {item.name["en-US"]}
-                    </Typography>
-                    <Typography variant="h4">
-                      {item.price.discounted !== undefined &&
-                      item.price.discounted.value.centAmount > 0 ? (
-                        <div className={styles.price}>
-                          <span
-                            style={{ textDecoration: "line-through" }}
-                            className={styles.noSale}
-                          >
-                            {(
-                              parseFloat(String(item.price.value.centAmount)) /
-                              100
-                            ).toFixed(2)}{" "}
-                            USD
-                          </span>
-                          <span
-                            style={{ color: "red" }}
-                            className={styles.sale}
-                          >
-                            {(
-                              parseFloat(
-                                String(item.price.discounted.value.centAmount)
-                              ) / 100
-                            ).toFixed(2)}{" "}
-                            USD
-                          </span>
-                        </div>
-                      ) : (
-                        <div className={styles.noSale}>
-                          {(
-                            parseFloat(String(item.price.value.centAmount)) /
-                            100
-                          ).toFixed(2)}{" "}
-                          USD
-                        </div>
-                      )}
-                    </Typography>
-                  </div>
-                </div>
-              </Box>
-            ))}
-          </div>
-        </div>
+      ) : basket.lineItems.length ? (
+        <Box className={styles.cartContainer}>
+          <Button
+            onClick={openModal}
+            className={styles.clearBtn}
+            disabled={isButtonsDisabled}
+            variant="contained"
+            color="secondary"
+          >
+            Clear cart
+          </Button>
+          <CartList
+            products={basket.lineItems || []}
+            changeProductQuantity={changeProductQuantity}
+            disabled={isButtonsDisabled}
+          />
+          <OrderSum
+            price={basket.totalPrice.centAmount}
+            version={basket.version}
+            setBasket={setBasket}
+            disabled={isButtonsDisabled}
+          />
+          <Button
+            className={styles.payBtn}
+            variant="contained"
+            color="secondary"
+          >
+            Checkout
+          </Button>
+          <ClearCartPopup
+            open={isModalOpen}
+            onClose={closeModal}
+            clearCart={clearCart}
+          />
+        </Box>
       ) : (
-        <div>No product data available</div>
+        <EmptyCart />
       )}
-    </div>
+    </>
   );
 };
-
 export default Cart;
