@@ -18,7 +18,6 @@ import Home from "./pages/main/main";
 
 import Product from "./pages/products/products";
 import Profile from "./pages/profile/profile";
-
 import Registration from "./pages/registration/registration";
 
 import "./app.scss";

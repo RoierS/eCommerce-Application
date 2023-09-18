@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import GitHab from "@assets/icons/gitHab.png";
+import RsSchool from "@assets/icons/rs-school.svg";
 import InesaImage from "@assets/images/about-us/inesa.jpg";
 import Header from "@components/header/header";
 
@@ -202,8 +203,15 @@ const AboutUsPage = () => {
         ))}
       </div>
       <TeamCollaboration />
+      <Link
+        to="https://rs.school/js/"
+        target="_blank"
+        className={styles.schoolLink}
+      >
+        {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+        <img src={RsSchool} alt="Course Image" className={styles.school} />
+      </Link>
     </div>
   );
 };
-
 export default AboutUsPage;
