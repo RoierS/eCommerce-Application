@@ -63,7 +63,7 @@ const CartItem = (props: ICartItemProps) => {
         alt="hotel"
         className={styles.image}
       />
-      <Box className={styles.price}>
+      <Box className={styles.actions}>
         <Box className={styles.quantity}>
           <IconButton
             disabled={lineItem.quantity === 1 || disabled}
@@ -90,7 +90,7 @@ const CartItem = (props: ICartItemProps) => {
           </IconButton>
         </Box>
         {discountPrice ? (
-          <>
+          <Box className={styles.discounted}>
             <Typography className={styles.originalPriceStriked}>
               <span>Original Price: </span>
               <span className={styles.price}>
@@ -119,9 +119,9 @@ const CartItem = (props: ICartItemProps) => {
                 {(totalPrice / 100).toFixed()} $
               </span>
             </Typography>
-          </>
+          </Box>
         ) : (
-          <>
+          <Box className={styles.discounted}>
             <Typography
               className={
                 promoApplied
@@ -144,7 +144,7 @@ const CartItem = (props: ICartItemProps) => {
                 {(totalPrice / 100).toFixed()} $
               </span>
             </Typography>
-          </>
+          </Box>
         )}
         <IconButton
           disabled={disabled}

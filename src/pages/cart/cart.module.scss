@@ -42,7 +42,7 @@ input[type="number"] {
 
 .cartContainer,
 .paper,
-.price,
+.actions,
 .quantity,
 .empty,
 .total,
@@ -85,9 +85,20 @@ input[type="number"] {
 }
 
 .title,
-.image,
+.image {
+  width: 25%;
+}
+
+.discounted {
+  width: 45%;
+}
+
 .quantity {
   width: 30%;
+}
+
+.actions {
+  width: 50%;
 }
 
 .image {
@@ -123,7 +134,7 @@ input[type="number"] {
   justify-content: center;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 730px) {
   .paper {
     flex-direction: column;
   }
@@ -132,12 +143,21 @@ input[type="number"] {
     width: 40%;
   }
 
-  .price {
-    width: 100%;
+  .discounted {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .title {
     width: 100%;
+  }
+
+  .actions {
+    width: 80%;
+    min-width: 310px;
   }
 }
 
