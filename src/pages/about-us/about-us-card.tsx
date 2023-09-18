@@ -113,7 +113,6 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                     <b>Skills:</b>
                     {data.skills.map((skill) => (
                       <Typography variant="body1">
-                        <br />
                         <Typography variant="body1">{skill}</Typography>
                       </Typography>
                     ))}
