@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useState } from "react";
 
 import { ICart } from "@interfaces/cart";
@@ -13,15 +14,51 @@ interface IPromocodeProps {
   setBasket: (cart: ICart) => void;
   disabled: boolean;
   basketId: string;
+  basket: ICart;
 }
 
 const Promocode = (props: IPromocodeProps) => {
-  const { version, setBasket, disabled, basketId } = props;
+  const { version, setBasket, disabled, basketId, basket } = props;
   const [promoCode, setPromoCode] = useState("");
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [helperText, setHelperText] = useState("");
 
   const handleApplyPromoCode = async () => {
-    const response = await applyPromoCode(basketId, version, promoCode);
-    setBasket(response);
+    try {
+      if (basket.discountCodes && basket.discountCodes.length > 0) {
+        console.log("Promo code is already applied.");
+        setErrorMessage("Promo code is already applied");
+        return;
+      }
+
+      const response = await applyPromoCode(basketId, version, promoCode);
+
+      if (response) {
+        setBasket(response);
+        setPromoApplied(true);
+        setHelperText("Promo code applied successfully!");
+        console.log(promoCode);
+        setPromoCode("");
+        setErrorMessage("");
+      }
+    } catch (error) {
+      if (
+        (error as { response: { data: { message: string } } }).response &&
+        (error as { response: { data: { message: string } } }).response.data &&
+        (error as { response: { data: { message: string } } }).response.data
+          .message
+      ) {
+        const promoCodeErrorMessage = (
+          error as { response: { data: { message: string } } }
+        ).response.data.message;
+        if (promoCodeErrorMessage.includes("The discount code")) {
+          setErrorMessage(promoCodeErrorMessage);
+        }
+      }
+      setPromoApplied(false);
+      setHelperText("");
+    }
   };
 
   return (
@@ -32,6 +69,8 @@ const Promocode = (props: IPromocodeProps) => {
         label="Promo Code"
         value={promoCode}
         onChange={(e) => setPromoCode(e.target.value)}
+        error={!!errorMessage}
+        helperText={errorMessage || (promoApplied && helperText)}
       />
       <Button
         disabled={disabled}

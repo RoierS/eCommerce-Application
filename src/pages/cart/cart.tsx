@@ -119,7 +119,7 @@ const Cart = () => {
           <OrderSum
             price={basket.totalPrice.centAmount}
             version={basket.version}
-            // basket={basket}
+            basket={basket}
             basketId={basket.id}
             setBasket={setBasket}
             disabled={isButtonsDisabled}

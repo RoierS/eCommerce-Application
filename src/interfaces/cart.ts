@@ -33,4 +33,13 @@ export interface ICart {
     currencyCode: string;
     centAmount: number;
   };
+  discountCodes: IDiscountCode[];
+}
+
+interface IDiscountCode {
+  discountCode: {
+    typeId: string;
+    id: string;
+  };
+  state: string;
 }

@@ -142,32 +142,27 @@ const applyPromoCode = async (
   const tokenObject = await getValidAccessToken();
   const accessToken = tokenObject.access_token;
 
-  try {
-    const response = await axios.post(
-      `${apiHost}/${projectKey}/me/carts/${currentCartId}`,
-      {
-        version: currentCartVersion,
-        actions: [
-          {
-            action: "addDiscountCode",
-            code: promoCode,
-          },
-        ],
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+  const response = await axios.post(
+    `${apiHost}/${projectKey}/me/carts/${currentCartId}`,
+    {
+      version: currentCartVersion,
+      actions: [
+        {
+          action: "addDiscountCode",
+          code: promoCode,
         },
-      }
-    );
+      ],
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 
-    console.log("Promo code successfully applied!");
-    return response.data;
-  } catch (error) {
-    console.error("Error sending request", error);
-    throw error;
-  }
+  console.log("Promo code successfully applied!");
+  return response.data;
 };
 
 // clear cart

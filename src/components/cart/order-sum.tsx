@@ -12,10 +12,11 @@ interface IOrderSumProps {
   setBasket: (cart: ICart) => void;
   disabled: boolean;
   basketId: string;
+  basket: ICart;
 }
 
 const OrderSum = (props: IOrderSumProps) => {
-  const { price, version, basketId, setBasket, disabled } = props;
+  const { price, version, basketId, setBasket, disabled, basket } = props;
   const theme = useTheme();
   const large = useMediaQuery(theme.breakpoints.up("lg"));
   const medium = useMediaQuery(theme.breakpoints.up("md"));
@@ -34,6 +35,7 @@ const OrderSum = (props: IOrderSumProps) => {
         setBasket={setBasket}
         basketId={basketId}
         disabled={disabled}
+        basket={basket}
       />
     </Paper>
   );
