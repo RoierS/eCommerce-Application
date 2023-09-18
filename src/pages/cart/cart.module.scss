@@ -143,7 +143,7 @@ input[type="number"] {
 
 .originalPriceStriked {
   text-decoration: line-through;
-  color:  $stricked-price-color;
+  color: $stricked-price-color;
   text-align: center;
   align-self: flex-start;
 }
@@ -157,7 +157,7 @@ input[type="number"] {
 
 .totalPricePromo {
   font-size: 18px;
-  color:$promocode-total-color;
+  color: $promocode-total-color;
   text-align: center;
   align-self: flex-start;
 }
@@ -174,4 +174,14 @@ input[type="number"] {
   color: $discounted-price-color;
   text-align: center;
   align-self: flex-start;
+}
+
+.totalStriked {
+  text-decoration: line-through;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px;
 }

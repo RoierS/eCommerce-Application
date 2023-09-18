@@ -1,4 +1,7 @@
+import { IPrice } from "./product-data";
+
 export interface ILineItem {
+  price: IPrice;
   id: string;
   productId: string;
   productKey: string;

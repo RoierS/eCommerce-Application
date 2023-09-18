@@ -7,7 +7,6 @@ import styles from "../../pages/cart/cart.module.scss";
 import Promocode from "./promocode";
 
 interface IOrderSumProps {
-  price: number;
   version: number;
   setBasket: (cart: ICart) => void;
   disabled: boolean;
@@ -16,20 +15,55 @@ interface IOrderSumProps {
 }
 
 const OrderSum = (props: IOrderSumProps) => {
-  const { price, version, basketId, setBasket, disabled, basket } = props;
+  const { version, basketId, setBasket, disabled, basket } = props;
   const theme = useTheme();
   const large = useMediaQuery(theme.breakpoints.up("lg"));
   const medium = useMediaQuery(theme.breakpoints.up("md"));
+
+  const totalPriceBeforeDiscount = basket.lineItems.reduce((total, item) => {
+    const lineItemPrice = item.price.discounted
+      ? item.price.discounted.value.centAmount
+      : item.price.value.centAmount;
+    return total + lineItemPrice * item.quantity;
+  }, 0);
+
+  let totalPriceWithDiscount = totalPriceBeforeDiscount;
+
+  if (basket.discountCodes.length) {
+    totalPriceWithDiscount = basket.totalPrice.centAmount;
+  }
+
+  const formattedTotalPriceBeforeDiscount = (
+    totalPriceBeforeDiscount / 100
+  ).toFixed();
+  const formattedTotalPriceWithDiscount = (
+    totalPriceWithDiscount / 100
+  ).toFixed();
+
   return (
     <Paper className={styles.totalContainer}>
-      <Box className={styles.total}>
-        <Typography variant={large || medium ? "h3" : "h4"} color="primary">
+      <Box
+        className={
+          basket.discountCodes.length > 0 ? styles.totalStriked : styles.total
+        }
+      >
+        <Typography variant={large || medium ? "h5" : "h6"} color="primary">
           Total:
         </Typography>
-        <Typography variant={large || medium ? "h3" : "h4"} color="primary">
-          {(price / 100).toFixed()} USD
+        <Typography variant={large || medium ? "h5" : "h6"} color="primary">
+          {formattedTotalPriceBeforeDiscount} $
         </Typography>
       </Box>
+      {basket.discountCodes.length > 0 && (
+        <Box className={styles.total}>
+          <Typography variant={large || medium ? "h4" : "h6"} color="secondary">
+            Total With All Discounts:
+          </Typography>
+          <Typography variant={large || medium ? "h4" : "h6"} color="secondary">
+            {formattedTotalPriceWithDiscount} $
+          </Typography>
+        </Box>
+      )}
       <Promocode
         version={version}
         setBasket={setBasket}
