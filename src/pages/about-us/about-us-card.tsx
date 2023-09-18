@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import GitHab from "@assets/icons/gitHab.png";
-import InesaImage from "@assets/images/about-us/inesa.jpg";
 import { CardData } from "@pages/about-us/about-us-data";
 import styles from "@pages/about-us/about-us.module.scss";
 
@@ -85,7 +84,7 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                   {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
                   <Avatar
                     alt="Remy Sharp"
-                    src={InesaImage}
+                    src={data.imageSrc}
                     sx={{
                       width: 100,
                       height: 100,
