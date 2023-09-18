@@ -9,7 +9,7 @@ interface Course {
 
 export interface CardData {
   name: string;
-  jobTitle: string;
+  jobTitle: string[];
   skills: string[];
   education: string;
   courses: Course[];
@@ -21,7 +21,7 @@ export interface CardData {
 const cardsData: CardData[] = [
   {
     name: "Inesa Smarhunova",
-    jobTitle: "Junior Frontend Developer",
+    jobTitle: ["Junior Frontend Developer"],
     skills: [
       "HTML5, CSS3",
       "JavaScript Basics",
@@ -60,7 +60,7 @@ const cardsData: CardData[] = [
   },
   {
     name: "Elena Leusik",
-    jobTitle: "Junior Frontend Developer",
+    jobTitle: ["Junior Frontend Developer"],
     skills: [
       "React",
       "JavaScript, TypeScript",
@@ -98,7 +98,7 @@ const cardsData: CardData[] = [
   },
   {
     name: "Roman Iermoliuk",
-    jobTitle: "Junior Frontend Developer",
+    jobTitle: ["Team Lead", "Junior Frontend Developer"],
     skills: ["HTML5, CSS3", "JavaScript", "Git, GitHub", "React", "TypeScript"],
     education: "Donetsk National University of Economics and Trade",
     courses: [

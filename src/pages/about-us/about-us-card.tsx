@@ -15,6 +15,7 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
+  Grid,
   Modal,
   Typography,
 } from "@mui/material";
@@ -53,14 +54,18 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
               {data.name}
             </Typography>
           </Box>
-          <Typography variant="h6" color="text.secondary">
-            {data.jobTitle}
-          </Typography>
+          {data.jobTitle.map((title) => (
+            <Typography variant="h6" color="text.secondary">
+              {title}
+            </Typography>
+          ))}
           <CardActions>
             {/* eslint-disable-next-line react/jsx-no-undef */}
-            <Button size="medium" color="success" onClick={openModal}>
-              Learn More
-            </Button>
+            <Grid container justifyContent="center">
+              <Button size="medium" color="success" onClick={openModal}>
+                Learn More
+              </Button>
+            </Grid>
             <Modal open={isModalOpen} onClose={closeModal}>
               <Box
                 className={styles.modal}
@@ -95,9 +100,12 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                     <Typography gutterBottom variant="h4" component="div">
                       {data.name}
                     </Typography>
-                    <Typography gutterBottom variant="h6">
-                      {data.jobTitle}
-                    </Typography>
+
+                    {data.jobTitle.map((title) => (
+                      <Typography gutterBottom variant="h6">
+                        {title}
+                      </Typography>
+                    ))}
                   </div>
                 </div>
                 <div className={styles.text}>
@@ -105,9 +113,8 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                     <b>Skills:</b>
                     {data.skills.map((skill) => (
                       <Typography variant="body1">
-                        <ul>
-                          <li>{skill}</li>
-                        </ul>
+                        <br />
+                        <Typography variant="body1">{skill}</Typography>
                       </Typography>
                     ))}
                   </Typography>
