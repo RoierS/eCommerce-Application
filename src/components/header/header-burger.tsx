@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { ReactComponent as LogoImage } from "@assets/icons/logo.svg";
+import CartRoute from "@components/header/cart-route";
 import HeaderRoute from "@components/header/header-route";
 import routes from "@components/header/tabs";
 
@@ -52,7 +53,7 @@ const HeaderBurger = () => {
             icon={routes.catalog.icon}
             label={routes.catalog.label}
           />
-          <HeaderRoute
+          <CartRoute
             to={routes.cart.link}
             icon={routes.cart.icon}
             label={routes.cart.label}

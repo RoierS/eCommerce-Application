@@ -8,6 +8,7 @@ import AppHeader from "@components/header/header";
 
 import ClearCartPopup from "@components/modal/clear-cart-popup";
 import getValidAccessToken from "@helpers/check-token";
+import EventSystem from "@helpers/event-system";
 import { ICart } from "@interfaces/cart";
 import {
   changeLineItemQuantity,
@@ -82,6 +83,8 @@ const Cart = () => {
 
     await deleteCart(basket.id, basket.version);
     await loadBasket();
+    localStorage.removeItem("cartItems");
+    EventSystem.onCartUpdate();
 
     setButtonsDisabled(false);
   };
