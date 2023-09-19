@@ -26,7 +26,7 @@ const HeaderBurger = () => {
           <LogoImage />
         </div>
       </Link>
-      <MenuIcon onClick={toggleDrawer} />
+      <MenuIcon onClick={toggleDrawer} className={styles.burgerIcon} />
       <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer}>
         <Box
           sx={{
@@ -41,6 +41,7 @@ const HeaderBurger = () => {
               position: "absolute",
               top: "20px",
               right: "20px",
+              cursor: "pointer",
             }}
           />
           <HeaderRoute
