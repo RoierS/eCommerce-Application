@@ -47,6 +47,8 @@ const Cart = () => {
       const cart: ICart = await getCart(tokenObject.access_token);
       setBasket(cart);
       setLoading(false);
+
+      localStorage.setItem("cartItems", JSON.stringify(cart.lineItems));
     } catch {
       setError(true);
       setLoading(false);
@@ -91,6 +93,7 @@ const Cart = () => {
 
   useEffect(() => {
     loadBasket();
+    // EventSystem.onCartUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
