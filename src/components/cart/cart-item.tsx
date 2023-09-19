@@ -77,7 +77,7 @@ const CartItem = (props: ICartItemProps) => {
       />
       <Box className={styles.actions}>
         <Box className={styles.quantity}>
-          <Box>
+          <Box className={styles.inputContainer}>
             <IconButton
               disabled={lineItem.quantity === 1 || disabled}
               onClick={decreaseQuantity}
@@ -102,7 +102,6 @@ const CartItem = (props: ICartItemProps) => {
               <AddCircleIcon color="secondary" />
             </IconButton>
           </Box>
-
           <Box className={styles.perUnit}>
             <Typography sx={{ fontSize: "0.6rem" }}>
               <span>Price per unit: </span>
