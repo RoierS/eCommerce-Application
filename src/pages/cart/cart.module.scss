@@ -182,10 +182,15 @@ input[type="number"] {
     align-items: center;
   }
 }
+
 .originalPriceStriked {
   text-decoration: line-through;
   color: $stricked-price-color;
   text-align: center;
+  align-self: flex-start;
+}
+
+.originalPrice {
   align-self: flex-start;
 }
 
