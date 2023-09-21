@@ -69,7 +69,7 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
           ))}
           <CardActions>
             <Grid container justifyContent="center">
-              <Button size="medium" color="success" onClick={openModal}>
+              <Button size="medium" color="secondary" onClick={openModal}>
                 Learn More
               </Button>
             </Grid>
@@ -183,8 +183,10 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
           </CardActions>
         </CardContent>
       </Box>
-      <Box className={styles.implementedFunctionsContainer}>
-        <b>Implemented functions:</b>
+      <Box textAlign="center">
+        <Typography variant="h6" className={styles.implemented}>
+          Implemented functions:
+        </Typography>
         {data.implemented.map((task) => (
           <Box key={data.implemented.indexOf(task)}>
             <ul>
