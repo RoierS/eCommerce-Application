@@ -1,0 +1,25 @@
+@import "../../sass/abstract/constants";
+.header {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding-right: 25px;
+  white-space: nowrap;
+}
+.link {
+  text-decoration: none;
+  margin-left: 20px;
+  color: $color-primary;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.logo {
+  width: 70px;
+  height: 70px;
+  margin-left: 35px;
+}
+
+.burgerIcon {
+  cursor: pointer;
+  color: $color-primary;
+}
